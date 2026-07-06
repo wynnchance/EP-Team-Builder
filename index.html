@@ -114,6 +114,9 @@ h2{font-family:'Cinzel',serif;color:var(--gold);font-size:22px;letter-spacing:1.
 .el-Nature:hover{box-shadow:0 4px 18px rgba(34,153,90,.3)}
 .el-Fire:hover{box-shadow:0 4px 18px rgba(207,67,53,.3)}
 .dbcard{opacity:1}
+.hport{float:left;width:44px;height:44px;border-radius:9px;margin-right:9px;object-fit:cover;object-position:top;border:1px solid var(--line2);background:#0d1b2a}
+.sport{width:54px;height:54px;border-radius:50%;object-fit:cover;object-position:top;margin:4px auto 2px;border:2px solid rgba(255,255,255,.55);box-shadow:0 2px 10px rgba(0,0,0,.45);background:#0d1b2a}
+.mport{width:88px;height:88px;border-radius:12px;object-fit:cover;object-position:top;border:2px solid var(--line2);background:#0d1b2a}
 
 /* ---------- team cards ---------- */
 .teamcard{
@@ -126,7 +129,7 @@ h2{font-family:'Cinzel',serif;color:var(--gold);font-size:22px;letter-spacing:1.
 .lineup{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
 @media(max-width:700px){.lineup{grid-template-columns:repeat(2,1fr)}}
 .slot{
-  border-radius:12px;padding:12px 8px;color:#fff;text-align:center;min-height:100px;
+  border-radius:12px;padding:12px 8px;color:#fff;text-align:center;min-height:130px;
   display:flex;flex-direction:column;justify-content:center;cursor:pointer;
   position:relative;overflow:hidden;
   transition:transform .18s ease, box-shadow .18s ease;
@@ -295,7 +298,7 @@ footer{text-align:center;color:var(--dim);font-size:12px;padding:26px 16px;line-
 
 <div class="modal" id="heroModal"></div>
 </main>
-<footer>Hero database seeded from a 156-hero roster (July 2026). Team recommendations are rule-based on skills, families, synergy pairs, speed and power. Emblem paths and troop picks use community breakpoint data (empuzzled / oldcynic, July 2026). </footer>
+<footer>Hero database seeded from a 156-hero roster (July 2026). Team recommendations are rule-based on skills, families, synergy pairs, speed and power. Emblem paths and troop picks use community breakpoint data (empuzzled / oldcynic, July 2026). Hero portraits hotlinked from the <a href='https://empiresandpuzzles.fandom.com' style='color:var(--accent)'>E&P Fandom wiki</a> — artwork © Small Giant Games / Zynga. </footer>
 
 <script>
 const BASE_HEROES = [
@@ -326,7 +329,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 450% damage to the target. All allies resist new negative mana effects for 3 turns. All allies resist new effects that block usage of Special Skills for 3 turns.",
 "pas": "TOON: +75% extra chance to resist all status ailments, mana reductions, and buff dispels. Extra chances are calculated independently.",
-"tal": "Fighter: 6% chance to revive upon death at end of turn."
+"tal": "Fighter: 6% chance to revive upon death at end of turn.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/7/79/Poseidon.jpg/revision/latest?cb=20190329165924"
 },
 {
 "name": "Toon Hel",
@@ -340,7 +344,8 @@ const BASE_HEROES = [
 ],
 "skill": "Stops mana regeneration of all enemies for 3 turns.",
 "pas": "TOON: +75% extra chance to resist all status ailments, mana reductions, and buff dispels. Extra chances are calculated independently.",
-"tal": "Wizard: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Wizard: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/a/a5/Hel.jpg/revision/latest?cb=20180506160003"
 },
 {
 "name": "Domitia",
@@ -356,7 +361,8 @@ const BASE_HEROES = [
 ],
 "skill": "Stylish Bolt (Domitia Stylish costume): Deals 610% damage to the target; if the target has less than 50% health remaining, deals 755% damage instead. The caster and nearby allies get +84% defense against Holy for 4 turns. Dispels buffs from the target and nearby enemies.",
 "pas": "STYLISH! (Stylish costume passive): 65% chance to replace incoming negative effects with matching positive ones. SEASON 1 / CLASSIC FAMILY BONUS (2/3/4/5 fully ascended heroes): +1%/+3%/+5%/+7% attack, defense and healing; at Class Level 20 all Class Talents upgrade to Superior Class Talents.",
-"tal": "Rogue: EVADE - 20% chance to dodge Special Skills that deal damage. Classic family: at class level 20, talents upgrade to Superior Class Talents."
+"tal": "Rogue: EVADE - 20% chance to dodge Special Skills that deal damage. Classic family: at class level 20, talents upgrade to Superior Class Talents.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/c/c4/Domitia.jpg/revision/latest?cb=20180509014950"
 },
 {
 "name": "Featherweight",
@@ -375,7 +381,8 @@ const BASE_HEROES = [
 ],
 "skill": "Heavy Drain: Deals 400% damage to the target and nearby enemies. Steals all dispellable buffs from the target and nearby enemies and randomly distributes them on allies. The caster steals 85% of any healing applied to the target and nearby enemies for 5 turns. The caster steals generated mana of the target and nearby enemies over 5 turns, starting low and increasing every turn until on the last turn all generated mana is stolen (can't be cleansed, but is removed if the caster is defeated).",
 "pas": "EMPOWERED RESIST SPECIAL BLOCKING: Immune to status ailments that prevent the use of Special Skills; gains 450 boosted health and 5% mana each time they resist. MINION CORE: Activates each time Special Skill is cast - with fully charged Core, summons a Killer Bot Minion (33% HP / 55% attack inherited, scaled by Core charge) on all allies; before hitting, the Killer Bot destroys all Minions on the target and damages Mega Minions; recovers 5% health for its owner each turn; Wither: each Killer Bot hit gives its target -50 attack. CONSTRUCT FAMILY: Core charges each time this hero receives damage from normal attacks or Special Skills. Aether Power: Defense Up.",
-"tal": "Paladin: MASTER PROTECT - 25% chance to get +25% defense for 2 turns after receiving damage; caster and nearby allies get the bonus."
+"tal": "Paladin: MASTER PROTECT - 25% chance to get +25% defense for 2 turns after receiving damage; caster and nearby allies get the bonus.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/4/43/Featherweight_-_Hero_Card.gif/revision/latest?cb=20260703130822"
 },
 {
 "name": "Duval",
@@ -393,7 +400,8 @@ const BASE_HEROES = [
 ],
 "skill": "Thieving Shot: Ransacks the target, stealing 400 health and a buff (safely steals one status effect buff from the target, including Stubborn effects, undispellable buffs and Dance effects; safe stealing bypasses secondary effects such as damage on removal). Deals 560% damage to the target. The target receives 1518 Poison damage over 3 turns; this effect spreads to nearby enemies.",
 "pas": "THIEF'S OPPORTUNITY: At the start of each turn this character Ransacks a random enemy (Ransack: steals 100 health; safely steals a buff from the enemy, including Stubborn/undispellable buffs and Dance effects). CHEAT DEATH: The first time this character would receive fatal damage, they instead redirect that damage to a random enemy; refreshed at the beginning of each wave. SHADY SCOUNDRELS FAMILY BONUS (1/2/3 heroes): Stack (Max 10): All allies get +4%/+5%/+6% attack stack each time this character attempts to Ransack an enemy; up to 2 activations per turn.",
-"tal": "Ranger: MASTER PIERCE - 25% chance to bypass defensive buffs including counterattacks."
+"tal": "Ranger: MASTER PIERCE - 25% chance to bypass defensive buffs including counterattacks.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/c/ce/Duval.jpg/revision/latest?cb=20251209020431"
 },
 {
 "name": "Pansius",
@@ -411,7 +419,8 @@ const BASE_HEROES = [
 ],
 "skill": "Poisonous Velvet Petals: Deals 400% damage to the target and nearby enemies. The target and nearby enemies are Mesmerized for 4 turns (can't be cleansed; Mesmerized enemies have -40% defense against Special Skills and take +40% increased damage from status ailments; against Dryads it's -60% / +60%). The target and nearby enemies receive 1008 Poison damage over 4 turns.",
 "pas": "WHISPERING PETAL RAIN: Every 4 turns, one random enemy is Mesmerized for 4 turns (can't be cleansed; same Mesmerize effect as the Special). ETHEREAL PETAL VEIL: After casting Special Skill this character is Camouflaged and can't be directly targeted by enemy Special Skills for 5 turns (can't be dispelled or reallocated; position-based skills bypass Camouflage; a lone Camouflaged character is hit automatically). DRYAD FAMILY BONUS (1/2/3 heroes): All allies get a +50/+60/+70 health regeneration stack each time this character attempts to Mesmerize an enemy (max 10 stacks). Aether Power: Boosted Regen.",
-"tal": "Wizard: MASTER JINX - chance to deal extra damage per each active status effect on the target when dealing damage."
+"tal": "Wizard: MASTER JINX - chance to deal extra damage per each active status effect on the target when dealing damage.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/2/2f/Pansius_-_Hero_Card.gif/revision/latest?cb=20260615131219"
 },
 {
 "name": "Hai'Kala",
@@ -429,7 +438,8 @@ const BASE_HEROES = [
 ],
 "skill": "Mending High Tide: Cleanses status ailments from all allies. Destroys all Fiends from all allies and damages all Mega Fiends. Recovers 60% health for the caster; the healing chains through all allies adjacent to any healed ally. All healed allies get +50% mana generation for 5 turns (affects only mana from matching shields or defense-team end-of-turn mana). Summons a Shark Mega Minion with 65% HP and 270% attack inherited from the caster (strong vs Fire); when summoned, gives its owner immunity to buff dispels and steals for as long as the owner has the Shark Mega Minion.",
 "pas": "SHARK'S MIGHT: Special Skill, Minions and Mega Minions deal increased damage against enemies with any Water-damage ailment (+35% Special Skills, +60% Minions/Mega Minions). EMPOWERED RESIST WATER: Immune to Water-damage ailments; gains 450 boosted health and 5% mana each time they resist. SHARK FAMILY BONUS (1/2/3 heroes): Deals 540/612/684 Water damage over 3 turns to an enemy who deals Special Skill damage to this character. Extra perks in the Sunbay Party event. Aether Power: Heal Increase.",
-"tal": "Cleric: MASTER MANASHIELD - 35% chance to resist negative mana effects and effects that prevent the use of Special Skills."
+"tal": "Cleric: MASTER MANASHIELD - 35% chance to resist negative mana effects and effects that prevent the use of Special Skills.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/b/b5/Hai%E2%80%99Kala_-_Hero_Card.gif/revision/latest?cb=20260602134111"
 },
 {
 "name": "Sha-Arr",
@@ -444,7 +454,8 @@ const BASE_HEROES = [
 ],
 "skill": "Harpoon Barrage: Deals 650% damage to the target. Deals an additional 150% damage to as many random enemies as there are Minions and Mega Minions owned by allies (damage reduced on each consecutive hit). All hit targets get -50% attack for 4 turns. Summons a Shark Minion for each ally with 25% HP and 25% attack inherited from the caster (strong vs Ice); when summoned, gives its owner immunity to buff dispels and steals for as long as the owner has the Shark Minion.",
 "pas": "SHARK'S MIGHT: Special Skill, Minions and Mega Minions deal increased damage against enemies with any Water-damage ailment (+35% Special Skills, +60% Minions/Mega Minions). EMPOWERED RESIST WATER: Immune to Water-damage ailments; gains 450 boosted health and 5% mana each time they resist. SHARK FAMILY BONUS (1/2/3 heroes): Deals 540/612/684 Water damage over 3 turns to an enemy who deals Special Skill damage to this character. Extra perks in the Sunbay Party event. Aether Power: Attack Up.",
-"tal": "Rogue: MASTER EVADE - 20-25% chance to evade Special Skills that deal damage."
+"tal": "Rogue: MASTER EVADE - 20-25% chance to evade Special Skills that deal damage.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/9/9e/Sha-Arr_-_Hero_Card.gif/revision/latest?cb=20260602133948"
 },
 {
 "name": "Bubo",
@@ -462,7 +473,8 @@ const BASE_HEROES = [
 ],
 "skill": "Terrycloth Shake-Off: Destroys all Fiends from all allies and damages all Mega Fiends. Cleanses status ailments from all allies. Boosts health of all allies by 1550 (boosted health can exceed max HP). Growth: All allies get 400 attack and 400 defense.",
 "pas": "DAMAGE OVER TIME ON SPECIAL: When this character casts their Special Skill, all enemies receive 316 Water damage over 2 turns. EMPOWERED RESIST WATER: Immune to Water-damage ailments; gains 450 boosted health and 5% mana each time they resist. BEACH PARTY FAMILY BONUS (1/2/3 heroes): -20%/-40%/-60% damage received from damage-over-time status effects. Extra perks in the Beach Party event.",
-"tal": "Cleric: MASTER MANASHIELD - 35% chance to resist negative mana effects and effects that prevent the use of Special Skills; if resisted, this character and nearby allies recover 10% health."
+"tal": "Cleric: MASTER MANASHIELD - 35% chance to resist negative mana effects and effects that prevent the use of Special Skills; if resisted, this character and nearby allies recover 10% health.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/1/1c/Bubo_-_Hero_Card.gif/revision/latest?cb=20260602133245"
 },
 {
 "name": "Skiff",
@@ -478,7 +490,8 @@ const BASE_HEROES = [
 ],
 "skill": "Kite Diving: All allies get +45% chance to dodge Special Skills for 2 turns; each dodge gives 10% mana to the ally. All allies are immune to new status ailments for 2 turns. All allies are immune to buff dispels and reallocations for 2 turns (immunity includes this effect itself; also includes Ransack).",
 "pas": "DAMAGE OVER TIME ON SPECIAL: When this character casts their Special Skill, all enemies receive 328 Water damage over 2 turns. EMPOWERED RESIST WATER: Immune to Water-damage ailments; gains 450 boosted health and 5% mana each time they resist. BEACH PARTY FAMILY BONUS (1/2/3 heroes): -20%/-40%/-60% damage received from damage-over-time status effects. Extra perks in the Beach Party event.",
-"tal": "Rogue: MASTER EVADE - 25% chance to dodge Special Skills that deal damage."
+"tal": "Rogue: MASTER EVADE - 25% chance to dodge Special Skills that deal damage.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/6/6e/Skiff_-_Hero_Card.gif/revision/latest?cb=20260602133432"
 },
 {
 "name": "He Gui",
@@ -496,7 +509,8 @@ const BASE_HEROES = [
 ],
 "skill": "Ghastly Drowning: Dispels buffs from all enemies. Deals 565% damage to the target. The target receives 1875 Water damage over 3 turns (Stubborn: each dispel/cleanse/reallocate attempt reduces duration by 1 turn). Casts Full Removal on the caster (removes ALL status effects, stacks, Growth and Wither effects, even Stubborn/undispellable ones). The caster shifts into Vengeful Ghost form for 2 turns: at the end of each turn, deals 450% damage to a random enemy and dispels buffs from them (undispellable). While in Ghost form: can't gain mana or be healed by Special Skills, but immune to normal attacks, Special Skill attacks, damage-dealing passives, status effects and stacks; immune to new Growth, Wither and Insanity effects.",
 "pas": "VENGEFUL HAUNTING: When this character loses more than 25% of max health at once - casts Full Removal on themselves and shifts into Vengeful Ghost form for 2 turns (450% damage + buff dispel to a random enemy at end of each turn, undispellable); activation chance 100%, decreasing -30% after each activation. GHOSTS OF YANG JIAN FAMILY BONUS (1/2 heroes): Gain 40%/45% mana when a Ghost form on this character expires. Morale Boost: +10% attack, +3% defense, +7% health for this family and allies in War of the Three Kingdoms. Aether Power: Attack Up.",
-"tal": "Sorcerer: MASTER DELAY - 15% chance to reduce the target's mana generation by -50% for 2 turns when dealing damage."
+"tal": "Sorcerer: MASTER DELAY - 15% chance to reduce the target's mana generation by -50% for 2 turns when dealing damage.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/d/d1/He_Gui_-_Hero_Card.gif/revision/latest?cb=20260521141646"
 },
 {
 "name": "Hei Wu Chang",
@@ -516,7 +530,8 @@ const BASE_HEROES = [
 ],
 "skill": "Cursed Judgement: Deals 430% damage to the target and nearby enemies; the damage is increased by 50% per each defeated enemy. The attack bypasses defensive buffs (including counterattacks). The target and nearby enemies receive 148-408 increasing Curse damage each turn for 4 turns (starts at 148, +40% per turn up to 408; Stubborn: each dispel/cleanse/reallocate attempt reduces duration by 1 turn). The target and nearby enemies can't revive their allies or themselves for 4 turns (Stubborn).",
 "pas": "VENGEFUL HAUNTING: When this character loses more than 25% of max health at once - casts Full Removal on themselves (removes all status effects, stacks, Growth/Wither, even Stubborn ones) and shifts into Vengeful Ghost form for 2 turns (Vengeful Ghost deals 450% damage to a random enemy and dispels their buffs at end of each turn, undispellable; while in Ghost form can't gain mana or be healed by Special Skills but is immune to normal attacks, Special Skill attacks, damage-dealing passives, status effects and stacks). GHOSTS OF YANG JIAN FAMILY BONUS (1/2 heroes): Gain 40%/45% mana when a Ghost form on this character expires. Morale Boost: +10% attack, +3% defense, +7% health in War of the Three Kingdoms. Aether Power: Attack Up.",
-"tal": "Monk: MASTER WITHSTAND - 30% chance to withstand any negative status effect."
+"tal": "Monk: MASTER WITHSTAND - 30% chance to withstand any negative status effect.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/7/72/Hei_Wu_Chang_-_Hero_Card.gif/revision/latest?cb=20260521142257"
 },
 {
 "name": "Zarek",
@@ -533,7 +548,8 @@ const BASE_HEROES = [
 ],
 "skill": "Whirling Stone Storm: Deals 350% damage to the target. Deals additional 150% damage to as many random enemies as there are Nature shields on the board, up to a maximum of 12 hits (damage reduced on each consecutive hit). All hit targets receive 1000 Surge Bleed damage over 5 turns (if the target already has this effect, the duration is refreshed and the damage increased by 250; max total damage 3750).",
 "pas": "NINE LIVES (Passive): When defeated, 80% chance to revive at beginning of next turn with 50% HP and 80% mana. Up to 9 times. Chance reduces on each activation. Can't be prevented by status ailments or Passive Skills. LITHE FRAME (Trait): Not affected by any effects that increase or reduce defense - including status effect buffs/ailments, positive/negative Stacks, Growth and Wither effects. WILD CAT FAMILY BONUS (1/2/3 heroes): 5%/10%/15% chance to dodge Special Skills. Each Special Skill dodged damages the attacker for 100/200/300 damage. Aether Power: Attack Up.",
-"tal": "Ranger: MASTER PIERCE - 25% chance to bypass defensive buffs including counterattacks."
+"tal": "Ranger: MASTER PIERCE - 25% chance to bypass defensive buffs including counterattacks.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/e/e9/Zarek_-_Hero_Card.gif/revision/latest?cb=20260524141834"
 },
 {
 "name": "Avestalon",
@@ -548,7 +564,8 @@ const BASE_HEROES = [
 ],
 "skill": "Crimson Trap: Deals 275% damage to 3 random enemies. Hit enemies become afflicted with Spike Trap: -42% defense against Fire; against Nature Titans, -65% defense against Fire. Spike Traps explode in 3 turns dealing 300 damage to their owner (if replaced by a new Spike Trap of the same element, it explodes; up to 2 times per turn).",
 "pas": "ENHANCED SHIELDS ON SPECIAL: On offense - Fire shields get +54% critical chance when this character casts their Special Skill; on defense - Fire shields get -47% accuracy. MARK OF THE TITAN HUNTER: When casting Special Skill, marks a random enemy with a Hunting Flare for 4 turns (+150 extra damage per critical hit received). TITAN HUNTER FAMILY BONUS (1/2/3 heroes): At start of battle receives 10%/15%/20% mana (vs Titans 40%/60%/100%); counterattacks with 100%/120%/140% of damage received from Titan Special Skills; in Monster Island: +40% attack/defense/health.",
-"tal": "Sorcerer: MASTER DELAY - 15% chance to reduce the target's mana generation by -50% for 2 turns when dealing damage."
+"tal": "Sorcerer: MASTER DELAY - 15% chance to reduce the target's mana generation by -50% for 2 turns when dealing damage.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/7/7e/Avestalon_-_Hero_Card.gif/revision/latest?cb=20260520164612"
 },
 {
 "name": "Nyctalos",
@@ -566,7 +583,8 @@ const BASE_HEROES = [
 ],
 "skill": "Ocular Ray: Deals 350% damage to the target and nearby enemies and inflicts 10 Insanity on them. At the end of each turn, the caster and nearby allies shoot an Ocular Ray at a random enemy for 2 turns. Each Ocular Ray inflicts 10 Insanity on the hit enemy and reduces their Max Health by 100. Casting this Special Skill inflicts 35 Insanity on the caster.",
 "pas": "MINION CORRUPTION: At the end of each turn, enemies with Insanity have a chance to have their Minions turn to Fiends; 70 Insanity = automatic transformation (Minion \u2192 Eldritch Fiend: 15% atk / 18% HP / +5 Insanity per turn; Mega Minion \u2192 Eldritch Mega Fiend: 115% atk / 68% HP / +10 Insanity per turn). BRANDED BY THE OLD ONES: All damage dealt increased by 6% per 10 Insanity on this character, up to 60%. FORSAKEN FAMILY BONUS (1/2/3 heroes): +15%/+20%/+30% critical chance; +20%/+30%/+40% health. Extra perks in the Shadows of the Deep event.",
-"tal": "Ranger: MASTER PIERCE - 25% chance to bypass defensive buffs including counterattacks."
+"tal": "Ranger: MASTER PIERCE - 25% chance to bypass defensive buffs including counterattacks.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/6/68/Nyctalos_-_Hero_Card.gif/revision/latest?cb=20260519104913"
 },
 {
 "name": "Melonius",
@@ -583,7 +601,8 @@ const BASE_HEROES = [
 ],
 "skill": "Magical Refreshment: All allies gain 25% mana, plus an additional 5% mana for each Fiend or Mega Fiend owned by the enemies, up to 50% mana total. Uproots debuffs from all allies (Uproot safely removes 2 status ailments, negative Stacks or Wither effects per target, including uncleansable ailments and dance effects; the caster receives 7% boosted health per effect removed; Wither effects removed first). The caster regenerates 1200 boosted health over 5 turns (boosted health can exceed max HP).",
 "pas": "EMPOWERED RESIST SPECIAL BLOCKING: Immune to status ailments that prevent the use of Special Skills; gains 450 boosted health and 5% mana each time they resist. SEEDLING SUMMONER: Summons a Seedling Fiend every turn to a random enemy; Seedling (50% atk / 20% HP) evolves into Sprout Fiend (75% / 30%) after 2 turns, then Blossom Mega Fiend (250% / 60%) after 2 turns; evolution delayed 1 turn each time the Fiend absorbs healing. VEGETABLE FAMILY BONUS (2/3 heroes): Fiends and Mega Fiends summoned by this character get +5%/+10% attack and +2%/+3% health. Extra perks in the Vigilant Vegetables event. Aether Power: Regen.",
-"tal": "Cleric: MASTER MANASHIELD - 35% chance to resist negative mana effects and effects that prevent the use of Special Skills."
+"tal": "Cleric: MASTER MANASHIELD - 35% chance to resist negative mana effects and effects that prevent the use of Special Skills.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/b/b1/Melonius_-_Hero_Card.gif/revision/latest?cb=20260517110551"
 },
 {
 "name": "Melonius (2)",
@@ -600,7 +619,8 @@ const BASE_HEROES = [
 ],
 "skill": "Magical Refreshment: All allies gain 25% mana, plus an additional 5% mana for each Fiend or Mega Fiend owned by the enemies, up to 50% mana total. Uproots debuffs from all allies (Uproot safely removes 2 status ailments, negative Stacks or Wither effects per target, including uncleansable ailments and dance effects; the caster receives 7% boosted health per effect removed; Wither effects removed first). The caster regenerates 1200 boosted health over 5 turns (boosted health can exceed max HP).",
 "pas": "EMPOWERED RESIST SPECIAL BLOCKING: Immune to status ailments that prevent the use of Special Skills; gains 450 boosted health and 5% mana each time they resist. SEEDLING SUMMONER: Summons a Seedling Fiend every turn to a random enemy; Seedling (50% atk / 20% HP) evolves into Sprout Fiend (75% / 30%) after 2 turns, then Blossom Mega Fiend (250% / 60%) after 2 turns; evolution delayed 1 turn each time the Fiend absorbs healing. VEGETABLE FAMILY BONUS (2/3 heroes): Fiends and Mega Fiends summoned by this character get +5%/+10% attack and +2%/+3% health. Extra perks in the Vigilant Vegetables event. Aether Power: Regen.",
-"tal": "Cleric: MASTER MANASHIELD - 35% chance to resist negative mana effects and effects that prevent the use of Special Skills."
+"tal": "Cleric: MASTER MANASHIELD - 35% chance to resist negative mana effects and effects that prevent the use of Special Skills.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/b/b1/Melonius_-_Hero_Card.gif/revision/latest?cb=20260517110551"
 },
 {
 "name": "Tengo",
@@ -617,7 +637,8 @@ const BASE_HEROES = [
 ],
 "skill": "Sunlord's Forbidden Flame: Deals 500% damage to the target and minor damage to all other enemies. Heals the caster for 30% of damage dealt. The caster gets Taunt that prevents enemies from using Special Skills on the caster's allies for 4 turns. Deals 480-1243 damage to all enemies after 4 turns, based on the damage the caster had taken while this effect was active (maximum effect at 50% of max health taken in damage).",
 "pas": "EMPOWERED RESIST SPECIAL BLOCKING: Immune to status ailments that prevent the use of Special Skills; gains 450 boosted health and 5% mana each time they resist. MINION CORE: Activates each time Special Skill is cast - with fully charged Core, summons a Killer Bot Minion (27% HP / 55% attack inherited, scaled by Core charge) on all allies; before hitting, the Killer Bot destroys all Minions from the target and damages Mega Minions; recovers 5% health for its owner each turn; Wither: each Killer Bot hit gives its target -50 attack. CONSTRUCT FAMILY: Core charges each time this character receives damage from normal attacks or Special Skills.",
-"tal": "Cleric: MASTER MANASHIELD - 35% chance to resist negative mana effects and effects that prevent the use of Special Skills; if resisted, this character and nearby allies recover 10% health."
+"tal": "Cleric: MASTER MANASHIELD - 35% chance to resist negative mana effects and effects that prevent the use of Special Skills; if resisted, this character and nearby allies recover 10% health.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/4/4a/Tengo.jpg/revision/latest?cb=20260706041155"
 },
 {
 "name": "Seraphine",
@@ -635,7 +656,8 @@ const BASE_HEROES = [
 ],
 "skill": "Ruthless Derision (Average): Less than 40 Humility: Deals 350% damage to all enemies. Enemies with less than 50% health remaining resist healing and receive 300 damage per each resisted healing for 4 turns. Stack (Max 10): All damage all enemies receive is increased by +5%. All enemies get \u221234% mana generation for 4 turns. | 40 or more Humility: Deals 400% damage to all enemies. Enemies with less than 50% health remaining resist healing and receive 400 damage per each resisted healing for 4 turns. Stack (Max 10): All damage all enemies receive is increased by +10%. All enemies get \u221234% mana generation for 4 turns.",
 "pas": "Revival Health Reduction (\u221280% HP on revive); Beautiful Inside (takes healing instead of ailment damage); Heal When Status Ailment Expires or Is Cleared (15% HP, once/turn); Aether Power: Damage Reduction (\u221210% damage received for 6 turns)",
-"tal": "Master Delay 5/5"
+"tal": "Master Delay 5/5",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/e/e3/S%C3%A9raphine_-_Hero_Card.gif/revision/latest?cb=20260508154536"
 },
 {
 "name": "Hiyori",
@@ -654,7 +676,8 @@ const BASE_HEROES = [
 ],
 "skill": "Sensu of Immortality (Charge x1/x2/x3): x1: Recovers 15% health for all allies; each defeated ally has 30% chance to be revived with 30% HP; for the next 2 turns all allies receive 10% mana at end of turn. x2: Recovers 35% health for all allies; each defeated ally has 40% chance to be revived with 40% HP; cleanses 1 status ailment from all allies; for the next 3 turns all allies receive 10% mana at end of turn. x3: Recovers 55% health for all allies; each defeated ally has 60% chance to be revived with 60% HP; cleanses ALL status ailments from all allies; for the next 5 turns all allies receive 15% mana at end of turn.",
 "pas": "WEAKER MINIONS: Enemy Minions have -50% HP. PREVENT BOOSTED HEALING: Enemies' health cannot increase above their max health. DISHONORABLE DEFEAT: When this character is defeated by a Special Skill, the attacker receives 450% damage and 1500 Bleed damage over 3 turns. RONIN FAMILY BONUS (1/2/3 heroes): 30%/50%/70% extra chance to bypass defensive buffs with attacks; if any defensive buffs are bypassed, this character's mana increases by 5%.",
-"tal": "Sorcerer: MASTER DELAY - If this character dealt any damage by the end of its turn, 15% chance to drop the target's mana generation by 50% for 2 turns and give the target -20% attack for 2 turns."
+"tal": "Sorcerer: MASTER DELAY - If this character dealt any damage by the end of its turn, 15% chance to drop the target's mana generation by 50% for 2 turns and give the target -20% attack for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/9/9e/Hiyori_-_Hero_Card.gif/revision/latest?cb=20260503163717"
 },
 {
 "name": "Hiyori (2)",
@@ -673,7 +696,8 @@ const BASE_HEROES = [
 ],
 "skill": "Sensu of Immortality (Charge x1/x2/x3): x1: Recovers 15% health for all allies; each defeated ally has 30% chance to be revived with 30% HP; for the next 2 turns all allies receive 10% mana at end of turn. x2: Recovers 35% health for all allies; each defeated ally has 40% chance to be revived with 40% HP; cleanses 1 status ailment from all allies; for the next 3 turns all allies receive 10% mana at end of turn. x3: Recovers 55% health for all allies; each defeated ally has 60% chance to be revived with 60% HP; cleanses ALL status ailments from all allies; for the next 5 turns all allies receive 15% mana at end of turn.",
 "pas": "WEAKER MINIONS: Enemy Minions have -50% HP. PREVENT BOOSTED HEALING: Enemies' health cannot increase above their max health. DISHONORABLE DEFEAT: When this character is defeated by a Special Skill, the attacker receives 450% damage and 1500 Bleed damage over 3 turns. RONIN FAMILY BONUS (1/2/3 heroes): 30%/50%/70% extra chance to bypass defensive buffs with attacks; if any defensive buffs are bypassed, this character's mana increases by 5%.",
-"tal": "Sorcerer: MASTER DELAY - If this character dealt any damage by the end of its turn, 15% chance to drop the target's mana generation by 50% for 2 turns and give the target -20% attack for 2 turns."
+"tal": "Sorcerer: MASTER DELAY - If this character dealt any damage by the end of its turn, 15% chance to drop the target's mana generation by 50% for 2 turns and give the target -20% attack for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/9/9e/Hiyori_-_Hero_Card.gif/revision/latest?cb=20260503163717"
 },
 {
 "name": "Rochefort",
@@ -687,7 +711,8 @@ const BASE_HEROES = [
 ],
 "skill": "Dishonorable Ploy: Deals 565% damage to the target and minor damage to nearby enemies. If the target is defeated in 3 turns, all enemies receive 626 damage.",
 "pas": "DAMAGE ON SPECIAL SKILL AND COVER DAMAGE: When this character receives damage from Special Skills or in place of a character in Cover, 60% chance to deal 20% of the received damage to all enemies. MUSKETEER FAMILY BONUS (1/2/3 heroes): 50%/75%/100% chance to give Cover to a random ally for 3 turns when this character casts their Special Skill; while in Cover the ally takes no damage from Special Skills or normal attacks, and this character takes 60%/50%/40% of the damage that would be received by the covered character (can't be dispelled, ends if this character is defeated).",
-"tal": "Fighter: MASTER REVIVE - 30% chance to revive with 1 HP at the end of the turn after being defeated."
+"tal": "Fighter: MASTER REVIVE - 30% chance to revive with 1 HP at the end of the turn after being defeated.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/c/c1/Rochefort.jpg/revision/latest?cb=20230921121645"
 },
 {
 "name": "Ivete",
@@ -705,7 +730,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 485% damage to the target and nearby enemies. After 1 turn all enemies get Paralyzed for 2 turns (uncleansable \u2013 can't attack or gain mana, +50% increased damage taken). The target and nearby enemies receive 745 Poison damage over 5 turns.",
 "pas": "TOON: +75% extra chance to resist all status ailments, mana reductions, and buff dispels. Extra chances are calculated independently. REVIVAL HEALTH REDUCTION: All enemies have -80% health when revived. Boss enemies are not affected. BEAUTIFUL INSIDE: Whenever this character would take damage from a status ailment or from a negative stack, they will recover that much health instead. HEAL WHEN STATUS AILMENT EXPIRES OR IS CLEARED: This character receives 15% health each time a status ailment expires or is cleansed, removed or reallocated from them. This effect can activate only once per turn.",
-"tal": "When dealing damage through normal attacks and Special Skills, +25% chance to deal _25% extra damage per each active buff"
+"tal": "When dealing damage through normal attacks and Special Skills, +25% chance to deal _25% extra damage per each active buff",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/c/c7/Ivete_-_Hero_Card.gif/revision/latest?cb=20260416150954"
 },
 {
 "name": "Ajay",
@@ -721,7 +747,8 @@ const BASE_HEROES = [
 ],
 "skill": "Urumi Lashings: Deals 310% damage to the target; the attack chains through all enemies adjacent to any hit enemy. All hit targets receive 933 Bleed damage over 3 turns. Growth Boon: deals 2x extra damage for each point of modified attack (up to a maximum of 600 additional extra damage).",
 "pas": "MANA ON DAMAGE RECEIVED: When receiving direct damage from Special Skills or normal attacks, gains a small amount of mana (max 10% per turn). EXTRA DAMAGE TO MINIONS & MEGA MINIONS: Deals +150% damage to Minions and Mega Minions. MAHAYODDHA FAMILY BONUS (1/2/3 heroes): At the end of each turn, Mahayoddha heroes gain Growth of 75/85/100 attack and 75/85/100 defense (modified scores limited to min 30% / max 170% of original values).",
-"tal": "Barbarian: MASTER WOUND - After any normal attack, 30% chance to deal 80% of the damage done over 5 turns (stacks with existing Wound)."
+"tal": "Barbarian: MASTER WOUND - After any normal attack, 30% chance to deal 80% of the damage done over 5 turns (stacks with existing Wound).",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/f/f8/Ajay.jpg/revision/latest?cb=20260702214450"
 },
 {
 "name": "Dancrag",
@@ -740,7 +767,8 @@ const BASE_HEROES = [
 ],
 "skill": "Ancient Technology: Recovers 45% health for all allies. Each defeated ally has a 25% chance to be revived with 40% HP; each Nature shield on the board increases the revive chance by 5%, up to 65% total. All allies are immune to new status ailments for 4 turns.",
 "pas": "EMPOWERED RESIST SPECIAL BLOCKING: Immune to status ailments that prevent the use of Special Skills; gains 450 boosted health and 5% mana each time they resist. MINION CORE: Activates each time Special Skill is cast - with fully charged Core, summons a Killer Bot Minion (33% HP / 55% attack inherited, scaled by Core charge) on all allies; before hitting, the Killer Bot destroys all Minions on the target and damages Mega Minions; recovers 5% health for its owner each turn; Wither: each Killer Bot hit gives its target -50 attack. CONSTRUCT FAMILY: Core charges each time this hero receives damage from normal attacks or Special Skills. Aether Power: Damage Reduction.",
-"tal": "Druid: MASTER COMPANION - 15% chance to summon a Thorn Minion (25% HP / 25% attack) if this character received any damage by end of enemy turn."
+"tal": "Druid: MASTER COMPANION - 15% chance to summon a Thorn Minion (25% HP / 25% attack) if this character received any damage by end of enemy turn.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/c/c0/Dancrag_-_Hero_Card.gif/revision/latest?cb=20260326130634"
 },
 {
 "name": "Rawn",
@@ -756,7 +784,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 410% clawing damage to all enemies. The caster gets taunt that prevents enemies from using special skills on the caster's allies for 5 turns. Knocks down enemies, this has a different effect based on the team of this character: Attack Team: all enemies have their normal attack delayed by 3 turns, Defense Team: All enemies don't contribute to Troop damage for 3 turns.",
 "pas": "NINE LIVES (Passive): When defeated, 80% chance to revive at beginning of next turn with 50% HP and 80% mana. Up to 9 times. Chance reduces on each activation. Can't be prevented by status ailments or Passive Skills. LITHE FRAME (Trait): Not affected by any effects that increase or reduce defense \u2014 including status effect buffs/ailments, positive/negative Stacks, Growth and Wither effects. WILD CAT FAMILY BONUS (1/2/3 heroes): 5%/10%/15% chance to dodge Special Skills. Each Special Skill dodged damages the attacker for 100/200/300 damage.",
-"tal": "Passive: Nine Lives \u2013 80% chance to revive with 50% HP and 80% mana (up to 9 times). Barbarian: 60% chance per basic attack to inflict stacking bleed dealing 60% of damage dealt over 5 turns."
+"tal": "Passive: Nine Lives \u2013 80% chance to revive with 50% HP and 80% mana (up to 9 times). Barbarian: 60% chance per basic attack to inflict stacking bleed dealing 60% of damage dealt over 5 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/8/8c/Rawn_-_Hero_Card.gif/revision/latest?cb=20260409182813"
 },
 {
 "name": "Cerissa",
@@ -772,7 +801,8 @@ const BASE_HEROES = [
 ],
 "skill": "Boosts health of caster and nearby allies by 1100 (can exceed max HP). Stack (Max 10): All damage caster and nearby allies receive is reduced by -4%. For the next 4 turns, recovers 550 boosted health to caster and nearby allies each time any other ally casts their Special Skill.",
 "pas": "REVIVAL HEALTH REDUCTION: All enemies have -80% health when revived. Boss enemies are not effected. HEAL WHEN STATUS AILMENT EXPIRES OR IS CLEARED: this character receives 15% health each time a status ailment expires or is cleansed, removed or reallocated from them. This effect can activate only once per turn. BEAUTIFUL INSIDE: Whenever this character would take damage from a status ailment or from a negative stack, they will recover that much health instead.",
-"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/3/3c/Cerissa_-_Hero_Card.gif/revision/latest?cb=20260220142858"
 },
 {
 "name": "Cerissa (2)",
@@ -788,7 +818,8 @@ const BASE_HEROES = [
 ],
 "skill": "Boosts health of caster and nearby allies by 1100 (can exceed max HP). Stack (Max 10): All damage caster and nearby allies receive is reduced by -4%. For the next 4 turns, recovers 550 boosted health to caster and nearby allies each time any other ally casts their Special Skill.",
 "pas": "REVIVAL HEALTH REDUCTION: All enemies have -80% health when revived. Boss enemies are not effected. HEAL WHEN STATUS AILMENT EXPIRES OR IS CLEARED: this character receives 15% health each time a status ailment expires or is cleansed, removed or reallocated from them. This effect can activate only once per turn. BEAUTIFUL INSIDE: Whenever this character would take damage from a status ailment or from a negative stack, they will recover that much health instead.",
-"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/3/3c/Cerissa_-_Hero_Card.gif/revision/latest?cb=20260220142858"
 },
 {
 "name": "Auberguy",
@@ -807,7 +838,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 530% damage to all enemies. Reduces Max Health of all enemies by 800. The effect is stronger against targets with boosted health. Harvests buffs from all enemies. Wither: All enemies get -450 defense",
 "pas": "Empowered Resist Special Blocking: this character is immune to status ailments that prevent the use of special skills. They also gain 450 boosted health and 5% mana each time they resist. Seeedling Summoner: Summons a seedling fiend every turn to a random enemy. The seedling fiend evolves into a sprout fiend after 2 turns. the sprout fiend evolves into a blossom mega fiend after 2 turns. the evolution of the fiends is delayed by 1 turn each time they absorb healing. seedling fiend: 50% attack, 20% health. Sprout Fiend: 75% attack, 30% health. Blossom Mega Fiend: 250% attack, 60% health.",
-"tal": "When dealing damage through normal attacks and Special Skills, +25% chance to deal _25% extra damage per each active buff"
+"tal": "When dealing damage through normal attacks and Special Skills, +25% chance to deal _25% extra damage per each active buff",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/3/3c/Auberguy_-_Hero_Card.gif/revision/latest?cb=20260402132109"
 },
 {
 "name": "Auberguy (2)",
@@ -826,7 +858,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 530% damage to all enemies. Reduces Max Health of all enemies by 800. The effect is stronger against targets with boosted health. Harvests buffs from all enemies. Wither: All enemies get -450 defense",
 "pas": "Empowered Resist Special Blocking: this character is immune to status ailments that prevent the use of special skills. They also gain 450 boosted health and 5% mana each time they resist. Seeedling Summoner: Summons a seedling fiend every turn to a random enemy. The seedling fiend evolves into a sprout fiend after 2 turns. the sprout fiend evolves into a blossom mega fiend after 2 turns. the evolution of the fiends is delayed by 1 turn each time they absorb healing. seedling fiend: 50% attack, 20% health. Sprout Fiend: 75% attack, 30% health. Blossom Mega Fiend: 250% attack, 60% health.",
-"tal": "When dealing damage through normal attacks and Special Skills, +25% chance to deal _25% extra damage per each active buff"
+"tal": "When dealing damage through normal attacks and Special Skills, +25% chance to deal _25% extra damage per each active buff",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/3/3c/Auberguy_-_Hero_Card.gif/revision/latest?cb=20260402132109"
 },
 {
 "name": "Meenakshi",
@@ -842,7 +875,8 @@ const BASE_HEROES = [
 ],
 "skill": "Coastal Recharge: Recovers 25% health for the caster and nearby allies. Growth Boon: recovers 2x extra health for each point of modified defense (up to 600 additional healing). The caster and nearby allies counterattack with 150% of the damage received for 4 turns. The caster and nearby allies regenerate a moderate amount of mana for each counterattack for 4 turns (diminished for consecutive activations in the same turn).",
 "pas": "MANA ON DAMAGE RECEIVED: When receiving direct damage from Special Skills or normal attacks, gains a small amount of mana (max 10% per turn). SUPERIOR RESIST NEGATIVE MINION EFFECTS: Immune to incoming negative effects and damage from Minions and Mega Minions. MAHAYODDHA FAMILY BONUS (1/2/3 heroes): At the end of each turn, Mahayoddha heroes gain Growth of 75/85/100 attack and 75/85/100 defense (modified scores limited to min 30% / max 170%).",
-"tal": "Paladin: MASTER PROTECT - 25% chance to get +25% defense for 2 turns after receiving damage; caster and nearby allies get the bonus."
+"tal": "Paladin: MASTER PROTECT - 25% chance to get +25% defense for 2 turns after receiving damage; caster and nearby allies get the bonus.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/6/6f/Meenakshi_-_Hero_Card.gif/revision/latest?cb=20260225114908"
 },
 {
 "name": "Zondalath",
@@ -861,7 +895,8 @@ const BASE_HEROES = [
 ],
 "skill": "Recovers 45% health for all allies. All allies reduce all received damage by -50% for 4 turns (this effect can't be dispelled). All allies except the caster get an additional +30% attack power for the next Special Skill they cast, increasing +30% per turn up to +120% maximum.",
 "pas": "HINDER MANA: Reduces the amount of mana increased by Special Skills, Passive Skills, family bonuses and status effects by -80%. This effect applies to all enemies in the battle at all times. MANA IMMUNITY: Immune to mana reductions, status ailments and negative stacks that affect mana generation. Applies also to effects that block or steal mana.",
-"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation."
+"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/a/ae/Zondalath_-_Hero_Card.gif/revision/latest?cb=20260307174258"
 },
 {
 "name": "Laurent",
@@ -879,7 +914,8 @@ const BASE_HEROES = [
 ],
 "skill": "UNYIELDING STANCE (Average, 8/8) IF THE CASTER HAS 60 OR MORE HUMILITY: \u2022 Deals 600% damage to the target and minor damage to nearby enemies. \u2022 The attack bypasses defensive buffs. \u2022 The caster gets Taunt that prevents enemies from using Special Skills on the caster's allies for 4 turns. \u2022 The caster activates Stoneskin that drops all damage dealt to the caster to 1, but is removed after 5 hits. This effect can't be dispelled. OTHERWISE: \u2022 Deals 490% damage to the target and minor damage to nearby enemies. \u2022 The caster gets Taunt that prevents enemies from using Special Skills on the caster's allies for 4 turns. \u2022 The caster activates Stoneskin that drops all damage dealt to the caster to 1, but is removed after 4 hits. This effect can't be dispelled.",
 "pas": "REVIVAL HEALTH REDUCTION: All enemies have -80% health when revived. Boss enemies are not affected. BEAUTIFUL INSIDE: Whenever this character would take damage from a status ailment or from a negative stack, they will recover that much health instead. HEAL WHEN STATUS AILMENT EXPIRES OR IS CLEARED: This character receives 15% health each time a status ailment expires or is cleansed, removed or reallocated from them. This effect can activate only once per turn. BRAVE & BEAUTIFUL FAMILY BONUS (1/2/3 heroes): +5/6/7 Humility at end of each turn. +15/17/20 Humility when receiving direct damage from Special Skills. +20/22/25 Humility when receiving direct healing from Special Skills. Max Humility: 100.",
-"tal": "MASTER PROTECT (Paladin, Level 25): If this character received any damage by the end of enemy turn, +25% chance to activate the following effects: This character and nearby allies get +25% defense for 2 turns."
+"tal": "MASTER PROTECT (Paladin, Level 25): If this character received any damage by the end of enemy turn, +25% chance to activate the following effects: This character and nearby allies get +25% defense for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/8/82/Laurent_%28Petrified_Guard_of_the_Bewitched_Castle%29.jpg/revision/latest?cb=20260201135943"
 },
 {
 "name": "Borgholf",
@@ -894,7 +930,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 275% damage to 3 random enemies. Each hit enemy gets a Spike Trap: -42% defense vs Nature damage and -65% defense vs Ice Titans. Spike Trap explodes after 3 turns dealing 300 damage (or sooner if another Spike Trap replaces it). BOARD EFFECT: On offense \u2014 Nature shields get +54% critical chance. On defense \u2014 when this character casts their Special Skill, all Nature shields get -47% accuracy.",
 "pas": "MARK OF THE TITAN HUNTER: When casting Special Skill, marks a random enemy with a Hunting Flare for 4 turns. Target marked with Hunting Flare receives +150 extra damage per critical hit. BOARD EFFECT: On offense \u2013 Nature shields gain +54% critical chance. On defense \u2013 Nature shields gain -47% accuracy when this character casts their Special Skill.",
-"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns."
+"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/9/98/Borgholf.jpg/revision/latest?cb=20260304170730"
 },
 {
 "name": "Inanis",
@@ -910,7 +947,8 @@ const BASE_HEROES = [
 ],
 "skill": "Severed Seal: Deals 350% damage to the target. Deals an additional 350% damage to 2 random enemies. All hit targets get 15 Insanity every time they are hit. Stack (Max 10): All damage the hit enemy receives is increased by 5%. Casting this Special Skill inflicts 35 Insanity on the caster.",
 "pas": "MINION CORRUPTION: At the end of each turn, enemies with Insanity have a chance to have their Minions turn to Fiends; 70 Insanity = automatic transformation (Minion \u2192 Eldritch Fiend: 15% atk / 18% HP / +5 Insanity per turn; Mega Minion \u2192 Eldritch Mega Fiend: 115% atk / 68% HP / +10 Insanity per turn). BRANDED BY THE OLD ONES: All damage dealt increased by 6% per 10 Insanity on this character, up to 60%. FORSAKEN FAMILY BONUS (1/2/3 heroes): +15%/+20%/+30% critical chance; +20%/+30%/+40% health. Extra perks in the Shadows of the Deep event.",
-"tal": "Fighter: MASTER REVIVE - 30% chance to revive with 1 HP at the end of the turn after being defeated."
+"tal": "Fighter: MASTER REVIVE - 30% chance to revive with 1 HP at the end of the turn after being defeated.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/9/9f/Inanis_%28The_Untethered%29.jpg/revision/latest?cb=20260110210347"
 },
 {
 "name": "Ott",
@@ -927,7 +965,8 @@ const BASE_HEROES = [
 ],
 "skill": "Saga of Protection: Boosts health of all allies by 600 (boosted health can exceed max HP). All allies get a Firestorm Ward for 3 turns that reduces incoming Special Skill damage by up to -1100, reducing damage by an additional 30% when the attacker is Nature element. All allies are immune to buff dispels and reallocations for 3 turns (immunity includes this effect itself; also includes Ransack).",
 "pas": "RESIST STEALING: Immune to stealing and Ransacking. EMPOWERED RESIST BURN: Immune to Burn-damage ailments; gains 450 boosted health and 5% mana each time they resist. MOLTEN CORE (Nidavellir realm): Core charges each time this character receives damage; activates when Special Skill is cast - all enemies receive Corrosive Burn for 3 turns (fully charged: 305 Burn damage and -12% defense per turn; extra damage vs heroes with Minions or Mega Minion; scaled by Core charge). NIDAVELLIR FAMILY BONUS (1/2/3 heroes): +3%/+5%/+7% attack, defense, and health. Extra perks in Untold Tales II: Treasures of Flame and Frost. Aether Power: Regen.",
-"tal": "Monk: MASTER WITHSTAND - 30% chance to withstand any negative status effect."
+"tal": "Monk: MASTER WITHSTAND - 30% chance to withstand any negative status effect.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/1/1d/Ott.jpg/revision/latest?cb=20250112154141"
 },
 {
 "name": "Hu Sanniang",
@@ -943,7 +982,8 @@ const BASE_HEROES = [
 ],
 "skill": "This Special Skill has a chance to deal Critical hits (crits deal 50% more damage; crits can reduce enemies' max health on PVP battles). Deals 350% damage to the target and nearby enemies. Stack (Max 10): Caster gets +5% critical chance. Stack (Max 10): All damage target and nearby enemies receive is increased by +5%.",
 "pas": "RIGHTEOUS REBELLION: When Special Skill hits a character with higher current HP, gain +20% boosted health. When hit by Special Skill from character with higher HP, gain +20% mana. (Each once per turn.) CLEANSE ON CRITICAL: When scoring a critical hit with Special Skill, safely cleanses the latest cleansable status ailment from all allies. RESIST BLEED: Immune to Bleed damage.",
-"tal": "Ranger: MASTER PIERCE \u2013 25% chance to bypass defensive buffs including counterattacks. If bypassed, target gets -20% defense for 3 turns."
+"tal": "Ranger: MASTER PIERCE \u2013 25% chance to bypass defensive buffs including counterattacks. If bypassed, target gets -20% defense for 3 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/4/4f/Hu_Sanniang_%28Bright_Star_of_Water_Margin%29.jpg/revision/latest?cb=20260122150214"
 },
 {
 "name": "Hu Sanniang (2)",
@@ -959,7 +999,8 @@ const BASE_HEROES = [
 ],
 "skill": "This Special Skill has a chance to deal Critical hits (crits deal 50% more damage; crits can reduce enemies' max health on PVP battles). Deals 350% damage to the target and nearby enemies. Stack (Max 10): Caster gets +5% critical chance. Stack (Max 10): All damage target and nearby enemies receive is increased by +5%.",
 "pas": "RIGHTEOUS REBELLION: When Special Skill hits a character with higher current HP, gain +20% boosted health. When hit by Special Skill from character with higher HP, gain +20% mana. (Each once per turn.) CLEANSE ON CRITICAL: When scoring a critical hit with Special Skill, safely cleanses the latest cleansable status ailment from all allies. RESIST BLEED: Immune to Bleed damage.",
-"tal": "Ranger: MASTER PIERCE \u2013 25% chance to bypass defensive buffs including counterattacks. If bypassed, target gets -20% defense for 3 turns."
+"tal": "Ranger: MASTER PIERCE \u2013 25% chance to bypass defensive buffs including counterattacks. If bypassed, target gets -20% defense for 3 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/4/4f/Hu_Sanniang_%28Bright_Star_of_Water_Margin%29.jpg/revision/latest?cb=20260122150214"
 },
 {
 "name": "Indigon",
@@ -977,7 +1018,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 300% damage to all enemies (up to 350% based on fiends on enemies). Stack (Max 10): All damage all enemies receive is increased by +6%. Stack (Max 10): All allies get +4% mana generation. Passive: Summons a Seedling Fiend to a random enemy each turn (evolves: Seedling \u2192 Sprout after 2 turns \u2192 Blossom Mega Fiend after 2 more turns).",
 "pas": "EMPOWERED RESIST SPECIAL BLOCKING: Immune to status ailments that prevent the use of Special Skills. Gains 450 boosted health and 5% mana each time they resist. SEEDLING SUMMONER: Summons a Seedling Fiend every turn to a random enemy (activates once per turn per team). Seedling Fiend evolves into Sprout Fiend after 2 turns; Sprout Fiend evolves into Blossom Mega Fiend after 2 turns. Evolution delayed by 1 turn each time they absorb healing. Fiend stats \u2014 Seedling: 50% atk / 20% hp. Sprout: 80% atk / 30% hp. Blossom Mega: 280% atk / 70% hp.",
-"tal": "Immune to status ailments that prevent Special Skill use; gains 450 boosted health and 5% mana each time it resists."
+"tal": "Immune to status ailments that prevent Special Skill use; gains 450 boosted health and 5% mana each time it resists.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/9/90/Indigon.jpg/revision/latest?cb=20260327223014"
 },
 {
 "name": "Bartholomew",
@@ -996,7 +1038,8 @@ const BASE_HEROES = [
 ],
 "skill": "Capsicum Charge: Deals 300% damage to the target and nearby enemies. Deals additional 15% damage for each Fiend or Mega Fiend owned by the enemies, up to 450% damage in total. Harvests buffs from target and nearby enemies (Harvest safely removes 2 buffs, positive Stacks or Growth effects from each target, including undispellable buffs and dance effects; the caster receives 7% boosted health for each effect removed; Growth effects removed first). The caster and nearby allies counterattack with 110% of the received damage for 4 turns.",
 "pas": "EMPOWERED RESIST SPECIAL BLOCKING: Immune to status ailments that prevent the use of Special Skills; gains 450 boosted health and 5% mana each time they resist. SEEDLING SUMMONER: Summons a Seedling Fiend every turn to a random enemy; Seedling (50% atk / 20% HP) evolves into Sprout Fiend (75% / 30%) after 2 turns, then Blossom Mega Fiend (250% / 60%) after 2 turns; evolution delayed 1 turn each time the fiend absorbs healing. VEGETABLE FAMILY BONUS (2/3 heroes): Fiends/Mega Fiends summoned by this character get +5%/+10% attack and +2%/+3% health. Extra perks in the Vigilant Vegetables event.",
-"tal": "Barbarian: MASTER WOUND - After any normal attack, 30% chance to deal 80% of the damage done over 5 turns (stacks with existing Wound)."
+"tal": "Barbarian: MASTER WOUND - After any normal attack, 30% chance to deal 80% of the damage done over 5 turns (stacks with existing Wound).",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/3/32/Bartholomew_%28Bell_Pepper_Barbarian%29.jpg/revision/latest?cb=20251024191319"
 },
 {
 "name": "Hongyunxing",
@@ -1011,7 +1054,8 @@ const BASE_HEROES = [
 ],
 "skill": "Ardent Panacea: All allies regenerate 1020 boosted HP over 3 turns. All allies receive a small mana boost each turn for 3 turns. All allies' ailments are cleansed at the end of each turn for 3 turns.",
 "pas": "LUNAR NEW YEAR FAMILY: Disable Minion Abilities \u2014 attacks and abilities of all Minions owned by enemies are disabled; Aether Power: needs in-game verification",
-"tal": "Companion"
+"tal": "Companion",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/e/ea/Hongyunxing_-_Hero_Card.gif/revision/latest?cb=20260217184706"
 },
 {
 "name": "Haradea",
@@ -1027,7 +1071,8 @@ const BASE_HEROES = [
 ],
 "skill": "Volley of Dark Stars: Deals 390% damage to the target and nearby enemies; the more mana the enemies have, the more damage they receive, up to 460%. The target and nearby enemies receive Resonance for 3 turns: each turn, deals 453 damage to the afflicted enemies and 226 damage to enemies nearby them. The target and nearby enemies receive Mana Corruption for 3 turns: each time an afflicted enemy receives mana from an additional source, they receive 850 damage.",
 "pas": "HINDER MANA: Reduces the amount of mana gained by enemies from Special Skills, Passive Skills, family bonuses and status effects by -80% (applies to all enemies in battle). RESIST NEGATIVE MANA EFFECTS: Immune to mana reductions and to status ailments/negative stacks affecting mana generation, including effects that block or steal mana. PERFECT ACCURACY: This character's Special Skill never misses. ASTRAL DEMONS FAMILY BONUS (1/2 heroes): Gains 3%/6% mana when taking Special Skill damage (once per turn); 60%/85% chance to cleanse 1 status ailment from all allies when receiving Special Skill damage.",
-"tal": "Wizard: MASTER JINX - When dealing damage through normal attacks and Special Skills, 25% chance to deal 25% extra damage per each active buff."
+"tal": "Wizard: MASTER JINX - When dealing damage through normal attacks and Special Skills, 25% chance to deal 25% extra damage per each active buff.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/5/50/Haradea_-_Hero_Card.gif/revision/latest?cb=20260215094125"
 },
 {
 "name": "Lin Chong",
@@ -1043,7 +1088,8 @@ const BASE_HEROES = [
 ],
 "skill": "CRITICAL HIT: This Special Skill has a chance to deal Critical hits (crits deal 50% more damage; crits can reduce enemies' max health on PVP battles). Deals 390% damage to the target and minor damage to nearby enemies. Stack (Max 10): All damage the target and nearby enemies receive is increased by +5%. Stack (Max 10): Caster and nearby allies get +5% critical chance.",
 "pas": "CLEANSE ON CRITICAL SPECIAL ATTACK: When scoring a critical hit with Special Skill, safely cleanses the latest cleansable status ailment from all allies (once per turn). RIGHTEOUS REBELLION: When Special Skill hits a character with higher current HP, gain +20% boosted health. When hit by Special Skill from character with higher HP, gain +20% mana. (Each once per turn.) RESIST BLEED: Immune to Bleed damage.",
-"tal": "Ranger: MASTER PIERCE \u2013 25% chance to bypass defensive buffs including counterattacks. If bypassed, target gets -20% defense for 3 turns."
+"tal": "Ranger: MASTER PIERCE \u2013 25% chance to bypass defensive buffs including counterattacks. If bypassed, target gets -20% defense for 3 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/6/6d/Lin_Chong_%28Panther_Head_of_Water_Margin%29.jpg/revision/latest?cb=20260122172221"
 },
 {
 "name": "Kadath",
@@ -1060,7 +1106,8 @@ const BASE_HEROES = [
 ],
 "skill": "Cult of Arachnid: The target succumbs to Fear for 3 turns (-40% defense; removes all dispellable buffs and Growth effects when Fear is added; cannot gain new buffs or Growth effects; a target with Fear deals 250% damage to a random ally each time any other ally casts their Special Skill, once per turn per character). Deals 600% damage to the target and inflicts 50 Insanity. If the target is defeated by the attack, nearby enemies succumb to Fear for 3 turns (160% damage version). Casting this Special Skill inflicts 40 Insanity on the caster.",
 "pas": "MINION CORRUPTION: At the end of each turn, enemies with Insanity have a chance to have their Minions turn to Fiends; 70 Insanity = automatic transformation (Minion \u2192 Eldritch Fiend: 15% atk / 18% HP / +5 Insanity per turn; Mega Minion \u2192 Eldritch Mega Fiend: 115% atk / 68% HP / +10 Insanity per turn). BRANDED BY THE OLD ONES: All damage dealt increased by 6% per 10 Insanity on this character, up to 60%. FORSAKEN FAMILY BONUS (1/2/3 heroes): +15%/+20%/+30% critical chance; +20%/+30%/+40% health. Extra perks in the Shadows of the Deep event.",
-"tal": "Wizard: MASTER JINX - 15% chance to deal +30% extra damage per each active buff on the target."
+"tal": "Wizard: MASTER JINX - 15% chance to deal +30% extra damage per each active buff on the target.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/1/1a/Kadath_%28Accursed_Clergyman%29.jpg/revision/latest?cb=20260122172329"
 },
 {
 "name": "Rose de Flo",
@@ -1076,7 +1123,8 @@ const BASE_HEROES = [
 ],
 "skill": "Beautiful Petals (Very Fast): LESS THAN 60 HUMILITY: Recovers 25% health for all allies. Cleanses 1 status ailment from all allies (latest first). Growth: All allies get 150 attack. All allies regenerate 1005 HP over 3 turns. | 60 OR MORE HUMILITY: Recovers 32% health for all allies. Cleanses ALL status ailments from all allies. Growth: All allies get 200 attack. All allies regenerate 1440 HP over 3 turns. The caster gets +84% defense against Special Skills for 3 turns.",
 "pas": "REVIVAL HEALTH REDUCTION: All enemies have -80% health when revived (bosses unaffected). HEAL WHEN STATUS AILMENT EXPIRES OR IS CLEARED: Receives 15% health each time a status ailment expires or is cleansed/removed/reallocated (once per turn). BEAUTIFUL INSIDE: Whenever this character would take damage from a status ailment, they recover that much health instead. BRAVE & BEAUTIFUL FAMILY (Humility, 1/2/3 heroes): Gains 15/17/20 Humility when receiving direct Special Skill damage and 20/22/25 Humility when receiving direct Special Skill healing (max 100).",
-"tal": "Druid: MASTER COMPANION - 15% chance to summon a Thorn Minion (25% HP / 25% attack) if this character received any damage by end of enemy turn."
+"tal": "Druid: MASTER COMPANION - 15% chance to summon a Thorn Minion (25% HP / 25% attack) if this character received any damage by end of enemy turn.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/c/c5/Rose_de_Flo.jpg/revision/latest?cb=20251115175637"
 },
 {
 "name": "Halwinter",
@@ -1094,7 +1142,8 @@ const BASE_HEROES = [
 ],
 "skill": "The caster gets Taunt that prevents enemies from using Special Skills on the caster's allies for 4 turns. The caster counterattacks a random enemy with 120% of the damage received for 4 turns. The caster reduces all received damage by -50% for 4 turns. The caster is immune to new status ailments for 4 turns.",
 "pas": "BOOSTED HEALTH FROM DEAD MINION: Recovers 100 boosted health when a Minion owned by this hero is destroyed. MINION CORE: Activated when Special Skill is cast. With fully charged Core, summons Killer Bot Minion (33% HP / 150% atk inherited from caster) for all allies; scales with Core charge. Before Killer Bot hits, it destroys all Minions from target and damages Mega Minions. EMPOWERED RESIST SPECIAL BLOCKING: Immune to ailments that prevent Special Skill use; gains 450 boosted health and 5% mana each time it resists. CONSTRUCT FAMILY: Core charges each time this hero receives damage from normal attacks or Special Skills.",
-"tal": "Paladin: MASTER PROTECT \u2013 25% chance to get +25% defense for 2 turns after receiving damage; if activated, caster and nearby allies get the bonus."
+"tal": "Paladin: MASTER PROTECT \u2013 25% chance to get +25% defense for 2 turns after receiving damage; if activated, caster and nearby allies get the bonus.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/4/4d/Halwinter_%28Heavily_Armored_Construct%29.jpg/revision/latest?cb=20251123104431"
 },
 {
 "name": "Vernon",
@@ -1106,7 +1155,8 @@ const BASE_HEROES = [
 "tags": [],
 "skill": "SHARED COMPASSION (Fast, 8/8) \u2022 Deals 380% damage to the enemies on the edges of the enemy formation. If there is only one enemy, the damage is doubled (760%). \u2022 For 3 turns, the enemies on the edges of the enemy formation receive 50% of all damage dealt to their allies. \u2022 For 3 turns, the enemies on the edges of the enemy formation are forced to cast Mindless Heal when at full mana. MINDLESS HEAL: Recovers 20% health for the character on the OPPOSING SIDE with the lowest remaining HP. (Edge enemies are forced to heal your lowest-HP hero when their mana is full \u2014 this heals YOU, not them.)",
 "pas": "RESIST SPECIAL SKILL BLOCKING: This character is immune to status ailments that prevent the use of Special Skills. CUPID FAMILY \u2014 SOLO BONUS: If Vernon is the only Cupid family hero on the team, he receives +20% increase for any healing received. EVENT BONUS: Additional perks in the Season of Love event.",
-"tal": "MASTER REVIVE (Fighter, Level 25, 5/5): When receiving a fatal attack, +30% chance to revive at the end of the turn. If revived: this character gets +25% attack for 2 turns. TRAIT \u2014 SPECIAL BOOST: At the start of each battle, this hero's Special Skill deals an additional +30% damage for 6 turns. Ref"
+"tal": "MASTER REVIVE (Fighter, Level 25, 5/5): When receiving a fatal attack, +30% chance to revive at the end of the turn. If revived: this character gets +25% attack for 2 turns. TRAIT \u2014 SPECIAL BOOST: At the start of each battle, this hero's Special Skill deals an additional +30% damage for 6 turns. Ref",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/a/a0/Vernon_%28Cupid_of_the_Heartwood%29.jpg/revision/latest?cb=20260122145309"
 },
 {
 "name": "Bonga",
@@ -1124,7 +1174,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 415% damage to all enemies. GROWTH BOON: Deals 2x extra damage for each point of modified attack (up to +800 max additional damage; independent of defense stats). Summons a Tokri Minion for each ally with 27% HP and 22% attack inherited from caster. Each time a Tokri Minion hits an enemy, it steals a random dispellable buff from that enemy and gives it to its owner.",
 "pas": "MANA ON HIT: When receiving direct damage from Special Skills or Normal Attacks, gains a small amount of mana (max 10% per turn). EXTRA DAMAGE TO MINIONS & MEGA MINIONS: Deals +150% damage to Minions and Mega Minions. MAHAYODDHA FAMILY BONUS (1/2/3 heroes): At the end of each turn, all Mahayoddha heroes gain Growth +50/+70/+85 attack and +50/+70/+85 defense.",
-"tal": "Ranger: 5% chance to bypass enemy defenses when attacking."
+"tal": "Ranger: 5% chance to bypass enemy defenses when attacking.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/9/99/Bonga_%28Basket_Maker%29.jpg/revision/latest?cb=20251123104148"
 },
 {
 "name": "Bonga (2)",
@@ -1142,7 +1193,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 415% damage to all enemies. GROWTH BOON: Deals 2x extra damage for each point of modified attack (up to +800 max additional damage; independent of defense stats). Summons a Tokri Minion for each ally with 27% HP and 22% attack inherited from caster. Each time a Tokri Minion hits an enemy, it steals a random dispellable buff from that enemy and gives it to its owner.",
 "pas": "MANA ON HIT: When receiving direct damage from Special Skills or Normal Attacks, gains a small amount of mana (max 10% per turn). EXTRA DAMAGE TO MINIONS & MEGA MINIONS: Deals +150% damage to Minions and Mega Minions. MAHAYODDHA FAMILY BONUS (1/2/3 heroes): At the end of each turn, all Mahayoddha heroes gain Growth +50/+70/+85 attack and +50/+70/+85 defense.",
-"tal": "Ranger: 5% chance to bypass enemy defenses when attacking."
+"tal": "Ranger: 5% chance to bypass enemy defenses when attacking.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/9/99/Bonga_%28Basket_Maker%29.jpg/revision/latest?cb=20251123104148"
 },
 {
 "name": "Shareef",
@@ -1158,7 +1210,8 @@ const BASE_HEROES = [
 ],
 "skill": "Skyfall Crumble: Deals 400% damage to the target. Deals 400% damage to 2 random enemies (targets the same enemy as the first hit if there are no valid targets). All hit targets get +30% increased damage (taken) for 3 turns. All hit targets receive 663 Bleed damage over 3 turns.",
 "pas": "TRANSFORM BUFFS: Each time this character casts their Special Skill, all dispellable buffs affecting attack, defense and mana generation on all enemies are transformed into matching undispellable status ailments (-40% attack / -40% defense / -40% mana generation for 3 turns). FLIGHT MOMENTUM: With Flight Momentum, receives up to +35% mana generation and up to +25% extra dodge chance (diminishes with less Momentum). WEAKER MEGA MINIONS: Enemy Mega Minions have -75% HP. MAGIC CARPET FAMILY: Heroes start with full Flight Momentum; lose a small amount at end of turn and when taking damage; regain it by casting their Special Skill.",
-"tal": "Wizard: MASTER JINX - 15% chance to deal +30% extra damage per each active buff on the target."
+"tal": "Wizard: MASTER JINX - 15% chance to deal +30% extra damage per each active buff on the target.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/d/de/Shareef_%28Unstoppable_Wizard%29.jpg/revision/latest?cb=20251123104312"
 },
 {
 "name": "Glacivolt",
@@ -1176,7 +1229,8 @@ const BASE_HEROES = [
 ],
 "skill": "Wrath of Frozen Soul: Deals 280% damage to all enemies. All enemies get -30% defense, and a further -5% decrease per each Ice shield on the board, for 3 turns (up to -55% defense). All enemies receive 579 Frost damage over 3 turns.",
 "pas": "EMPOWERED RESIST SPECIAL BLOCKING: Immune to status ailments that prevent the use of Special Skills; gains 450 boosted health and 5% mana each time they resist. MINION CORE: Activates each time Special Skill is cast - with fully charged Core, summons a Killer Bot Minion (33% HP / 55% attack inherited, scaled by Core charge) on all allies; before hitting, the Killer Bot destroys all Minions from the target and damages Mega Minions; recovers 5% health for its owner each turn; Wither: each Killer Bot hit gives its target -50 attack. CONSTRUCT FAMILY: Core charges each time this character receives damage from normal attacks or Special Skills.",
-"tal": "Cleric: MASTER MANASHIELD - chance to resist any negative mana status effects or effects that block Special Skill use."
+"tal": "Cleric: MASTER MANASHIELD - chance to resist any negative mana status effects or effects that block Special Skill use.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/4/4f/Glacivolt.jpg/revision/latest?cb=20251019014004"
 },
 {
 "name": "Florencia",
@@ -1193,7 +1247,8 @@ const BASE_HEROES = [
 ],
 "skill": "Watchful Duty: Deals 345% damage to all enemies (never misses). The enemy with the highest HP gets Silenced for 4 turns. Summons a Snow Warden Minion for all allies (20% HP from caster's HP).",
 "pas": "WINTER FAMILY BONUS (1/2/3 heroes): +5%/+8%/+10% attack. Members have additional perks in the Santa's Challenge seasonal event. \u26a0\ufe0f Element flagged: research confirms Florencia is Holy (Yellow), not Ice \u2014 verify in-game.",
-"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation."
+"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/7/7f/Florencia.jpg/revision/latest?cb=20251209020402"
 },
 {
 "name": "Zestique",
@@ -1210,7 +1265,8 @@ const BASE_HEROES = [
 ],
 "skill": "CHERRY PUDDING SERVED! (Average, 8/8) \u2022 Recovers 25% health for the caster and nearby allies. \u2022 Increases the mana of nearby allies by 30%. \u2022 Growth: Nearby allies get +300 attack and +300 defense. \u2022 Summons a Slime Mega Minion with 50% HP and 40% attack inherited from the caster.",
 "pas": "SLIME MINION UPON DEFEAT: When this character is defeated, summons Slime Mega Minions to nearby allies with 50% HP and 40% attack inherited from this character. SLIME MINION SPLIT: If this character loses more than 25% of max health at once, summons a Slime Mega Minion for themselves with 50% HP and 40% attack inherited from this character. SLIME FAMILY BONUS (1/2/3 heroes): Mega Minions, Minions, Mega Fiends and Fiends summoned by allies get +10%/+15%/+20% attack. (With Gooric also on team = 2 Slime heroes = +15% attack to all summoned entities including Indigon/Auberguy fiends and Halwinter Killer Bots.)",
-"tal": "MASTER MANASHIELD (Cleric, Level 25, 5/5): +35% chance to resist negative mana effects and effects that prevent the use of Special Skills. If resisted: recovers 10% health. TRAIT \u2014 DODGE: At the start of each battle, +20% chance to dodge Special Skills that deal damage for 6 turns. Refreshed at star"
+"tal": "MASTER MANASHIELD (Cleric, Level 25, 5/5): +35% chance to resist negative mana effects and effects that prevent the use of Special Skills. If resisted: recovers 10% health. TRAIT \u2014 DODGE: At the start of each battle, +20% chance to dodge Special Skills that deal damage for 6 turns. Refreshed at star",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/3/3c/Zestique_%28Sweet_Blushing_Slime%29.jpg/revision/latest?cb=20251024191446"
 },
 {
 "name": "Ustad Anand",
@@ -1225,7 +1281,8 @@ const BASE_HEROES = [
 ],
 "skill": "This Special Skill has a chance to deal Critical hits. Deals 415% damage to all enemies. GROWTH BOON: Deals 2x extra damage for each point of modified attack (up to +800 additional damage). Growth Boon: All allies get +50 attack for 3 turns.",
 "pas": "MAHAYODDHA FAMILY BONUS (1/2/3 heroes): At the end of each turn, all Mahayoddha heroes gain Growth +50/+70/+85 attack and +50/+70/+85 defense. NOTE: Ustad Anand was recently nerfed (April 2026) as he was significantly stronger than other Mahayoddha heroes.",
-"tal": "Fighter: 6% chance to revive upon death at end of turn."
+"tal": "Fighter: 6% chance to revive upon death at end of turn.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/6/68/Ustad_Anand_%28Royal_Performer%29.jpg/revision/latest?cb=20251123104016"
 },
 {
 "name": "Ustad Anand (2)",
@@ -1240,7 +1297,8 @@ const BASE_HEROES = [
 ],
 "skill": "This Special Skill has a chance to deal Critical hits. Deals 415% damage to all enemies. GROWTH BOON: Deals 2x extra damage for each point of modified attack (up to +800 additional damage). Growth Boon: All allies get +50 attack for 3 turns.",
 "pas": "MAHAYODDHA FAMILY BONUS (1/2/3 heroes): At the end of each turn, all Mahayoddha heroes gain Growth +50/+70/+85 attack and +50/+70/+85 defense. NOTE: Ustad Anand was recently nerfed (April 2026) as he was significantly stronger than other Mahayoddha heroes.",
-"tal": "Fighter: 6% chance to revive upon death at end of turn."
+"tal": "Fighter: 6% chance to revive upon death at end of turn.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/6/68/Ustad_Anand_%28Royal_Performer%29.jpg/revision/latest?cb=20251123104016"
 },
 {
 "name": "Atlanteia",
@@ -1257,7 +1315,8 @@ const BASE_HEROES = [
 ],
 "skill": "Aphotic Maw (Changing Tides - consecutive casts get stronger): 1ST CAST: All enemies receive Corrosive Frost for 4 turns (158 Frost damage and -8% attack per turn); the caster steals 28% of generated mana from all enemies over 4 turns (can't be cleansed, removed if caster dies). 2ND CAST: Corrosive Frost deals 222 Frost damage and -13% attack per turn for 4 turns; steals 28% of generated mana over 4 turns. (Costume Aphotic Whisper: 228/328 Frost damage, -7%/-15% attack, steals 27%/30% mana.)",
 "pas": "EFFECTS ON SPECIAL SKILL: 50% chance when casting - deals 80% damage to all enemies and the caster gets +19% mana generation for 2 turns. NIGHTMARES OF ATLANTIS FAMILY BONUS (1/2 heroes): 50%/75% chance to cast -10% mana generation for 3 turns on an enemy who deals Special Skill damage to this hero (75%/100% if the Special Skill defeats the hero). Costume adds innate Resist Mindless Attack (Insanity).",
-"tal": "Sorcerer: DELAY - 15% chance to drop the mana generation of the enemy by -50% for 2 turns when dealing damage. (Costume version is Rogue: Evade.)"
+"tal": "Sorcerer: DELAY - 15% chance to drop the mana generation of the enemy by -50% for 2 turns when dealing damage. (Costume version is Rogue: Evade.)",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/5/54/Atlanteia.jpg/revision/latest?cb=20231216155942"
 },
 {
 "name": "Elyzabel de Tuilleres",
@@ -1274,7 +1333,8 @@ const BASE_HEROES = [
 ],
 "skill": "PRECIOUS PETS (Average, 8/8) \u2022 Deals 465% damage to the target and nearby enemies. \u2022 All allies are immune to new effects that prevent the use of Special Skills for 4 turns. \u2022 Summons a Sanguine Bat Minion for all allies with 25% HP and 30% attack inherited from the caster. \u2022 The target hit by the Sanguine Bat Minion is marked with a Blood Lily.",
 "pas": "SANGUINE MARK (Passive): All damage from normal attacks and Special Skills dealt by this character is increased by +5% per Blood Lily stack on the target. (Max 10 stacks = +50% damage.) FLEUR DE SANG FAMILY (confirmed from card): At the start of each turn, each Fleur de Sang hero marks the enemy with the highest remaining HP with a Blood Lily. BLOOD LILY Stack (Max 10): Target receives 10 damage per turn. Fleur de Sang heroes on the Blood Lily applicators' team gain the damage dealt as health (divided equally if multiple Fleur de Sang heroes). EVENT BONUS: Additional perks in the Halloween event. NOTE: Previous Fleur De Sang family entry was incorrect \u2014 corrected to Blood Lily mechanic.",
-"tal": "MASTER COMPANION (Druid, Level 25, 5/5): If this character received any damage by the end of enemy turn, +15% chance to activate: Summon a Thorn Minion with 25% HP and 25% attack. TRAIT \u2014 FIEND RESIST: At the start of each battle, immune to new Fiends for 6 turns. Refreshed at start of each wave."
+"tal": "MASTER COMPANION (Druid, Level 25, 5/5): If this character received any damage by the end of enemy turn, +15% chance to activate: Summon a Thorn Minion with 25% HP and 25% attack. TRAIT \u2014 FIEND RESIST: At the start of each battle, immune to new Fiends for 6 turns. Refreshed at start of each wave.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/d/db/Elyzabel_de_Tuilli%C3%A8res_%28Sanguine_Countess%29.jpg/revision/latest?cb=20251024191135"
 },
 {
 "name": "Guillemette",
@@ -1290,7 +1350,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 270% damage to all enemies. All allies are immune to new negative mana effects for 4 turns. For the next 4 turns, deals 135% damage to all enemies marked with a Blood Lily at the end of each turn",
 "pas": "BLOOD LILY MARK: When casting Special Skill, marks a random enemy with Blood Lily for 4 turns. Marked enemy takes 135% damage at the end of each turn. FLEUR DE SANG FAMILY BONUS (1/2 heroes): 50%/75% chance \u2014 when this character's Special Skill defeats an enemy, all allies recover 15% health.",
-"tal": "If this character received any damage by the end of the enemy turn +25% chance to activate the following effects: this character and nearby allies get +25% defense for 2 turns."
+"tal": "If this character received any damage by the end of the enemy turn +25% chance to activate the following effects: this character and nearby allies get +25% defense for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/7/72/Guillemette_%28Sanguine_Crusader%29.jpg/revision/latest?cb=20251024190925"
 },
 {
 "name": "Medea",
@@ -1306,7 +1367,8 @@ const BASE_HEROES = [
 ],
 "skill": "Shatter Psyche (Changing Tides - consecutive casts get stronger): 1ST CAST: Deals 365% damage to the target and nearby enemies; target and nearby enemies get -50% healing received for 3 turns; the target automatically casts Shifting Mindless Attack on a random ally when mana is full (3 turns; shifts to the hit ally and refreshes on trigger). 2ND CAST: 430% damage, -75% healing received for 4 turns, Shifting Mindless Attack for 4 turns. (Costume Shatter Soul: 355%/450% damage, -45%/-85% healing.)",
 "pas": "EFFECTS ON SPECIAL SKILL: 50% chance when casting - deals 80% damage to all enemies and the caster gets +19% mana generation for 2 turns. NIGHTMARES OF ATLANTIS FAMILY BONUS (1/2 heroes): 50%/75% chance to cast -10% mana generation for 3 turns on an enemy who deals Special Skill damage to this hero (75%/100% if the Special Skill defeats the hero).",
-"tal": "Ranger: PIERCE - 25% chance to bypass defensive buffs including counterattacks. (Costume version is Fighter: Revive.)"
+"tal": "Ranger: PIERCE - 25% chance to bypass defensive buffs including counterattacks. (Costume version is Fighter: Revive.)",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/b/b1/Medea.png/revision/latest?cb=20240208221826"
 },
 {
 "name": "Lyria",
@@ -1324,7 +1386,8 @@ const BASE_HEROES = [
 ],
 "skill": "RUSHED MELODY (Very Fast, 8/8) \u2022 Deals 475% damage to the target. The attack bypasses defensive buffs. \u2022 The caster gets an additional +40% attack power for the next Special Skill they cast. The additional attack power increases +40% each turn, up to a maximum of +160% in total. \u2022 The caster gets +45% chance to dodge Special Skills that deal damage for 2 turns.",
 "pas": "REVIVAL CHANCE REDUCTION (Passive): The chance of revival is reduced for ALL enemies in the battle. The revival chance is reduced to 20% of the original value. (Confirmed as a BARD FAMILY shared passive \u2014 both Merith and Lyria carry this passive.) BARD FAMILY \u2014 MANA INCREASE REDUCTION: -50% mana from Special Skills for all enemies (always active). BARD SOLO BONUS: +5% mana generation if the only Bard hero on the team. SYNERGY: Lyria + Merith on the same team means Revival Chance Reduction is doubled on the same enemies (both passives are calculated \u2014 stacking from 16% down to ~3.2% effective revive chance).",
-"tal": "MASTER REVIVE (Fighter, Level 25, 5/5): When receiving a fatal attack, +30% chance to revive at the end of the turn. If revived: this character gets +25% attack for 2 turns. TRAIT \u2014 SPECIAL BOOST: At the start of each battle, this hero's Special Skill deals an additional +30% damage for 6 turns. Ref"
+"tal": "MASTER REVIVE (Fighter, Level 25, 5/5): When receiving a fatal attack, +30% chance to revive at the end of the turn. If revived: this character gets +25% attack for 2 turns. TRAIT \u2014 SPECIAL BOOST: At the start of each battle, this hero's Special Skill deals an additional +30% damage for 6 turns. Ref",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/d/da/Lyria_%28Exceptionally_Eager_Instrumentalist%29.jpg/revision/latest?cb=20251025091944"
 },
 {
 "name": "Edwin",
@@ -1341,7 +1404,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 250% damage to all enemies. The attack bypasses defensive buffs (including counterattacks). All enemies can't get their status ailments cleansed from Special Skills for 3 turns. This effect also prevents cleansing of itself.",
 "pas": "STEAL BUFF: When casting Special Skill, 50% chance to steal the newest dispellable buff from a random enemy that has buffs. If no enemy has buffs, deals 70% damage to all enemies instead. RESIST BLEED: Immune to Bleed damage. MORLOVIA FAMILY BONUS (1/2/3 heroes): +3%/+6%/+9% Mana generation.",
-"tal": "Paladin: 25% chance to get +25% defense for 2 turns after receiving any damage."
+"tal": "Paladin: 25% chance to get +25% defense for 2 turns after receiving any damage.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/9/96/Edwin_Thumb.jpg/revision/latest?cb=20231014140931"
 },
 {
 "name": "Thaffer",
@@ -1358,7 +1422,8 @@ const BASE_HEROES = [
 ],
 "skill": "GRAB AND RUN (Average, 8/8) \u2022 The caster steals 25% mana from the target. \u2022 Deals 375% damage to the target and 4 random enemies. \u2022 The caster steals 70% of any healing applied to the target for 4 turns.",
 "pas": "NINE LIVES (Passive): When defeated, this character has 80% chance to revive at the beginning of their next turn with 50% health and 80% mana. Activates up to 9 times. Chance to revive is reduced on each activation. Can't be prevented with status ailments or Passive Skills. LITHE FRAME (Trait): This character is not affected by effects that increase or reduce defense. This includes: Status effect buffs and ailments, Positive and negative Stacks, Growth and Wither effects. WILD CAT FAMILY BONUS (1/2/3 heroes): 5%/10%/15% chance to dodge Special Skills. Each Special Skill dodged damages the attacker for 100/200/300 damage.",
-"tal": "MASTER COMPANION (Druid, Level 25, 5/5): If this character received any damage by the end of enemy turn, +15% chance to activate: Summon a Thorn Minion with 25% health and 25% attack inherited from the caster."
+"tal": "MASTER COMPANION (Druid, Level 25, 5/5): If this character received any damage by the end of enemy turn, +15% chance to activate: Summon a Thorn Minion with 25% health and 25% attack inherited from the caster.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/1/13/Thaffer_%28Tabby_Safecracker%29.jpg/revision/latest?cb=20251024190755"
 },
 {
 "name": "Thaffer (2)",
@@ -1375,7 +1440,8 @@ const BASE_HEROES = [
 ],
 "skill": "GRAB AND RUN (Average, 8/8) \u2022 The caster steals 25% mana from the target. \u2022 Deals 375% damage to the target and 4 random enemies. \u2022 The caster steals 70% of any healing applied to the target for 4 turns.",
 "pas": "NINE LIVES (Passive): When defeated, this character has 80% chance to revive at the beginning of their next turn with 50% health and 80% mana. Activates up to 9 times. Chance to revive is reduced on each activation. Can't be prevented with status ailments or Passive Skills. LITHE FRAME (Trait): This character is not affected by effects that increase or reduce defense. This includes: Status effect buffs and ailments, Positive and negative Stacks, Growth and Wither effects. WILD CAT FAMILY BONUS (1/2/3 heroes): 5%/10%/15% chance to dodge Special Skills. Each Special Skill dodged damages the attacker for 100/200/300 damage.",
-"tal": "MASTER COMPANION (Druid, Level 25, 5/5): If this character received any damage by the end of enemy turn, +15% chance to activate: Summon a Thorn Minion with 25% health and 25% attack inherited from the caster."
+"tal": "MASTER COMPANION (Druid, Level 25, 5/5): If this character received any damage by the end of enemy turn, +15% chance to activate: Summon a Thorn Minion with 25% health and 25% attack inherited from the caster.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/1/13/Thaffer_%28Tabby_Safecracker%29.jpg/revision/latest?cb=20251024190755"
 },
 {
 "name": "Sliposi",
@@ -1393,7 +1459,8 @@ const BASE_HEROES = [
 ],
 "skill": "Sticky Express: Increases the mana of allies on the edges of the formation by 30% (cannot increase the caster's mana). Summons a Slime Mega Minion for the allies on the edges of the formation with 50% HP and 40% attack inherited from the caster. The caster regenerates 1020 boosted health over 4 turns (boosted health can exceed max HP).",
 "pas": "SLIME MINION UPON DEFEAT: When this character is defeated, summons Slime Mega Minions to nearby allies with 50% HP and 40% attack inherited from this character. SLIME MINION SPLIT: If this character loses more than 25% of max health at once, summons a Slime Mega Minion for themselves with 50% HP and 40% attack inherited from this character. SLIME FAMILY BONUS (1/2/3 heroes): Mega Minions, Minions, Mega Fiends and Fiends summoned by allies get +10%/+15%/+20% attack.",
-"tal": "Ranger: PIERCE - 25% chance to bypass defensive buffs including counterattacks."
+"tal": "Ranger: PIERCE - 25% chance to bypass defensive buffs including counterattacks.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/d/da/Sliposi_%28Slippery_Courier_Slime%29.jpg/revision/latest?cb=20251025092314"
 },
 {
 "name": "Vivica",
@@ -1408,7 +1475,8 @@ const BASE_HEROES = [
 ],
 "skill": "Recovers 42% health for all allies. All allies get +63% defense for 4 turns.",
 "pas": "CLERIC TALENT: MANASHIELD \u2014 7% chance to resist any negative mana status effects or effects that prevent use of Special Skills. SEASON 1 FAMILY: When 2/3/4/5 fully ascended Classic Heroes are teamed up, they get +1%/+3%/+5%/+7% Attack, Defense, and Healing.",
-"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation."
+"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/c/c7/Vivica.jpg/revision/latest?cb=20180506162701"
 },
 {
 "name": "Ratgrub",
@@ -1423,7 +1491,8 @@ const BASE_HEROES = [
 ],
 "skill": "All enemies get \u221225% accuracy for 3 turns. Summons a Rat Princess Mega Minion for all allies (65% HP, 160% attack). While the Mega Minion is alive, each time any ally uses a Special Skill, the Mega Minion owner deals 240% damage to all enemies (once per turn).",
 "pas": "GOBLIN FAMILY BONUS (1/2/3 heroes): each time this hero takes damage from enemy Special Skill, removes 50%/75%/100% boosted health from all enemies; Aether Power: needs in-game verification",
-"tal": "Companion"
+"tal": "Companion",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/a/ad/Ratgrub_%28Goblin_Rat_Courtier%29.jpg/revision/latest?cb=20251024211357"
 },
 {
 "name": "Gardered",
@@ -1440,7 +1509,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 385% damage to the target. The target receives Toxin damage over 3 turns (Toxin is +100% stronger against targets with boosted health, +33% per Minion or Mega Minion owned by the target, max +199% total increase). Deals 435% damage to enemies on the edges of the enemy formation (doubled if only 1 enemy remains). Enemies on the edges fall into Deep Sleep for 3 turns (uncleansable): +80% increased damage while sleeping; cannot attack or gain mana; woken immediately if they take 500+ damage.",
 "pas": "MOTH DUST (Moth Family passive): At the start of each turn, a random enemy receives Moth Dust for 2/3/4 turns (1/2/3 Moth heroes in team). Moth Dust: -10% mana generation. If Moth Dust is cleansed or removed early, the target falls asleep and receives +60% increased damage while sleeping.",
-"tal": "Fighter: 6% chance to revive upon death at end of turn."
+"tal": "Fighter: 6% chance to revive upon death at end of turn.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/b/b3/Gardered_%28The_Daremoth%29.jpg/revision/latest?cb=20251024191651"
 },
 {
 "name": "Khatrox",
@@ -1455,7 +1525,8 @@ const BASE_HEROES = [
 ],
 "skill": "Boosts all allies' health by 1000 (can exceed max HP). Deals damage to all enemies (bonus damage added from Stored Damage absorbed while charging). All enemies become Insane for 2 turns (Insanity: attacks a random target including own allies, uncleansable). The caster also becomes Insane for 2 turns. STORED DAMAGE: While charging, Khatrox absorbs a portion of damage received and adds it to the next Special Skill damage.",
 "pas": "FORSAKEN FAMILY: Heroes of this family share the Shadow/Forsaken event bonus. Passive: Resist Insanity \u2014 this character is immune to Insanity status effects. Note: Khatrox inflicts Insanity on himself but is not immune to its effects as caster.",
-"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns."
+"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/f/ff/Khatrox_%28Blighted_Bruiser%29.jpg/revision/latest?cb=20251031172033"
 },
 {
 "name": "Prof. Morryster",
@@ -1471,7 +1542,8 @@ const BASE_HEROES = [
 ],
 "skill": "Seeking Shots: Deals 460% damage to the target and nearby enemies, inflicts 50 Insanity, and reduces their defense by \u221244% for 4 turns. The caster gets 45 Insanity.",
 "pas": "Minion Corruption (at end of each turn, enemies with Insanity have a chance for Minions \u2192 Fiends; 70 Insanity = automatic transformation; Eldritch Fiend: 15% ATK/18% HP/+5 Insanity/turn; Eldritch Mega Fiend: 115% ATK/68% HP/+10 Insanity/turn); Branded by the Old Ones (all damage dealt +6% per 10 Insanity on this hero, up to +60%); Aether Power: Counterattack (60% of damage received for 6 turns at battle start)",
-"tal": "Revive"
+"tal": "Revive",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/8/8d/Prof._Morryster_%28The_Masked_Savant%29.jpg/revision/latest?cb=20251024211952"
 },
 {
 "name": "Prof. Morryster (2)",
@@ -1487,7 +1559,8 @@ const BASE_HEROES = [
 ],
 "skill": "Seeking Shots: Deals 460% damage to the target and nearby enemies, inflicts 50 Insanity, and reduces their defense by \u221244% for 4 turns. The caster gets 45 Insanity.",
 "pas": "Minion Corruption (at end of each turn, enemies with Insanity have a chance for Minions \u2192 Fiends; 70 Insanity = automatic transformation; Eldritch Fiend: 15% ATK/18% HP/+5 Insanity/turn; Eldritch Mega Fiend: 115% ATK/68% HP/+10 Insanity/turn); Branded by the Old Ones (all damage dealt +6% per 10 Insanity on this hero, up to +60%); Aether Power: Counterattack (60% of damage received for 6 turns at battle start)",
-"tal": "Revive"
+"tal": "Revive",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/8/8d/Prof._Morryster_%28The_Masked_Savant%29.jpg/revision/latest?cb=20251024211952"
 },
 {
 "name": "Merith",
@@ -1507,7 +1580,8 @@ const BASE_HEROES = [
 ],
 "skill": "PETRIFYING PERFORMANCE (Fast, 8/8) \u2022 Reduces max health of the target and nearby enemies by 1000. The effect is stronger against targets with boosted health. \u2022 Dispels buffs from the target and nearby enemies. \u2022 After 1 turn, the target and nearby enemies get Paralyzed for 2 turns (Paralyzed: can't attack, can't gain mana, receives +50% increased damage).",
 "pas": "REVIVAL CHANCE REDUCTION (Passive): The chance of revival is reduced for ALL enemies in the battle. The revival chance is reduced to 20% of the original value. (Example: Nine Lives' 80% revive chance \u2192 80% \u00d7 20% = 16% actual chance.) BARD FAMILY \u2014 SHARED PASSIVE: MANA INCREASE REDUCTION \u2014 Reduces the amount of mana increased by Special Skills by -50% for all enemies at all times. BARD SOLO BONUS: +5% mana generation if Merith is the only Bard hero on the team. SYNERGY NOTE: Merith's Revival Chance Reduction stacks with Cerissa/Laurent/Ivete's Revival Health Reduction. Combined: enemy revives at only 16% chance AND at -80% HP.",
-"tal": "MASTER JINX (Wizard, Level 25, 5/5): When dealing damage through normal attacks and Special Skills, +25% chance to deal +25% extra damage per each active buff on the target. TRAIT \u2014 DODGE: At the start of each battle, this hero gets +20% chance to dodge Special Skills that deal damage for 6 turns. R"
+"tal": "MASTER JINX (Wizard, Level 25, 5/5): When dealing damage through normal attacks and Special Skills, +25% chance to deal +25% extra damage per each active buff on the target. TRAIT \u2014 DODGE: At the start of each battle, this hero gets +20% chance to dodge Special Skills that deal damage for 6 turns. R",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/6/69/Merith.jpg/revision/latest?cb=20250901125835"
 },
 {
 "name": "Motsognir",
@@ -1524,7 +1598,8 @@ const BASE_HEROES = [
 ],
 "skill": "STALWART RALLY (Average, 8/8) \u2022 All allies get Frostfall Ward for 4 turns: reduces incoming Special Skill damage by up to -1400; reduces damage by an additional 30% when the attacker is Fire element. \u2022 All allies bypass defensive buffs with their attacks for 4 turns. \u2022 All allies get +45% attack, and a further +20% increase every time they are hit during 4 turns, up to +145% attack total. \u2022 All allies get +55% critical chance for 4 turns. ARCTIC CORE (activates when Special Skill is cast): All enemies receive Corrosive Frost for 3 turns. With fully charged Arctic Core: 466 Frost damage and -15% attack per turn. Extra damage against heroes with Minions or Mega Minion. Frost damage scales with Core charge; all charge exhausted on activation.",
 "pas": "ARCTIC CORE (Passive): This character has an Arctic Core. Activates when Special Skill is cast: all enemies receive Corrosive Frost (466 damage + -15% attack per turn with fully charged Core; extra damage vs heroes with Minions). Frost damage scales with Core charge level. EMPOWERED RESIST FROST: Immune to status ailments that deal Frost damage; gains 450 boosted health and 5% mana each time they resist. MYRKHEIM REALM: The Arctic Core is charged each time this character receives damage from normal attacks or Special Skills. More Myrkheim heroes = more powerful realm effect. Season bonus: additional perks in Untold Tales II: Treasures of Flame and Frost. TACTICAL VALUE: 'All allies bypass defensive buffs' counters Lane's counterattack and Sylosis's 100% team counterattack. Frostfall Ward -",
-"tal": "MASTER REVIVE (Fighter, Level 25, 5/5): When receiving a fatal attack, +30% chance to revive at the end of the turn. If revived: +25% attack for 2 turns. TRAIT \u2014 REGEN: At the start of each battle, regenerates 420 health over 6 turns. Refreshed at start of each wave."
+"tal": "MASTER REVIVE (Fighter, Level 25, 5/5): When receiving a fatal attack, +30% chance to revive at the end of the turn. If revived: +25% attack for 2 turns. TRAIT \u2014 REGEN: At the start of each battle, regenerates 420 health over 6 turns. Refreshed at start of each wave.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/b/b7/M%C3%B3tsognir_%28Dwarven_Frontier_Wildman%29.jpg/revision/latest?cb=20251024211851"
 },
 {
 "name": "Ascension Mimic",
@@ -1539,7 +1614,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 380% damage to the target and nearby enemies. If an enemy is defeated by this attack, the caster recovers +50% health and gains +33% mana. Target and nearby enemies receive 608 Bleed damage over 4 turns.",
 "pas": "MIMIC PASSIVE \u2014 MIMIC LOOT: Chance for extra loot rewards when completing a map or quest level (chance scales with energy cost). Hero must be max level and fully ascended. Mimics have reduced leveling cost.",
-"tal": "Rogue: 20% chance to dodge direct damage from offensive Special Skills."
+"tal": "Rogue: 20% chance to dodge direct damage from offensive Special Skills.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/f/f0/Ascension_Mimic_Fire.jpg/revision/latest?cb=20250706073400"
 },
 {
 "name": "Gwendoline",
@@ -1557,7 +1633,8 @@ const BASE_HEROES = [
 ],
 "skill": "ESSENCE OF QUEEN NITOCRIS (Very Slow, 8/8) \u2022 Cleanses status ailments from the caster and nearby allies. \u2022 Recovers 70% health for the caster and nearby allies. \u2022 The caster and nearby allies receive a moderate amount of mana over 6 turns. \u2022 Casting this Special Skill inflicts 35 Insanity on nearby allies. \u2022 The caster turns into a Yag-Mago for 6 turns (undispellable): 200% attack, 150% defense. YAG-MAGO SPECIAL \u2014 ETERNAL BOND (Very Fast): Deals 300% damage to all enemies and inflicts 20 Insanity on them. Revives a random defeated ally with 10% HP. NOTE: The 35 Insanity on nearby allies is a self-inflicted downside \u2014 position carefully on offense. On enemy defense teams: nearby enemy heroes become insane (may help you).",
 "pas": "Passive icon visible on card but description not captured in screenshots. INVESTIGATOR FAMILY BONUS (1/2/3 heroes): +20%/+30%/+40% attack AND +20%/+30%/+40% health. EVENT BONUS: Additional perks in the Shadows of the Deep event. \u26a0\ufe0f One passive still unknown \u2014 verify in-game.",
-"tal": "MASTER COMPANION (Druid, Level 25, 5/5): If this character received any damage by the end of enemy turn, +15% chance to activate: Summon a Thorn Minion with 25% HP and 25% attack. TRAIT \u2014 REVIVE: If defeated during the FIRST 4 TURNS of battle, resurrected at start of her next turn with 1% HP. All st"
+"tal": "MASTER COMPANION (Druid, Level 25, 5/5): If this character received any damage by the end of enemy turn, +15% chance to activate: Summon a Thorn Minion with 25% HP and 25% attack. TRAIT \u2014 REVIVE: If defeated during the FIRST 4 TURNS of battle, resurrected at start of her next turn with 1% HP. All st",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/9/9b/Gwendoline_%28Fanatical_Archaeologist%29.jpg/revision/latest?cb=20251024211319"
 },
 {
 "name": "Suomuhauki",
@@ -1573,7 +1650,8 @@ const BASE_HEROES = [
 ],
 "skill": "SNAPPING JAWS (Fast, 8/8) \u2022 Deals 400% damage to the target. \u2022 Summons a Pike Mega Fiend for the target. The Fiend damages the enemy with 270% attack every turn. Deals strong damage against Fire characters. \u2022 The Pike Mega Fiend absorbs healing and disappears when it has absorbed health equal to 70% of its target's max health. \u2022 When summoned, the Pike Mega Fiend gives -45% attack to its target (-55% against Fire characters). This Wither effect lasts as long as the target has a Pike Mega Fiend.",
 "pas": "POWER OF SISU (Passive): When this character starts a turn with low health for the first time during a battle, they recover 15% health and receive 15% mana. (One-time activation per battle \u2014 emergency survival passive.) KALEVALA FAMILY BONUS (1/2/3 heroes): -10%/-25%/-40% less damage from Special Skills of the stronger element (Fire). EVENT BONUS: Additional perks in the Kalevala event. NOTE: Pike Mega Fiend absorbs healing \u2014 this stacks with Imagus's -80% heal block. The fiend is also an anti-Fire specialist (270% hits extra hard vs Fire, -55% Wither vs Fire).",
-"tal": "MASTER WOUND (Barbarian, Level 25, 5/5): After any normal attack, +30% chance to activate: Deal 80% of the damage done by the normal attack over 5 turns. If target already has this ailment, the previous ailment's remaining damage is added to the new ailment as additional damage (stacking DoT that co"
+"tal": "MASTER WOUND (Barbarian, Level 25, 5/5): After any normal attack, +30% chance to activate: Deal 80% of the damage done by the normal attack over 5 turns. If target already has this ailment, the previous ailment's remaining damage is added to the new ailment as additional damage (stacking DoT that co",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/e/ee/Suomuhauki.jpg/revision/latest?cb=20250906221133"
 },
 {
 "name": "Agadh",
@@ -1591,7 +1669,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 565% damage to the target and nearby enemies. Inflicts Corrosive Poison on the target and nearby enemies. Prevents revival of the target and nearby enemies. Transforms all buffs of the target and nearby enemies.",
 "pas": "MAGIC CARPET FAMILY \u2014 FLIGHT MOMENTUM: If this character has any Flight Momentum, they receive up to +20% mana generation and +5% extra chance to dodge Special Skills. Anti-mana passive: All enemies get -5% mana when this character fires Special Skill.",
-"tal": "Rogue: 20% chance to dodge direct damage from offensive Special Skills."
+"tal": "Rogue: 20% chance to dodge direct damage from offensive Special Skills.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/1/17/Agadh.jpg/revision/latest?cb=20250804125111"
 },
 {
 "name": "Imagus",
@@ -1607,7 +1686,8 @@ const BASE_HEROES = [
 ],
 "skill": "Unraveling Curse: Deals 215% damage to all enemies. All enemies get Lasting Greed for 5 turns (the next 3 ailments inflicted convert to mana loss). All enemies' stacks are weakened by 50%.",
 "pas": "NINE LIVES (Passive): When defeated, 80% chance to revive at beginning of next turn with 50% HP and 80% mana. Up to 9 times. Chance reduces on each activation. Can't be prevented by status ailments or Passive Skills. LITHE FRAME (Trait): Not affected by any effects that increase or reduce defense \u2014 including status effect buffs/ailments, positive/negative Stacks, Growth and Wither effects. WILD CAT FAMILY BONUS (1/2/3 heroes): 5%/10%/15% chance to dodge Special Skills. Each Special Skill dodged damages the attacker for 100/200/300 damage.",
-"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/f/f1/Imagus.jpg/revision/latest?cb=20250804125251"
 },
 {
 "name": "Grendel's Mother",
@@ -1623,7 +1703,8 @@ const BASE_HEROES = [
 ],
 "skill": "Harrow the Heart: Deals 410% damage to all enemies. All enemies receive 1230 Curse damage over 6 turns, starting low and increasing every turn. Source of Ailments: the following effects are cast on a random enemy at the start of each turn - +60% damage from status ailments for 5 turns and -60% for all healing received for 5 turns; activates 6 times, each dispel attempt removes one activation.",
 "pas": "EMPOWERED RESIST MANA REDUCTION: Innate resistance against mana reductions; gains 600 boosted health and 10% mana each time they resist. MANA OFF BUFF RECEIVED: Gains 5% mana when they receive a buff or passive stack. STACKING ATTACK ON DAMAGE RECEIVED: When receiving damage from Special Skills, gains a +30% attack Stack (max 10, one per turn). BEOWULF FAMILY BONUS (1/2 heroes): 50%/70% chance to cleanse a random cleansable status ailment from all allies when this character receives damage from an enemy's Special Skill (once per turn).",
-"tal": "Sorcerer: DELAY - 15% chance to drop the mana generation of the enemy by -50% for 2 turns when dealing damage."
+"tal": "Sorcerer: DELAY - 15% chance to drop the mana generation of the enemy by -50% for 2 turns when dealing damage.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/c/c5/Grendel%27s_Mother.jpg/revision/latest?cb=20250715204621"
 },
 {
 "name": "Fimafeng",
@@ -1638,7 +1719,8 @@ const BASE_HEROES = [
 ],
 "skill": "Self-preservation: Safely cleanses the caster of all dispellable status ailments. Deals up to 3000 damage to the target (+40% damage vs Fire heroes, never misses). Stack (max 10): All allies get +5% mana generation. Stack (max 10): All allies get +20% defense.",
 "pas": "MYRKHEIM (Norse Dwarf) FAMILY BONUS (1/2/3 heroes): +5%/+10%/+15% resistance to Special Skill damage. Members have additional perks in the Myrkheim Mine event.",
-"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns."
+"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/b/b2/Fimafeng.jpg/revision/latest?cb=20250804132636"
 },
 {
 "name": "Salvatore",
@@ -1653,7 +1735,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deranged Existence: Performs a Full Removal on the caster. Summons a Deranged Dire Ghost for 5 turns. The Ghost deals 350% damage to a random enemy and inflicts 30 Insanity each turn. Inflicts 25 Insanity on all allies.",
 "pas": "CULTIST FAMILY BONUS (1/2/3 heroes): At the start of each turn, cast Moth Dust to a random enemy for 2/3/4 turns. MOTH DUST: -10% mana generation. If Moth Dust is cleansed or removed, the target falls asleep and receives +60% increased damage when sleeping.",
-"tal": "Fighter: 6% chance to revive upon death at end of turn."
+"tal": "Fighter: 6% chance to revive upon death at end of turn.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/5/50/Salvatore.jpg/revision/latest?cb=20250715204823"
 },
 {
 "name": "Chao Gai",
@@ -1668,7 +1751,8 @@ const BASE_HEROES = [
 ],
 "skill": "This Special Skill has a chance to deal Critical hits (crits deal 50% more damage; crits can reduce enemies' max health on PVP battles). Deals 390% damage to the target and nearby enemies. Stack (Max 10): All damage the target and nearby enemies receive is increased by +5%. Stack (Max 10): Caster and nearby allies get +5% critical chance.",
 "pas": "RIGHTEOUS REBELLION: When Special Skill hits a character with higher current HP, gain +20% boosted health. When hit by Special Skill from character with higher HP, gain +20% mana. (Each once per turn.) RESIST BLEED: Immune to Bleed damage. OUTLAWS FAMILY BONUS (1/2/3): +50%/+60%/+70% Critical Chance.",
-"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation."
+"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/3/34/Chao_Gai.jpg/revision/latest?cb=20250706115722"
 },
 {
 "name": "Lennart",
@@ -1685,7 +1769,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 420% clawing damage to all enemies. The caster gets Taunt for 5 turns. Knocks down enemies \u2014 Attack Team: all enemies' normal attacks delayed 3 turns; Defense Team: all enemies don't contribute to Troop damage for 3 turns.",
 "pas": "NINE LIVES (Passive): When defeated, 80% chance to revive at beginning of next turn with 50% HP and 80% mana. Up to 9 times. Chance reduces on each activation. Can't be prevented by status ailments or Passive Skills. LITHE FRAME (Trait): Not affected by any effects that increase or reduce defense \u2014 including status effect buffs/ailments, positive/negative Stacks, Growth and Wither effects. WILD CAT FAMILY BONUS (1/2/3 heroes): 5%/10%/15% chance to dodge Special Skills. Each Special Skill dodged damages the attacker for 100/200/300 damage.",
-"tal": "Ranger: MASTER PIERCE \u2013 25% chance to bypass defensive buffs including counterattacks."
+"tal": "Ranger: MASTER PIERCE \u2013 25% chance to bypass defensive buffs including counterattacks.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/e/e3/Lennart.jpg/revision/latest?cb=20250728133410"
 },
 {
 "name": "Dunner Hart",
@@ -1700,7 +1785,8 @@ const BASE_HEROES = [
 ],
 "skill": "Infernal Drumstorm: Deals 500% damage to all enemies. All enemies receive Corrosive Burn for 5 turns (322 damage, \u221213% defense per turn). The caster regenerates 1480 boosted HP over 4 turns. The caster gets +50% mana generation for 4 turns.",
 "pas": "BARD FAMILY: Shared passive \u2014 MANA INCREASE REDUCTION: Reduces the amount of mana increased by Special Skills by -50% for all enemies (always active). BARD SOLO BONUS: +5% mana generation for any hero with no other family member on the same team.",
-"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns."
+"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/5/50/Dunnar_Hart.jpg/revision/latest?cb=20250623144854"
 },
 {
 "name": "Fafnir",
@@ -1715,7 +1801,8 @@ const BASE_HEROES = [
 ],
 "skill": "Lance of Avarice: Deals up to 2100 damage to the target and nearby enemies (+40% damage vs Fire heroes, never misses). The target and nearby enemies receive +35% increased damage for 3 turns. Reflects the next status effect buff back to a random enemy for 3 turns.",
 "pas": "MYRKHEIM (Norse Dwarf) FAMILY BONUS (1/2/3 heroes): +5%/+10%/+15% resistance to Special Skill damage. Members have additional perks in the Myrkheim Mine event.",
-"tal": "Fighter: 6% chance to revive upon death at end of turn."
+"tal": "Fighter: 6% chance to revive upon death at end of turn.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/8/85/Fafnir.jpg/revision/latest?cb=20250624013903"
 },
 {
 "name": "Cleopatra",
@@ -1730,7 +1817,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 290% damage to all enemies. All allies get +42% defense for 4 turns. All allies become immune to new status ailments for 4 turns.",
 "pas": "SUN FAMILY BONUS (1/2/3 heroes): 30%/60%/100% chance \u2014 when a Sun hero casts Special Skill, a random dispellable buff from all enemies is dispelled.",
-"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation."
+"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/8/85/Cleopatra.jpg/revision/latest?cb=20221210172745"
 },
 {
 "name": "Milena",
@@ -1747,7 +1835,8 @@ const BASE_HEROES = [
 ],
 "skill": "Restoration and Annihilation (Magic - different effect at x1/x2 charge): x1 MANA CHARGE: Recovers 25% health for all allies; cleanses status ailments from all allies. x2 MANA CHARGE: Deals 420% damage to all enemies; dispels buffs from all enemies. (Costume Preserve and Freeze: x1 recovers 26% health + cleanse; x2 deals 440% damage + dispel.)",
 "pas": "MANA ON SPECIAL: When this character casts their Special Skill, 50% chance to give 10% mana to all allies; if fully charged (x2), the chance is 100%. MAGIC FAMILY BONUS (1/2/3 heroes): 50%/75%/100% chance to cast a +5% mana generation stack on a random ally when this hero casts their Special Skill (max stack 10). Costume adds Weaker Mega Minions (enemy Mega Minions have -75% HP).",
-"tal": "Wizard: JINX - 25% chance to deal extra damage per each buff/status effect the target has. (Costume version is Cleric: Manashield.)"
+"tal": "Wizard: JINX - 25% chance to deal extra damage per each buff/status effect the target has. (Costume version is Cleric: Manashield.)",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/e/eb/Event_-_Magic_-_Milena.png/revision/latest/scale-to-width-down/239?cb=20211013014518"
 },
 {
 "name": "Ruan Xiaoqi",
@@ -1762,7 +1851,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 300% damage to the target and nearby enemies. This Special Skill has a chance to deal Critical hits (crits deal 50% more damage; crits can reduce enemies' max health on PVP battles). Stack (Max 10): Caster gets +5% critical chance. Stack (Max 10): All damage target and nearby enemies receive is increased by +5%.",
 "pas": "RIGHTEOUS REBELLION: When Special Skill hits a character with higher current HP, gain +20% boosted health. When hit by Special Skill from character with higher HP, gain +20% mana. (Each once per turn.) RESIST BLEED: Immune to Bleed damage. OUTLAWS FAMILY BONUS (1/2/3): +50%/+60%/+70% Critical Chance.",
-"tal": "Monk: 6% chance to resist status ailments."
+"tal": "Monk: 6% chance to resist status ailments.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/1/1b/Ruan_Xiaoqi.jpg/revision/latest?cb=20250623145542"
 },
 {
 "name": "Song Jiang",
@@ -1778,7 +1868,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 450% damage to the target and nearby enemies. Heals the caster and nearby allies for 20% of damage dealt. The target and nearby enemies get silenced for 4 turns.",
 "pas": "RIGHTEOUS REBELLION: When Special Skill hits a character with higher current HP, gain +20% boosted health. When hit by Special Skill from character with higher HP, gain +20% mana. (Each once per turn.) CRITICAL HIT MECHANIC: Special Skill has a chance to deal critical hits; crits deal 50% more damage and can reduce enemies' max health on PVP. RESIST BLEED: Immune to Bleed damage.",
-"tal": "Paladin: 25% chance to get +25% defense for 2 turns after receiving any damage."
+"tal": "Paladin: 25% chance to get +25% defense for 2 turns after receiving any damage.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/f/f6/Song_Jiang.jpg/revision/latest?cb=20250624014305"
 },
 {
 "name": "Li Kui",
@@ -1793,7 +1884,8 @@ const BASE_HEROES = [
 ],
 "skill": "Whirlwind Blows: This Special Skill has a chance to deal Critical hits (crits deal 50% more damage; crits can reduce enemies' max health on PVP battles). Deals 300% damage to the target and 4 random enemies. The caster gets Taunt that prevents enemies from using Special Skills on the caster's allies for 4 turns. The caster reduces all received damage by -50% for 4 turns.",
 "pas": "CLEANSE ON CRITICAL: When scoring a critical hit with Special Skill, safely cleanses the latest cleansable status ailment from all allies (once per turn). RIGHTEOUS REBELLION: When Special Skill hits a character with higher current HP, gain +20% boosted health. When hit by Special Skill from character with higher HP, gain +20% mana. (Each once per turn.) RESIST BLEED: Immune to Bleed damage. OUTLAWS FAMILY BONUS (1/2/3): +50%/+60%/+70% Critical Chance. Morale Boost in War of the Three Kingdoms (+10% attack, +3% defense, +7% health). Aether Power: Taunt at battle start for 3 turns.",
-"tal": "Barbarian: MASTER WOUND - After any normal attack, 30% chance to deal 80% of the damage done over 5 turns (stacks with existing Wound)."
+"tal": "Barbarian: MASTER WOUND - After any normal attack, 30% chance to deal 80% of the damage done over 5 turns (stacks with existing Wound).",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/6/65/Li_Kui.jpg/revision/latest?cb=20250619064407"
 },
 {
 "name": "Hysteria",
@@ -1809,7 +1901,8 @@ const BASE_HEROES = [
 ],
 "skill": "Eye of Yog-Sir: The caster gets Taunt for 4 turns, preventing enemies from using Special Skills on allies. For 4 turns, inflicts 10 Insanity on all enemies each time the caster is hit (unlimited activations from Special Skills, once per turn from tiles/normal attacks). The caster gets 45 Insanity.",
 "pas": "CULTIST FAMILY BONUS (1/2/3 heroes): At the start of each turn, cast Moth Dust to a random enemy for 2/3/4 turns. MOTH DUST: -10% mana generation. If Moth Dust is cleansed or removed, the target falls asleep and receives +60% increased damage when sleeping.",
-"tal": "Druid: 3% chance per hit to summon a Thorn Minion (25% HP / 25% atk inherited from caster) at end of turn."
+"tal": "Druid: 3% chance per hit to summon a Thorn Minion (25% HP / 25% atk inherited from caster) at end of turn.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/a/ae/Hysteria.jpg/revision/latest?cb=20250623145327"
 },
 {
 "name": "Thrivaldi",
@@ -1821,7 +1914,8 @@ const BASE_HEROES = [
 "tags": [],
 "skill": "Glacial Atmosphere: Deals up to 1600 Frostfall Strike damage to all enemies (+40% damage vs Fire). All enemies receive Arctic Core damage over time and \u221215% attack stacking per turn.",
 "pas": "MYRKHEIM (Norse Dwarf) FAMILY BONUS (1/2/3 heroes): +5%/+10%/+15% resistance to Special Skill damage. Members have additional perks in the Myrkheim Mine event.",
-"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation."
+"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/3/3d/Thrivaldi.jpg/revision/latest?cb=20250615202539"
 },
 {
 "name": "Serena",
@@ -1838,7 +1932,8 @@ const BASE_HEROES = [
 ],
 "skill": "Spreading Gossip: Deals 400% damage to the target. Summons a Gossip Whisperer Fiend on the target (absorbs healing equal to 25% of target's max HP then disappears; gives \u221245% accuracy; clones itself to nearby enemies each turn \u2014 won't clone if target already has max fiends). When cast: inflicts 412 Water damage over 2 turns on all enemies.",
 "pas": "BEACH PARTY FAMILY BONUS: Reduces damage received from DoT status effects by -20% per hero (max -60% for 3 heroes).",
-"tal": "Monk: 6% chance to resist negative status effects."
+"tal": "Monk: 6% chance to resist negative status effects.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/6/6f/Serena_%28Shoreside_Socialite%29.jpg/revision/latest?cb=20250628143850"
 },
 {
 "name": "Tealmoine",
@@ -1856,7 +1951,8 @@ const BASE_HEROES = [
 ],
 "skill": "Bizarre Mist: Steals all dispellable buffs from the target and randomly distributes them on allies. The target falls into Deep Sleep and receives +80% increased damage while in Deep Sleep; the character in Deep Sleep cannot gain mana or attack; woken once it takes 500 damage; this effect is uncleansable. Recovers 30% health for all allies.",
 "pas": "DODGE SPECIAL DAMAGE: 10% chance to dodge Special Skills that deal damage. MOTH FAMILY BONUS (1/2/3 heroes): At the start of each turn, cast Moth Dust on a random enemy for 2/3/4 turns. MOTH DUST: -10% mana generation. If Moth Dust is cleansed or removed, the target falls asleep and receives +60% increased damage while sleeping.",
-"tal": "Monk: WITHSTAND - 30% chance to resist status ailments."
+"tal": "Monk: WITHSTAND - 30% chance to resist status ailments.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/4/45/Tealmoine.jpg/revision/latest?cb=20250521145328"
 },
 {
 "name": "Pepperbleu",
@@ -1872,7 +1968,8 @@ const BASE_HEROES = [
 ],
 "skill": "Safely dispels all buffs from the target. Summons a Dusk Mothling Mega Fiend on the target (270% attack, absorbs 75% max HP healing). The target is immune to new buffs while the Mega Fiend is present.",
 "pas": "MOTH FAMILY BONUS (1/2/3 heroes): At the start of each turn, cast Moth Dust to a random enemy for 2/3/4 turns. MOTH DUST: -10% mana generation. If Moth Dust is cleansed or removed, the target falls asleep and receives +60% increased damage when sleeping.",
-"tal": "Wizard: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Wizard: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/e/eb/Pepperbleu.jpg/revision/latest?cb=20250306151855"
 },
 {
 "name": "Pepperbleu (2)",
@@ -1888,7 +1985,8 @@ const BASE_HEROES = [
 ],
 "skill": "Safely dispels all buffs from the target. Summons a Dusk Mothling Mega Fiend on the target (270% attack, absorbs 75% max HP healing). The target is immune to new buffs while the Mega Fiend is present.",
 "pas": "MOTH FAMILY BONUS (1/2/3 heroes): At the start of each turn, cast Moth Dust to a random enemy for 2/3/4 turns. MOTH DUST: -10% mana generation. If Moth Dust is cleansed or removed, the target falls asleep and receives +60% increased damage when sleeping.",
-"tal": "Wizard: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Wizard: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/e/eb/Pepperbleu.jpg/revision/latest?cb=20250306151855"
 },
 {
 "name": "Aethslegaur",
@@ -1902,7 +2000,8 @@ const BASE_HEROES = [
 ],
 "skill": "Firestorm Strike: Deals up to 3000 Firestorm Strike damage to the target (+40% damage vs Nature heroes, never misses). All allies get +17% dodge chance for 4 turns.",
 "pas": "NIDAVELLIR FAMILY BONUS (1/2/3 heroes): +3%/+5%/+7% attack, defense, and health. Members have additional perks in the Nidavellir event.",
-"tal": "Fighter: 6% chance to revive upon death at end of turn."
+"tal": "Fighter: 6% chance to revive upon death at end of turn.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/2/27/Aethslegaur.jpg/revision/latest?cb=20250405182743"
 },
 {
 "name": "Gongoth",
@@ -1917,7 +2016,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 450% damage to the target and nearby enemies. All allies become immune to new status ailments for 3 turns. All allies get +45% defense for 3 turns.",
 "pas": "ASTRAL DWARF FAMILY: Innate resistance to mana reduction (scales with family members on team: 1 hero = partial, 2+ heroes = full immunity). Family bonus (2+ heroes): 50% chance to dispel a random dispellable buff from all enemies at end of each turn.",
-"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns."
+"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/d/df/Gongoth.jpg/revision/latest?cb=20250624014035"
 },
 {
 "name": "Hrothgar",
@@ -1932,7 +2032,8 @@ const BASE_HEROES = [
 ],
 "skill": "The King's Feast: Deals 340% damage to all enemies. All enemies lose 20% mana. All enemies get \u221224% mana generation for 4 turns. Source of Buffs (4 activations): A random ally gets +70% attack and +50% defense for 5 turns.",
 "pas": "BEOWULF FAMILY BONUS (1/2 heroes): 75%/100% chance to cleanse a random cleansable status ailment from all allies when this character receives damage from an enemy's Special Skill. (Once per turn.)",
-"tal": "Paladin: 25% chance to get +25% defense for 2 turns after receiving any damage."
+"tal": "Paladin: 25% chance to get +25% defense for 2 turns after receiving any damage.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/e/ec/Hrothgar.jpg/revision/latest?cb=20241130031055"
 },
 {
 "name": "Jolyon",
@@ -1947,7 +2048,8 @@ const BASE_HEROES = [
 ],
 "skill": "Charm of Protection (Average): All allies get +75% chance to dodge Special Skills that deal damage. This effect lasts until the ally successfully dodges once. After the Enhanced Dodge ends or is removed or replaced, the ally gets a Wooden Doll Minion. The Wooden Doll Minion has 30% HP and 30% attack inherited from the caster. When summoned, the Wooden Doll Minion gives its owner immunity to new status ailments for as long as the owner has a Wooden Doll Minion.",
 "pas": "Minion Blind; Resist Insanity; Resist Defense Reduction; Aether Power: Defense Up (+20% defense for 6 turns at battle start)",
-"tal": "Master Manashield 5/5"
+"tal": "Master Manashield 5/5",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/8/8f/Jolyon.jpg/revision/latest?cb=20250624014235"
 },
 {
 "name": "Ceris",
@@ -1964,7 +2066,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 600% damage to the target. If the target had more than 50% mana before being hit, the damage chains to another enemy with more than 50% mana (each enemy can only be hit once; damage is reduced each hit). All hit enemies get Silenced for 4 turns. All enemies get \u2212250 attack and \u2212250 defense (Wither effect).",
 "pas": "ASTRAL DWARF FAMILY BONUS (2/3 heroes): 50%/75% chance \u2014 at end of each turn, a random dispellable buff is dispelled from all enemies.",
-"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/4/48/Ceris.jpg/revision/latest?cb=20250425125228"
 },
 {
 "name": "Ceris (2)",
@@ -1981,7 +2084,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 600% damage to the target. If the target had more than 50% mana before being hit, the damage chains to another enemy with more than 50% mana (each enemy can only be hit once; damage is reduced each hit). All hit enemies get Silenced for 4 turns. All enemies get \u2212250 attack and \u2212250 defense (Wither effect).",
 "pas": "ASTRAL DWARF FAMILY BONUS (2/3 heroes): 50%/75% chance \u2014 at end of each turn, a random dispellable buff is dispelled from all enemies.",
-"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/4/48/Ceris.jpg/revision/latest?cb=20250425125228"
 },
 {
 "name": "Hathor",
@@ -1998,7 +2102,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 400% damage to the target. The target and nearby enemies get -44% defense for 3 turns. The target and nearby enemies receive 300 Burn damage over 3 turns.",
 "pas": "MOON FAMILY BONUS (1/2/3 heroes): 30%/60%/100% chance \u2014 when Moon hero casts Special Skill, a random cleansable status ailment from all allies is cleansed.",
-"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/7/7c/Hathor.jpg/revision/latest?cb=20240219150326"
 },
 {
 "name": "Burton",
@@ -2014,7 +2119,8 @@ const BASE_HEROES = [
 ],
 "skill": "Petrifying Knuckles: Deals 400% damage to the target and nearby enemies and inflicts 25 Insanity. The caster gets Stoneskin (reduces all damage taken to 1 for the next 5 hits, undispellable). The caster gets 40 Insanity.",
 "pas": "INVESTIGATOR FAMILY BONUS (1/2/3 heroes): +20%/+30%/+40% attack and +20%/+30%/+40% health. EVENT BONUS: Additional perks in the Shadows of the Deep event.",
-"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns."
+"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/e/eb/Burton.jpg/revision/latest?cb=20250319201701"
 },
 {
 "name": "Gooric",
@@ -2031,7 +2137,8 @@ const BASE_HEROES = [
 ],
 "skill": "Slime Revive: All allies get Slime Revive for 4 turns (if defeated, they are reborn as a Slime with 100% HP, 50% attack, 50% defense; Slime Slap deals 290% damage to the target). All allies get +60% attack for 3 turns.",
 "pas": "SLIME MINION UPON DEFEAT: When this character is defeated, summons Slime Mega Minions to nearby allies with 50% HP and 40% attack inherited from this character. SLIME MINION SPLIT: If this character loses more than 25% of max health at once, summons a Slime Mega Minion for themselves with 50% HP and 40% attack inherited from this character. SLIME FAMILY BONUS (1/2/3 heroes): Mega Minions, Minions, Mega Fiends and Fiends summoned by allies get +10%/+15%/+20% attack.",
-"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation."
+"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/e/e6/Gooric.jpg/revision/latest?cb=20250125142449"
 },
 {
 "name": "Amund",
@@ -2047,7 +2154,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 350% damage to all enemies. Summons a Bone Trap Fiend on all enemies (45% attack per turn increasing by 8% per turn up to 93%, absorbs 45% max HP of healing then disappears, prevents ailment cleanse and reallocation).",
 "pas": "PLAINS HUNTER FAMILY BONUS (2/3/4/5 heroes): +5%/+10%/+15%/+20% Attack. Shared passive \u2014 DAMAGE OVER TIME ON SPECIAL: When casting Special Skill, gives a Hunter's Mark to a random enemy (150 damage over 3 turns; refreshes and increases by 150, max 1500 total).",
-"tal": "Fighter: 6% chance to revive upon death at end of turn."
+"tal": "Fighter: 6% chance to revive upon death at end of turn.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/4/43/Amund.jpg/revision/latest?cb=20250624014541"
 },
 {
 "name": "Gandr",
@@ -2062,7 +2170,8 @@ const BASE_HEROES = [
 ],
 "skill": "Spearwand Gale: Deals up to 2200 Firestorm Strike damage to all enemies (never misses). Heals all allies for 30% of the damage dealt. All allies get Counterattack 65% for 5 turns.",
 "pas": "NIDAVELLIR FAMILY BONUS (1/2/3 heroes): +3%/+5%/+7% attack, defense, and health. Members have additional perks in the Nidavellir event.",
-"tal": "Ranger: 25% chance to bypass defensive buffs including counterattacks. If bypassed, target gets -20% defense for 3 turns."
+"tal": "Ranger: 25% chance to bypass defensive buffs including counterattacks. If bypassed, target gets -20% defense for 3 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/8/8a/Gandr.jpg/revision/latest?cb=20241214140747"
 },
 {
 "name": "Wulfstan",
@@ -2079,7 +2188,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 350% damage to all enemies. All enemies get +10 Insanity. The caster gets +45 Insanity.",
 "pas": "CULTIST FAMILY BONUS (1/2/3 heroes): At the start of each turn, cast Moth Dust to a random enemy for 2/3/4 turns. MOTH DUST: -10% mana generation. If Moth Dust is cleansed or removed, the target falls asleep and receives +60% increased damage when sleeping.",
-"tal": "Ranger: 25% chance to bypass defensive buffs including counterattacks. If bypassed, target gets -20% defense for 3 turns."
+"tal": "Ranger: 25% chance to bypass defensive buffs including counterattacks. If bypassed, target gets -20% defense for 3 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/a/a6/Wulfstan.jpg/revision/latest?cb=20250201225346"
 },
 {
 "name": "Dularfulr",
@@ -2093,7 +2203,8 @@ const BASE_HEROES = [
 ],
 "skill": "Firestorm Ward: All allies get Firestorm Ward for 4 turns (reduces Special Skill damage received by up to \u22121200). All allies get +30% defense vs Nature heroes for 4 turns. All allies are immune to new ailments for 4 turns.",
 "pas": "NIDAVELLIR FAMILY BONUS (1/2/3 heroes): +3%/+5%/+7% attack, defense, and health. Members have additional perks in the Nidavellir event.",
-"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation."
+"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/1/12/Dularfulr.jpg/revision/latest?cb=20241214142659"
 },
 {
 "name": "Maisie",
@@ -2108,7 +2219,8 @@ const BASE_HEROES = [
 ],
 "skill": "Boosts the caster's HP by 160 per active ailment among all allies (up to 800). Summons a Shield Guard Mega Minion for all allies (65% HP, 180% attack). The Mega Minion safely cleanses the latest ailment from all allies each turn.",
 "pas": "GARRISON GUARDS FAMILY BONUS: Guard Rally \u2014 removes Wither effects from allies each turn; Aether Power: needs in-game verification. \u26a0\ufe0f Note: Forum data suggests Maisie may be Dark/Purple \u2014 verify element in-game.",
-"tal": "Revive"
+"tal": "Revive",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/e/ea/Maisie.jpg/revision/latest?cb=20250215164801"
 },
 {
 "name": "Vard",
@@ -2124,7 +2236,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 450% damage to all enemies. All enemies get \u2212300 attack and \u2212300 defense (Wither effect). All enemies get \u221230% mana generation for 5 turns.",
 "pas": "ASTRAL DWARF FAMILY BONUS (2/3 heroes): 50%/75% chance \u2014 at end of each turn, a random dispellable buff is dispelled from all enemies.",
-"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/7/78/Vard.jpg/revision/latest?cb=20250206232304"
 },
 {
 "name": "Maegwyn",
@@ -2143,7 +2256,8 @@ const BASE_HEROES = [
 ],
 "skill": "Astral Brew: Recovers 50% health for all allies. All allies regenerate 800 boosted health over 4 turns (boosted health can exceed max HP). All allies reduce all received damage by -40% for 4 turns.",
 "pas": "SUPERIOR RESIST NEGATIVE MINION EFFECTS: Immune to incoming negative effects and damage from Minions and Mega Minions. RESIST HEALING AILMENTS: Innate resistance against status ailments that affect healing. DESTROY FIENDS ON SPECIAL: When this character casts their Special Skill, all fiends are destroyed from them. ASTRAL DWARF FAMILY BONUS (1/2 heroes): 20%/25% chance to dispel a random dispellable buff from all enemies at end of each turn; 75%/100% chance to resist mana reductions and mana status ailments, each successful resist gives 5% mana.",
-"tal": "Cleric: MANASHIELD - 35% chance to resist any negative mana effects or effects that prevent the use of Special Skills."
+"tal": "Cleric: MANASHIELD - 35% chance to resist any negative mana effects or effects that prevent the use of Special Skills.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/5/5a/Maegwyn.jpg/revision/latest?cb=20250112153521"
 },
 {
 "name": "Sable",
@@ -2160,7 +2274,8 @@ const BASE_HEROES = [
 ],
 "skill": "I'll Bring You Back: Performs a Full Removal on the caster and puts caster in Ghost form for 3 turns. When Ghost expires: revives a random defeated ally at 40% HP. All allies regenerate 900 HP over 3 turns. All allies' ailments are cleansed at the end of each turn for 3 turns.",
 "pas": "FOX FAMILY BONUS (1/2/3 heroes): +5%/+10%/+15% chance to dodge Special Skills.",
-"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation."
+"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/6/66/Sable.jpg/revision/latest?cb=20250206232234"
 },
 {
 "name": "Sable (2)",
@@ -2177,7 +2292,8 @@ const BASE_HEROES = [
 ],
 "skill": "I'll Bring You Back: Performs a Full Removal on the caster and puts caster in Ghost form for 3 turns. When Ghost expires: revives a random defeated ally at 40% HP. All allies regenerate 900 HP over 3 turns. All allies' ailments are cleansed at the end of each turn for 3 turns.",
 "pas": "FOX FAMILY BONUS (1/2/3 heroes): +5%/+10%/+15% chance to dodge Special Skills.",
-"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation."
+"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/6/66/Sable.jpg/revision/latest?cb=20250206232234"
 },
 {
 "name": "Quari",
@@ -2193,7 +2309,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 435% damage to the target and nearby enemies. The target and nearby enemies receive 776 Water damage over 4 turns. All allies steal 50% of the Water damage dealt as boosted health.",
 "pas": "ASTRAL PLANE FAMILY BONUS: Bonus for 1/2 heroes \u2014 each time an Astral Plane hero takes Special Skill damage, 50%/70% chance to dispel a random dispellable buff from the attacker.",
-"tal": "Monk: 6% chance to resist negative status effects."
+"tal": "Monk: 6% chance to resist negative status effects.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/6/67/Quari_%28Astral_Dwarf_Pilgrim%29.jpg/revision/latest?cb=20241222163539"
 },
 {
 "name": "Salniss",
@@ -2209,7 +2326,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 425% damage to the target (Silenced for 3 turns) and 425% damage to a random enemy (+50% increased damage for 3 turns, +10% per minion on target up to +100%, never misses). Innate resistance to minion effects.",
 "pas": "Innate Resistance to Minion Effects (tile damage bypasses Minions; immune to minion-based effects); ASTRAL DWARFS/ASTRAL PLANE FAMILY BONUS (1/2 heroes): 50%/70% chance \u2014 each time an Astral hero takes Special Skill damage, a random dispellable buff from the attacker is dispelled; Aether Power: needs in-game verification",
-"tal": "Pierce"
+"tal": "Pierce",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/b/b8/Salniss_%28Astral_Dwarf_Warden%29.jpg/revision/latest?cb=20241225142246"
 },
 {
 "name": "Bramble",
@@ -2227,7 +2345,8 @@ const BASE_HEROES = [
 ],
 "skill": "Recovers 50% health for all allies. All allies gain 25% mana after 3 turns (or immediately if removed before duration ends). Safely cleanses status ailments from all allies. (Safe cleanse bypasses secondary effects like damage on removal.)",
 "pas": "MINION BLIND: All enemies' Minions get -60% accuracy. All enemies' Mega Minions get -50% accuracy. DEFENSE IMMUNITY: Immune to status ailments, stacks and Wither effects that affect defense. INSANITY IMMUNITY: Immune to Insanity. WOODLAND FAUN FAMILY BONUS (1/2 heroes): 75%/100% chance to resist mana reductions and mana status ailments. Each successful resist gives +15% mana. +50%/+100% more damage dealt against Minions and Mega Minions.",
-"tal": "Druid: 3% per damage taken to summon a Thorn Minion at end of turn."
+"tal": "Druid: 3% per damage taken to summon a Thorn Minion at end of turn.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/a/a4/Bramble.jpg/revision/latest?cb=20250125142015"
 },
 {
 "name": "Isidore",
@@ -2242,7 +2361,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 300% damage to the target and up to 9 random enemies (damage reduced on each consecutive hit). All enemies get \u221264% defense against Special Skills (lasts until enemy takes Special Skill damage 3 times). After the Enhanced Defense Ailment ends or is removed or replaced, all enemies get \u221280% healing received for 6 turns.",
 "pas": "WOODLAND FAMILY BONUS (1/2/3 heroes): +15%/+20%/+25% resistance to Nature damage.",
-"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns."
+"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/5/58/Isidore.jpg/revision/latest?cb=20250112153828"
 },
 {
 "name": "Silverpaw",
@@ -2259,7 +2379,8 @@ const BASE_HEROES = [
 ],
 "skill": "Foxfire Barrage: Deals 285% damage to all enemies. All enemies receive 432 fire damage over 3 turns. All enemies get \u221224% mana generation for 3 turns.",
 "pas": "FOX FAMILY BONUS (1/2/3 heroes): +5%/+10%/+15% chance to dodge Special Skills.",
-"tal": "Monk: 6% chance to resist negative status effects."
+"tal": "Monk: 6% chance to resist negative status effects.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/a/a5/Silverpaw.jpg/revision/latest?cb=20250226134447"
 },
 {
 "name": "Salimata",
@@ -2273,7 +2394,8 @@ const BASE_HEROES = [
 ],
 "skill": "Bard's Finale: Deals 260% damage to the target. All allies get +45% attack for 3 turns. All allies recover 30% health over 3 turns. The caster gets an additional +20% attack for 3 turns.",
 "pas": "BARD FAMILY: Shared passive \u2014 MANA INCREASE REDUCTION: Reduces the amount of mana increased by Special Skills by -50% for all enemies (always active). BARD SOLO BONUS: +5% mana generation for any hero with no other family member on the same team.",
-"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation."
+"tal": "Cleric: 7% chance to resist effects that block skill use or negatively impact mana generation.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/4/4d/Salimata.jpg/revision/latest?cb=20241214142548"
 },
 {
 "name": "Emblem Mimic",
@@ -2289,7 +2411,8 @@ const BASE_HEROES = [
 ],
 "skill": "Savage Gobble: Deals 480% damage to the target. If an enemy is defeated by the attack, the caster recovers +50% health and gains +33% mana. The target and nearby enemies receive 387 Poison damage over 4 turns; this effect spreads to nearby enemies. The Mimic chest closes for 2 turns (the Mimic is immune to damage and new status ailments while closed).",
 "pas": "PERFECT ACCURACY: This character's Special Skill never misses its target. MIMIC LOOT: Grants a chance for extra loot when completing stages - Master Cleric Emblems, Master Monk Emblems (5*), Cleric Emblems, Monk Emblems (4*); Mimic must be max level and fully ascended. Mimics have reduced leveling and ascension cost.",
-"tal": "Cleric: MANASHIELD - 35% chance to resist any negative mana effects or effects that prevent the use of Special Skills."
+"tal": "Cleric: MANASHIELD - 35% chance to resist any negative mana effects or effects that prevent the use of Special Skills.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/8/8c/Emblem_Mimic_Fire.jpg/revision/latest?cb=20250922194116"
 },
 {
 "name": "Ysabel",
@@ -2305,7 +2428,8 @@ const BASE_HEROES = [
 ],
 "skill": "Lash of the Whip: Deals 525% damage to the target and nearby enemies. The target and nearby enemies get \u221250% defense against Special Skills (lasts until they take Special Skill damage 3 times). After the Enhanced Defense Ailment ends or is removed or replaced, dispels buffs from the affected enemies.",
 "pas": "WOODLAND FAUN FAMILY BONUS (1/2 heroes): 75%/100% chance to resist mana reductions and mana status ailments; each successful resist gives +15% mana; +50%/+100% more damage dealt against Minions and Mega Minions; Aether Power: needs in-game verification",
-"tal": "Revive"
+"tal": "Revive",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/2/2c/Ysabel_%28Dauntless_Faun_Gladiator%29.jpg/revision/latest?cb=20241123175157"
 },
 {
 "name": "Revna",
@@ -2320,7 +2444,8 @@ const BASE_HEROES = [
 ],
 "skill": "Cloak of Feathers: Safely cleanses 1 status ailment from all allies (latest first). Recovers 35% health for all allies. All allies reflect status ailments, negative stacks, and Wither effects to a random character on the opposing team for 4 turns.",
 "pas": "DAMAGE OVER TIME ON SPECIAL: When casting Special Skill, gives a Hunter's Mark to a random enemy (150 damage over 3 turns; refreshes and increases by 150, max 1500 total). SPECIAL SKILL DAMAGE REDUCTION: 10% chance to drop the direct damage received from Special Skills to 1. PLAINS HUNTER FAMILY BONUS (2/3/4/5 heroes): +5%/+10%/+15%/+20% Attack.",
-"tal": "Cleric: MANASHIELD - 35% chance to resist any negative mana effects or effects that prevent the use of Special Skills."
+"tal": "Cleric: MANASHIELD - 35% chance to resist any negative mana effects or effects that prevent the use of Special Skills.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/b/b6/Revna_%28Carnelian_Hunter%29.jpg/revision/latest?cb=20241123174701"
 },
 {
 "name": "Tamlin",
@@ -2337,7 +2462,8 @@ const BASE_HEROES = [
 ],
 "skill": "Disquieting Tune: Deals 460% damage to all enemies. All enemies get \u221264% defense against Special Skills (this effect lasts until the enemy takes damage from a Special Skill 6 times). After the Enhanced Defense Ailment ends or is removed or replaced, the enemy gets Silenced for 6 turns.",
 "pas": "WOODLAND FAMILY BONUS (1/2/3 heroes): +15%/+20%/+25% resistance to Nature damage.",
-"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/2/22/Tamlin.jpg/revision/latest?cb=20240923130042"
 },
 {
 "name": "Hunter",
@@ -2352,7 +2478,8 @@ const BASE_HEROES = [
 ],
 "skill": "Merciless Execution: Deals 530% damage to the target (never misses). Reduces the target's defense by \u221225% for 3 turns. If the target is defeated by this attack, nearby enemies receive 100 Insanity.",
 "pas": "INVESTIGATOR FAMILY BONUS (1/2/3 heroes): +20%/+30%/+40% attack and +20%/+30%/+40% health. EVENT BONUS: Additional perks in the Shadows of the Deep event.",
-"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns."
+"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/2/2a/Hunter.jpg/revision/latest?cb=20240604144245"
 },
 {
 "name": "Aurox",
@@ -2368,7 +2495,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 380% damage to all enemies. All allies get +45% attack for 3 turns. All allies become immune to new status ailments for 3 turns.",
 "pas": "LEGENDS 2025 FAMILY: Bonus activates when all 12 HOTM for 2025 are released. +10%/+15%/+20% attack (1/2/3 heroes).",
-"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns."
+"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage dealt over 5 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/1/17/Aurox_%28The_Radiant_Berserker%29.jpg/revision/latest?cb=20251025091728"
 },
 {
 "name": "Fergus",
@@ -2382,7 +2510,8 @@ const BASE_HEROES = [
 ],
 "skill": "Shield Guard Mega Minion: Summons a Shield Guard Mega Minion for all allies (65% HP, 180% attack). The Mega Minion protects owners from up to 900 direct damage from Special Skills (undispellable). The Mega Minion safely dispels the latest removable buff from the target each turn.",
 "pas": "GARRISON GUARD FAMILY BONUS (1/2/3 heroes): At start of battle, summons a Recruit Guard Mega Minion (20%/25%/30% HP and 100%/120%/140% attack inherited from this character).",
-"tal": "Monk: 6% chance to resist negative status effects."
+"tal": "Monk: 6% chance to resist negative status effects.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/5/5f/Fergus.jpg/revision/latest?cb=20241214142044"
 },
 {
 "name": "Sune",
@@ -2399,7 +2528,8 @@ const BASE_HEROES = [
 ],
 "skill": "Primeval Glaive: Deals 550% damage to the target. If the target is Ice element, also deals 300% damage to nearby enemies, dispels buffs from the target and nearby enemies, and reduces their mana by \u221215% (\u22125% additional per each removed status effect, up to \u221240% total).",
 "pas": "PLAINS HUNTER FAMILY BONUS (2/3/4/5 heroes): +5%/+10%/+15%/+20% Attack. Shared passive \u2014 DAMAGE OVER TIME ON SPECIAL: When casting Special Skill, gives a Hunter's Mark to a random enemy (150 damage over 3 turns; refreshes and increases by 150, max 1500 total).",
-"tal": "Paladin: 25% chance to get +25% defense for 2 turns after receiving any damage."
+"tal": "Paladin: 25% chance to get +25% defense for 2 turns after receiving any damage.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/1/1b/Sune_%28Malachite_Hunter%29.jpg/revision/latest?cb=20240727080051"
 },
 {
 "name": "Melancholia",
@@ -2415,7 +2545,8 @@ const BASE_HEROES = [
 ],
 "skill": "Revives all allies with 70% HP and 50 Insanity. All allies get +74% defense against Special Skills for 5 turns.",
 "pas": "CULTIST FAMILY BONUS (1/2/3 heroes): At the start of each turn, cast Moth Dust to a random enemy for 2/3/4 turns. MOTH DUST: -10% mana generation. If Moth Dust is cleansed or removed, the target falls asleep and receives +60% increased damage when sleeping.",
-"tal": "Paladin: 25% chance to get +25% defense for 2 turns after receiving any damage."
+"tal": "Paladin: 25% chance to get +25% defense for 2 turns after receiving any damage.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/a/a8/Melancholia.jpg/revision/latest?cb=20240506160328"
 },
 {
 "name": "Fungustine",
@@ -2434,7 +2565,8 @@ const BASE_HEROES = [
 ],
 "skill": "Revitalizing Sludge: Boosts health of all allies by 1000 (boosted health can exceed max HP). All allies get Sticky Surface for 4 turns: steals 1 random dispellable buff or Growth effect from the character that deals damage through normal attacks or Special Skill (one steal per turn from normal attacks per hero). All allies get +25% defense for 4 turns. All allies are immune to buff dispels and relocations for 4 turns (immunity includes this effect itself).",
 "pas": "SLIME MINION UPON DEFEAT: When this character is defeated, summons Slime Mega Minions to nearby allies with 50% HP and 40% attack inherited from this character. SLIME MINION SPLIT: If this character loses more than 25% of max health at once, summons a Slime Mega Minion for themselves with 50% HP and 40% attack. SLIME FAMILY BONUS (1/2/3 heroes): Mega Minions, Minions, Mega Fiends and Fiends summoned by allies get +10%/+15%/+20% attack.",
-"tal": "Paladin: PROTECT - 25% chance to get +25% defense for 2 turns after receiving any damage."
+"tal": "Paladin: PROTECT - 25% chance to get +25% defense for 2 turns after receiving any damage.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/3/37/Fungustine.jpg/revision/latest?cb=20240622032656"
 },
 {
 "name": "Astrid",
@@ -2450,7 +2582,8 @@ const BASE_HEROES = [
 ],
 "skill": "Booming Mend: Recovers 50% health for all allies. Each defeated ally has a 40% chance to get revived with 30% HP. All allies have a 20% chance to drop any received damage to 1 for 3 turns.",
 "pas": "QUICK TEMPO: BALLAD - All Ballads cast by enemies only last for 1 turn. QUICK TEMPO: DANCE - All Dances cast by enemies only last for 1 turn. BARD FAMILY: Shared passive - MANA INCREASE REDUCTION: Reduces the amount of mana increased by Special Skills by -50% for all enemies (always active). BARD SOLO BONUS: +5% mana generation for any hero with no other family member on the same team.",
-"tal": "Sorcerer: DELAY - 15% chance to drop the mana generation of the enemy by -50% for 2 turns when dealing damage."
+"tal": "Sorcerer: DELAY - 15% chance to drop the mana generation of the enemy by -50% for 2 turns when dealing damage.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/e/ea/Astrid.jpg/revision/latest?cb=20241115131520"
 },
 {
 "name": "Zavinia",
@@ -2465,7 +2598,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 180% damage to random enemies. Hits as many enemies as there are Nature tiles on the board (up to 12 hits). Damage is reduced on each consecutive hit. All hit enemies receive 10 Insanity per hit.",
 "pas": "CULTIST FAMILY BONUS (1/2/3 heroes): At the start of each turn, cast Moth Dust to a random enemy for 2/3/4 turns. MOTH DUST: -10% mana generation. If Moth Dust is cleansed or removed, the target falls asleep and receives +60% increased damage when sleeping.",
-"tal": "Rogue: 20% chance to dodge direct damage from offensive Special Skills."
+"tal": "Rogue: 20% chance to dodge direct damage from offensive Special Skills.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/4/4a/Zavinia.jpg/revision/latest?cb=20240702151840"
 },
 {
 "name": "Zhuge Liang",
@@ -2480,7 +2614,8 @@ const BASE_HEROES = [
 ],
 "skill": "Scholar's Stratagem: Deals 185% damage to all enemies. All enemies get \u221234% attack for 4 turns. All enemies get \u221234% defense for 4 turns.",
 "pas": "KINGDOM FAMILY \u2014 MORALE BOOST (War of the Three Kingdoms only): +10% attack, +3% defense, +7% health for heroes of this family and their allies.",
-"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/c/c0/W3K_-_Zhuge_Liang.png/revision/latest/scale-to-width-down/239?cb=20220821181447"
 },
 {
 "name": "Theodosius",
@@ -2496,7 +2631,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 450% damage to all enemies. Reduces the duration of all active status ailments on allies by 3 turns. Reduces the duration of all active buffs on enemies by 3 turns. All allies get +30% defense for 5 turns. All enemies get \u221230% defense for 5 turns.",
 "pas": "GARRISON GUARD FAMILY BONUS (1/2/3 heroes): At start of battle, summons a Recruit Guard Mega Minion (20%/25%/30% HP and 100%/120%/140% attack inherited from this character).",
-"tal": "Monk: 6% chance to resist negative status effects."
+"tal": "Monk: 6% chance to resist negative status effects.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/a/a8/Theodosius_%28Courageous_Corporal%29.jpg/revision/latest?cb=20240727080249"
 },
 {
 "name": "Violet Potts",
@@ -2511,7 +2647,8 @@ const BASE_HEROES = [
 ],
 "skill": "Tea Time Assault: Deals 325% damage to the target and nearby enemies. Summons a Shield Guard Mega Minion for all allies (65% HP, 180% attack). The Mega Minion safely dispels 1 buff from the target per attack.",
 "pas": "GARRISON GUARD FAMILY BONUS (1/2/3 heroes): At start of battle, summons a Recruit Guard Mega Minion (20%/25%/30% HP and 100%/120%/140% attack inherited from this character).",
-"tal": "Fighter: 6% chance to revive upon death at end of turn."
+"tal": "Fighter: 6% chance to revive upon death at end of turn.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/9/9a/Violet_Potts.jpg/revision/latest?cb=20240618104403"
 },
 {
 "name": "Armand Moncharmin",
@@ -2530,7 +2667,8 @@ const BASE_HEROES = [
 ],
 "skill": "Make Them Harmless: Deals 300% damage to all enemies. Summons a Bodyguard Mega Minion for all allies (50% HP, 250% attack). Any enemy hit by the Mega Minion falls asleep with +60% increased damage taken while sleeping (uncleansable, woken up by damage except from minions/fiends).",
 "pas": "OPERA FAMILY BONUS (1/2 heroes): Opera heroes apply musical debuffs (silence, attack reduction) to enemies. Members have additional perks in the Opera Challenge Event.",
-"tal": "Ranger: 25% chance to bypass defensive buffs including counterattacks. If bypassed, target gets -20% defense for 3 turns."
+"tal": "Ranger: 25% chance to bypass defensive buffs including counterattacks. If bypassed, target gets -20% defense for 3 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/c/ce/Armand_Moncharmin.jpg/revision/latest?cb=20240826114017"
 },
 {
 "name": "Moonbell",
@@ -2545,7 +2683,8 @@ const BASE_HEROES = [
 ],
 "skill": "Summons an Astral Sphere Minion for all allies that grants +33% mana generation (undispellable). All allies receive \u221243% damage from enemies for 4 turns. All allies get +90% extra damage vs enemies with boosted health for 4 turns.",
 "pas": "ASTRAL ELVES FAMILY BONUS (1/2 heroes): Status effects cast by Astral Elf heroes last 1 additional turn. Members have additional perks in the Plane of Astral Elves event.",
-"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/6/66/Moonbell.jpg/revision/latest?cb=20240718141645"
 },
 {
 "name": "Guffa",
@@ -2560,7 +2699,8 @@ const BASE_HEROES = [
 ],
 "skill": "Reflecting Stance: The caster gets Taunt for 4 turns. The caster gets +40% mana generation for 4 turns. All allies except the caster get Softskin (reduces the next hit to \u221290%, immune to ailments, mana reductions, and Insanity, undispellable). All allies recover 1400 HP after 4 turns, or instantly if the special is cast again.",
 "pas": "GARGOYLE FAMILY BONUS (1/2/3 heroes): Gargoyle heroes can transform into stone form, becoming immune to status effects but unable to attack. While in stone form, they take significantly reduced damage.",
-"tal": "Paladin: 25% chance to get +25% defense for 2 turns after receiving any damage."
+"tal": "Paladin: 25% chance to get +25% defense for 2 turns after receiving any damage.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/7/7e/Guffa.jpg/revision/latest?cb=20240804145346"
 },
 {
 "name": "Bearnadette",
@@ -2576,7 +2716,8 @@ const BASE_HEROES = [
 ],
 "skill": "Cursed Painting: Dispels buffs from all enemies. Deals 250% damage to all enemies. All enemies turn into Cursed Paintings for 5 turns (can't be cleansed). Cursed Paintings have 70% attack and 70% defense; their Special Skill becomes Break Free (Very Fast): deals 250% damage to the target, 60% chance to remove the Cursed Painting ailment from the caster.",
 "pas": "BEAR FAMILY BONUS (1/2 heroes): At start of battle, all Bear heroes gain a random positive status effect.",
-"tal": "Druid: 3% chance per hit to summon a Thorn Minion (25% HP / 25% atk inherited from caster) at end of turn."
+"tal": "Druid: 3% chance per hit to summon a Thorn Minion (25% HP / 25% atk inherited from caster) at end of turn.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/5/5c/Bearnadette_%28Portrait_Painter%29.jpg/revision/latest?cb=20240727080147"
 },
 {
 "name": "Vanya",
@@ -2593,7 +2734,8 @@ const BASE_HEROES = [
 ],
 "skill": "Sense of Wonder: Recovers 54% health for all allies. Summons a Shield Guard Mega Minion for all allies (65% HP / 180% attack). The Mega Minion safely cleanses the latest ailment from all allies each turn.",
 "pas": "GARRISON GUARD FAMILY BONUS (1/2/3 heroes): At start of battle, summons a Recruit Guard Mega Minion (20%/25%/30% HP and 100%/120%/140% attack inherited from this character).",
-"tal": "Monk: 6% chance to resist negative status effects."
+"tal": "Monk: 6% chance to resist negative status effects.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/3/31/Vanya.jpg/revision/latest?cb=20240425193333"
 },
 {
 "name": "Demilune",
@@ -2608,7 +2750,8 @@ const BASE_HEROES = [
 ],
 "skill": "Moon Crush Beam: Deals 495% damage to the target and nearby enemies (never misses). Steals all dispellable buffs from the target and nearby enemies and randomly distributes them among allies.",
 "pas": "ASTRAL ELVES FAMILY BONUS (1/2 heroes): Status effects cast by Astral Elf heroes last 1 additional turn. Members have additional perks in the Plane of Astral Elves event.",
-"tal": "Wizard: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Wizard: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/5/5f/Demilune.jpg/revision/latest?cb=20240523124717"
 },
 {
 "name": "Uwe",
@@ -2623,7 +2766,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 850% damage to the target. If the target had less than 50% HP before receiving damage, the damage chains to another enemy with less than 50% HP (each enemy can only be hit once). If any hit enemy uses their Special Skill in the next 3 turns, they receive 725 Poison damage over 3 turns. Softskin activates when this hero casts: next 4 hits on caster reduced to \u221290%, immune to all ailments and mana reductions (undispellable).",
 "pas": "GARGOYLE FAMILY BONUS (1/2/3 heroes): Gargoyle heroes can transform into stone form, becoming immune to status effects but unable to attack. While in stone form, they take significantly reduced damage.",
-"tal": "Wizard: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Wizard: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/7/71/Uwe.jpg/revision/latest?cb=20240521134410"
 },
 {
 "name": "Garten",
@@ -2635,7 +2779,8 @@ const BASE_HEROES = [
 "tags": [],
 "skill": "Softskin activates on the caster: the next 4 times this hero receives damage it is reduced by \u221290%, and they resist all status ailments and mana reductions (undispellable). All allies except the caster get Softskin. All allies get immunity to new status ailments that affect healing for 4 turns. Removes all status ailments that affect healing from all allies.",
 "pas": "GARGOYLE FAMILY BONUS (1/2/3 heroes): Gargoyle heroes can transform into stone form, becoming immune to status effects but unable to attack. While in stone form, they take significantly reduced damage.",
-"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/e/ed/Garten.jpg/revision/latest?cb=20240301031018"
 },
 {
 "name": "Verity",
@@ -2651,7 +2796,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 320% damage to the target and nearby enemies. The target and nearby enemies get \u221250% defense against Special Skills (lasts until they take Special Skill damage 3 times). After the Enhanced Defense Ailment ends or is removed or replaced, the enemy gets \u221240% mana generation for 3 turns.",
 "pas": "WOODLAND FAUN FAMILY BONUS (1/2 heroes): 75%/100% chance to resist mana reductions and mana status ailments; each successful resist gives +15% mana; +50%/+100% more damage dealt against Minions and Mega Minions; Aether Power: needs in-game verification",
-"tal": "Jinx"
+"tal": "Jinx",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/a/a7/Verity.jpg/revision/latest?cb=20240904144426"
 },
 {
 "name": "Gastille",
@@ -2666,7 +2812,8 @@ const BASE_HEROES = [
 ],
 "skill": "All allies get +150% normal attack for 4 turns (can stack with general attack buffs; max +200% total combined). All damage all enemies receive is increased by +55% for 4 turns.",
 "pas": "TROOP MASTERY (attacking): This hero's Troops deal +100% extra elemental damage against the weaker element. TROOP MASTERY (defending): This hero receives -10% elemental damage from Troops of the stronger element. SUPER ELEMENTAL FAMILY: At start of battle, 5 Power Gems spawn on the board for each ally of the same element. Power Gems deal 20 damage to a random enemy each turn until matched.",
-"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage over 5 turns."
+"tal": "Barbarian: 60% chance per basic attack to inflict stacking Wound (Bleed) dealing 60% of damage over 5 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/8/85/Gastille.jpg/revision/latest?cb=20240416203738"
 },
 {
 "name": "Chloris",
@@ -2684,7 +2831,8 @@ const BASE_HEROES = [
 ],
 "skill": "Gives 650 boosted health to all allies. All allies regenerate 400 boosted HP over 4 turns. All allies get +50% attack as long as the caster has boosted health (can't be cleansed). Element Link: All Nature allies get +20% critical chance for 6 turns.",
 "pas": "LEGENDS 2024 (HotM) FAMILY BONUS: Elemental Link \u2014 all Nature allies get +20% critical chance for 6 turns (already in special); Aether Power: needs in-game verification",
-"tal": "Companion"
+"tal": "Companion",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/6/61/Chloris.jpg/revision/latest?cb=20240904144810"
 },
 {
 "name": "Heimdall",
@@ -2700,7 +2848,8 @@ const BASE_HEROES = [
 ],
 "skill": "Boosts all allies' health by 400 (can exceed max HP). Revives all fallen allies with 20% health. All allies get +40% attack for 4 turns.",
 "pas": "ASGARD REALM BONUS: When an Asgard hero falls below 20% health or dies, Asgard heroes grant passive bonuses to their teammates (varies per hero).",
-"tal": "Wizard: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Wizard: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/1/18/Heimdall.jpg/revision/latest?cb=20200425115154"
 },
 {
 "name": "Lord Loki",
@@ -2712,7 +2861,8 @@ const BASE_HEROES = [
 "tags": [],
 "skill": "Copies the most recent Special Skill used by an enemy and casts it on the caster's team's behalf. The damage values are based on the caster's attack stat. This skill never misses.",
 "pas": "JOTUNHEIM REALM BONUS: When a Jotunheim hero falls below 20% health or dies, Jotunheim heroes apply frost debuffs to enemies.",
-"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/a/a5/S3_-_Lord_Loki.jpg/revision/latest?cb=20211017004944"
 },
 {
 "name": "Fizzcoil",
@@ -2727,7 +2877,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 385% damage to the target. The target receives 480 Poison damage over 4 turns. All enemies with Boosted health lose 30% of their current Boosted health.",
 "pas": "GOBLIN FAMILY BONUS (1/2/3 heroes): Each time this hero takes damage from enemy's Special Skill, removes 50%/75%/100% boosted health from all enemies.",
-"tal": "Rogue: 20% chance to dodge direct damage from offensive Special Skills."
+"tal": "Rogue: 20% chance to dodge direct damage from offensive Special Skills.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/d/dc/Fizzcoil.jpg/revision/latest?cb=20231122165131"
 },
 {
 "name": "Anubis",
@@ -2743,7 +2894,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 320% damage to all enemies. All enemies have -34% defense for 3 turns. Dispels buffs from the enemy with the most buffs.",
 "pas": "MOON FAMILY BONUS (1/2/3 heroes): 30%/60%/100% chance \u2014 when Moon hero casts Special Skill, a random cleansable status ailment from all allies is cleansed.",
-"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Sorcerer: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/0/0a/Anubis.jpg/revision/latest?cb=20230419124927"
 },
 {
 "name": "Phenexa",
@@ -2760,7 +2912,8 @@ const BASE_HEROES = [
 ],
 "skill": "Ballad of Restoration: Recovers 42% health for all allies. Resets the duration of all buffs on all allies. All allies get +30% critical chance for 4 turns. All allies get +50% attack for 4 turns.",
 "pas": "BARD FAMILY: Shared passive \u2014 MANA INCREASE REDUCTION: Reduces the amount of mana increased by Special Skills by -50% for all enemies (always active). BARD SOLO BONUS: +5% mana generation for any hero with no other family member on the same team.",
-"tal": "Monk: 6% chance to resist negative status effects."
+"tal": "Monk: 6% chance to resist negative status effects.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/f/f1/Event_-_Bard_-_Phenexa.png/revision/latest/scale-to-width-down/240?cb=20220821173435"
 },
 {
 "name": "Oniwakamaru",
@@ -2775,7 +2928,8 @@ const BASE_HEROES = [
 ],
 "skill": "CHARGE 1 (6 tiles): Deals 185% damage to the target and minor damage to nearby enemies. CHARGE 2 (10 tiles): Deals 330% damage to the target and nearby enemies. CHARGE 3 (15 tiles): Deals 475% damage to the target and nearby enemies. All charges: The target and nearby enemies get -44% defense for 3 turns.",
 "pas": "NINJA FAMILY: Heroes charging at different levels can fire separately; all Ninjas benefit from synergistic speed.",
-"tal": "Monk: 6% chance to resist status ailments."
+"tal": "Monk: 6% chance to resist status ailments.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/1/14/Oniwakamaru.jpg/revision/latest?cb=20230112015155"
 },
 {
 "name": "Li Xiu",
@@ -2789,7 +2943,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 130% damage to all enemies. All enemies get -20% mana.",
 "pas": "MONK TALENT: WITHSTAND \u2014 6% chance to resist negative status effects. SEASON 1 FAMILY: Same bonus as Vivica.",
-"tal": "Monk: 6% chance to resist status ailments."
+"tal": "Monk: 6% chance to resist status ailments.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/9/9b/Li_xiu.jpg/revision/latest?cb=20180506174730"
 },
 {
 "name": "Kiril",
@@ -2804,7 +2959,8 @@ const BASE_HEROES = [
 ],
 "skill": "All allies get +30% attack for 4 turns. All allies get +30% defense for 4 turns. Recovers 26% health for all allies.",
 "pas": "WIZARD TALENT: JINX \u2014 3% chance when dealing damage to reduce enemy mana generation by -50% for 2 turns. SEASON 1 FAMILY: Same bonus as Vivica.",
-"tal": "Wizard: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns."
+"tal": "Wizard: 3% chance when dealing damage to reduce enemy mana generation by 50% for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/2/2c/Kiril.jpg/revision/latest?cb=20180506175107"
 },
 {
 "name": "Sumitomo",
@@ -2818,7 +2974,8 @@ const BASE_HEROES = [
 ],
 "skill": "Deals 210% damage to the target and minor damage to nearby enemies. The damage reflects back to attacker for 3 turns if target has riposte.",
 "pas": "MONK TALENT: WITHSTAND \u2014 6% chance to resist negative status effects. SEASON 1 FAMILY: Same bonus as Vivica.",
-"tal": "Monk: 6% chance to resist status ailments."
+"tal": "Monk: 6% chance to resist status ailments.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/c/c5/Sumitomo.jpg/revision/latest?cb=20190401030924"
 },
 {
 "name": "Ludwig",
@@ -2833,7 +2990,8 @@ const BASE_HEROES = [
 ],
 "skill": "Casts a Mana Shield for all allies for 4 turns (allies can't have mana reduced below the mana they had when this skill was cast). All nearby allies get +24% mana generation for 4 turns. The caster and nearby allies get +46% attack for 4 turns.",
 "pas": "WOLF FAMILY: +5% mana generation per family member in team.",
-"tal": "Paladin: 25% chance to get +25% defense for 2 turns after receiving any damage."
+"tal": "Paladin: 25% chance to get +25% defense for 2 turns after receiving any damage.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/6/60/Ludwig_-_Hero_Card.gif/revision/latest?cb=20211013082901"
 }
 ];
 
@@ -3023,11 +3181,17 @@ function autoTags(sp){
 
 /* ---------- battle contexts ---------- */
 const CTXS={
- standard:{label:"Standard raid/war",d:"Normal rules."},
- rush:{label:"Rush (all Very Fast)",d:"Everyone charges at Very Fast — slow heavy-hitters and big healers shine.",mod:{}},
- bloody:{label:"Bloody Battle (no healing)",d:"Healing disabled — healers, overheal and heal-block are dead weight; DoTs, minions and fiends rule.",mod:{healer:0,bigheal:0,revive:0.3,overheal:0,healblock:0.1,dot:1.5,minions:1.4,fiends:1.2}},
- buff:{label:"Buff Booster",d:"Buffs boosted — attack buffs, walls, counterattacks and buff-strippers gain value.",mod:{atkbuff:1.5,teamimmune:1.3,counter:1.4,wall:1.3,dispel:1.4}},
- fieldaid:{label:"War: Field Aid",d:"The defense heals every turn — kill speed, heal-block and anti-revive matter most.",mod:{healblock:1.8,antirevive:1.5,sniper:1.2,amp:1.2}}
+ standard:{label:"Standard raid",d:"Normal rules."},
+ rush:{label:"Rush Attack (war/tourney)",d:"All heroes charge at Very Fast mana — slow heavy-hitters and big healers shine.",mod:{}},
+ bloody:{label:"Bloody Battle (war/tourney)",d:"No healing or revival — healers, revivers, overheal and heal-block are dead weight; DoTs, minions and fiends rule.",mod:{healer:0,bigheal:0,revive:0,overheal:0,healblock:0.1,dot:1.5,minions:1.4,fiends:1.2}},
+ equalizer:{label:"War Equalizer",d:"Every 3 turns ALL status effects are removed — buffs, ailments and DoTs are short-lived. Direct damage, minions/fiends and straight healing keep full value.",mod:{dot:0.5,atkbuff:0.6,teamimmune:0.6,amp:0.7,cc:0.6,wall:0.7,counter:0.7,manactl:0.75,healblock:0.7,defdown:0.6,minions:1.2,fiends:1.2,sniper:1.2,aoe:1.15}},
+ arrows:{label:"Arrow Barrage (war)",d:"Arrows periodically hit your attackers for 25% of current HP — sustain, overheal and cleanse keep the attack alive.",mod:{healer:1.4,bigheal:1.3,overheal:1.3,revive:1.2,cleanse:1.1}},
+ atkboost:{label:"Attack Boost (war)",d:"Defenders gain a scaling UNDISPELLABLE attack buff — on attack, kill fast and control their mana before they snowball.",mod:{manactl:1.4,cc:1.3,sniper:1.2,aoe:1.2,healer:1.2,healblock:1.2}},
+ horde:{label:"Undead Horde (war)",d:"Skeletal minions spawn every 5 turns — minion destroyers and AoE clear the horde before it buries you.",mod:{minionhate:1.8,aoe:1.2,fiends:1.15}},
+ clover:{label:"Cloverfield (war)",d:"Chance to cast Special Skills twice — big specials get bigger: double heals, double nukes, double debuffs.",mod:{bigheal:1.25,aoe:1.2,sniper:1.2,healer:1.15,defdown:1.15}},
+ terror:{label:"Ancient Terror (war)",d:"Insanity builds on activation (+20 attackers / +10 defenders) — Insanity-fueled heroes (Forsaken, Cultists) thrive; Insanity-immune heroes (Bramble, Khatrox, Jolyon) are safe picks.",mod:{insanity:3,cleanse:1.15}},
+ skyfire:{label:"Skyfire (war)",d:"Attacking Assist Dragons are more powerful — no hero-scoring changes; bring your strongest dragon and your standard best teams.",mod:{}},
+ buff:{label:"Buff Booster (tournament)",d:"Buffs are boosted — attack buffs, walls, counterattacks and buff-strippers gain value.",mod:{atkbuff:1.5,teamimmune:1.3,counter:1.4,wall:1.3,dispel:1.4}}
 };
 let CTX="standard";
 const ctxMod=t=>{const m=CTXS[CTX].mod;return m&&m[t]!==undefined?m[t]:1;};
@@ -3085,10 +3249,10 @@ function defScore(h, slot){
     if(["Paladin","Monk","Fighter","Cleric"].includes(h.cls)) s+=5;
     s-=slowPen(h,14,5);
   } else if(slot==="flank"){
-    s += sp*5 + w("manactl",16)+w("healblock",13)+w("healer",12)+w("aoe",10)+w("hit3",7)+w("cc",10)+w("dispel",8)+w("engine",10)+w("amp",8)+w("teamimmune",5)+w("antirevive",4)+w("overheal",4);
+    s += sp*5 + w("manactl",16)+w("healblock",13)+w("healer",12)+w("aoe",10)+w("hit3",7)+w("cc",10)+w("dispel",8)+w("engine",10)+w("amp",8)+w("teamimmune",5)+w("antirevive",4)+w("overheal",4)+w("insanity",4)+w("minionhate",3);
     s-=slowPen(h,10,0);
   } else {
-    s += sp*6 + w("ninelives",22)+w("sniper",14)+w("dispel",8)+w("engine",8)+w("dot",6)+w("revive",7)+w("cc",6)+w("healblock",6)+w("hit3",5)+w("dodge",6);
+    s += sp*6 + w("ninelives",22)+w("sniper",14)+w("dispel",8)+w("engine",8)+w("dot",6)+w("revive",7)+w("cc",6)+w("healblock",6)+w("hit3",5)+w("dodge",6)+w("insanity",4)+w("minionhate",3);
     s-=slowPen(h,12,5);
   }
   if(CTX==="rush"&&(h.speed==="Slow"||h.speed==="Very Slow")) s+=8;
@@ -3178,7 +3342,7 @@ function whyDefense(team){
 /* ---------- offense builder ---------- */
 function offScore(h){
   const w=(t,v)=>T(h,t)?v*ctxMod(t):0;
-  return powerBase(h) + spd(h)*3 + w("atkbuff",20)+w("amp",13)+w("defdown",13)+w("dispel",10)+w("manactl",10)+w("crit",8)+w("sniper",9)+w("aoe",8)+w("hit3",5)+w("healblock",8)+w("dot",4)+w("bypass",8)+w("minionhate",6)+w("antirevive",6);
+  return powerBase(h) + spd(h)*3 + w("atkbuff",20)+w("amp",13)+w("defdown",13)+w("dispel",10)+w("manactl",10)+w("crit",8)+w("sniper",9)+w("aoe",8)+w("hit3",5)+w("healblock",8)+w("dot",4)+w("bypass",8)+w("minionhate",6)+w("antirevive",6)+w("insanity",3);
 }
 function supScore(h){
   const w=(t,v)=>T(h,t)?v*ctxMod(t):0;
@@ -3261,7 +3425,7 @@ function renderGrid(){
   shown().sort((a,b)=>b.power-a.power).forEach(h=>{
     const d=document.createElement("div");
     d.className=`hero el-${h.el}`+(sel.has(h.name)?" sel":"");
-    d.innerHTML=`<span class="pw">${h.power}</span><div class="nm">${h.name}</div>
+    d.innerHTML=`${h.img?`<img class="hport" src="${h.img}" loading="lazy" onerror="this.remove()">`:""}<span class="pw">${h.power}</span><div class="nm">${h.name}</div>
       <div class="meta">${h.el} · ${h.speed} · ${h.cls}${h.fam?" · "+h.fam:""}</div>`;
     d.title=(h.skill||"")+(h.pas?"\n\nPASSIVES: "+h.pas:"");
     d.onclick=()=>{ sel.has(h.name)?sel.delete(h.name):sel.add(h.name); save(); renderGrid(); };
@@ -3289,7 +3453,7 @@ document.getElementById("anAdd").onclick=()=>{
 /* ---------- render helpers ---------- */
 const POSN=["Left Wing","Left Flank","Tank","Right Flank","Right Wing"];
 function slotDiv(h,pos,extra){
-  return `<div class="slot bg-${h.el}${pos==="Tank"?" tankslot":""}" data-h="${h.name}" title="Click for details"><span class="pos">${pos}</span><span class="n">${h.name}</span><span class="d">${h.el} · ${h.speed}${extra?"<br>"+extra:""} · ${h.power}</span></div>`;
+  return `<div class="slot bg-${h.el}${pos==="Tank"?" tankslot":""}" data-h="${h.name}" title="Click for details"><span class="pos">${pos}</span>${h.img?`<img class="sport" src="${h.img}" loading="lazy" onerror="this.remove()">`:""}<span class="n">${h.name}</span><span class="d">${h.el} · ${h.speed}${extra?"<br>"+extra:""} · ${h.power}</span></div>`;
 }
 function teamCard(title,sub,slots,whyBits){
   return `<div class="teamcard"><h3>${title}</h3><div class="sub">${sub}</div>
@@ -3447,7 +3611,7 @@ function renderDb(){
   else if(srt==="speed") list.sort((a,b)=>(SPEED[b.speed]||3)-(SPEED[a.speed]||3)||b.power-a.power);
   else list.sort((a,b)=>b.power-a.power);
   document.getElementById("dbCount").textContent=list.length+" heroes";
-  g.innerHTML=list.map(h=>`<div class="hero el-${h.el} dbcard" data-h="${h.name}"><span class="pw">${h.power}</span><div class="nm">${h.name}</div><div class="meta">${h.el} · ${h.speed} · ${h.cls}${h.fam?" · "+h.fam:""}</div><div class="meta">${h.tags.slice(0,5).map(x=>TAGDESC[x]||x).join(" · ")}</div></div>`).join("");
+  g.innerHTML=list.map(h=>`<div class="hero el-${h.el} dbcard" data-h="${h.name}">${h.img?`<img class="hport" src="${h.img}" loading="lazy" onerror="this.remove()">`:""}<span class="pw">${h.power}</span><div class="nm">${h.name}</div><div class="meta">${h.el} · ${h.speed} · ${h.cls}${h.fam?" · "+h.fam:""}</div><div class="meta">${h.tags.slice(0,5).map(x=>TAGDESC[x]||x).join(" · ")}</div></div>`).join("");
 }
 renderDb();
 function openHero(name){
@@ -3456,7 +3620,7 @@ function openHero(name){
   const m=document.getElementById("heroModal");
   m.innerHTML=`<div class="mcard">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
-      <h3 style="color:#fff;background:var(--${h.el.toLowerCase()});padding:6px 16px;border-radius:8px;font-size:18px">${h.name}</h3>
+      <div style="display:flex;align-items:center;gap:14px">${h.img?`<img class="mport" src="${h.img}" onerror="this.remove()">`:""}<h3 style="color:#fff;background:var(--${h.el.toLowerCase()});padding:6px 16px;border-radius:8px;font-size:18px">${h.name}</h3></div>
       <button class="chipbtn" onclick="closeHero()">✕ Close</button></div>
     <div class="sub" style="margin-top:8px">${h.el} · ${h.speed} · ${h.cls} · ${h.fam||"—"} · Power ${h.power}</div>
     <div>${h.tags.map(x=>`<span class="pill">${TAGDESC[x]||x}</span>`).join("")}</div>
@@ -3514,7 +3678,7 @@ function renderLog(){
   const tb=document.getElementById("lgTable");
   if(tb){
     tb.innerHTML=es.slice().reverse().slice(0,60).map((e,idx)=>
-      `<div class="note">${e.date} — <b>${e.mode}</b> ${e.result==="Win"?"✅ Win":"❌ Loss"}${e.ctx&&e.ctx!=="standard"?" ("+CTXS[e.ctx].label+")":""} — ${(e.team||[]).join(", ")}${e.tank?" vs "+e.tank+" tank":""}${e.note?" — "+e.note:""} <a href="#" data-del="${es.length-1-idx}" style="color:var(--fire);text-decoration:none">✕</a></div>`).join("");
+      `<div class="note">${e.date} — <b>${e.mode}</b> ${e.result==="Win"?"✅ Win":"❌ Loss"}${e.ctx&&CTXS[e.ctx]&&e.ctx!=="standard"?" ("+CTXS[e.ctx].label+")":""} — ${(e.team||[]).join(", ")}${e.tank?" vs "+e.tank+" tank":""}${e.note?" — "+e.note:""} <a href="#" data-del="${es.length-1-idx}" style="color:var(--fire);text-decoration:none">✕</a></div>`).join("");
     document.querySelectorAll("[data-del]").forEach(a=>a.onclick=ev=>{ev.preventDefault();const es2=logEntries();es2.splice(+a.getAttribute("data-del"),1);store.set("epLog",es2);renderLog();});
   }
 }
