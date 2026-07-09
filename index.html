@@ -226,6 +226,8 @@ footer{text-align:center;color:var(--dim);font-size:12px;padding:26px 16px;line-
   <div class="bar">
     <button class="chipbtn" id="selAll">Select all shown</button>
     <button class="chipbtn" id="selNone">Clear all</button>
+    <button class="chipbtn" id="rosterExport">⬇ Export roster</button>
+    <label class="chipbtn" style="cursor:pointer">⬆ Import roster<input type="file" id="rosterImport" accept=".json" style="display:none"></label>
   </div>
   <div class="grid" id="heroGrid"></div>
   <details>
@@ -837,7 +839,30 @@ document.getElementById("search").oninput=renderGrid;
   paint();
 })();
 document.getElementById("selAll").onclick=()=>{shown().forEach(h=>{sel.add(h.name); OWN[h.name]=OWN[h.name]||{n:1,c:0};}); save(); renderGrid();};
-document.getElementById("selNone").onclick=()=>{sel.clear(); OWN={}; save(); renderGrid();};
+document.getElementById("selNone").onclick=()=>{
+  if(!sel.size) return;
+  if(!confirm("Remove ALL "+sel.size+" heroes from your roster? (Export a backup first if unsure)")) return;
+  sel.clear(); OWN={}; save(); renderGrid();
+};
+document.getElementById("rosterExport").onclick=()=>{
+  const blob=new Blob([JSON.stringify({v:1,own:OWN},null,1)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="ep-roster.json"; a.click();
+};
+document.getElementById("rosterImport").onchange=ev=>{
+  const f=ev.target.files&&ev.target.files[0]; if(!f) return;
+  f.text().then(txt=>{
+    try{
+      const d=JSON.parse(txt);
+      const own=d.own||d; let n=0;
+      Object.entries(own).forEach(([name,o])=>{
+        if(!HEROES.some(h=>h.name===name)) return;
+        OWN[name]={n:Math.max(1,Math.min(4,(o&&o.n)||1)), c:Math.max(0,Math.min(5,(o&&o.c)||0))};
+        sel.add(name); n++;
+      });
+      save(); RV="mine"; renderGrid(); alert("Imported "+n+" heroes into your roster.");
+    }catch(e){ alert("Invalid roster file"); }
+  });
+};
 function shown(){
   const q=document.getElementById("search").value.toLowerCase();
   const fc=document.getElementById("fClass").value, ff=document.getElementById("fFam").value;
