@@ -188,7 +188,7 @@ h2{font-family:'Cinzel',serif;color:var(--gold);font-size:22px;letter-spacing:1.
 .selrow label{font-size:13.5px;color:var(--dim);font-weight:600}
 .addform{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:12px}
 .addform textarea{grid-column:1/-1;min-height:74px}
-.addform select,.addform input,#lgTeam select{min-width:0;width:100%}
+.addform select,.addform input,#lgTeam select,#lgEnemy select{min-width:0;width:100%}
 details{margin-top:18px}
 summary{cursor:pointer;color:var(--accent);font-weight:700;font-size:14px}
 summary:hover{color:var(--gold2)}
@@ -365,11 +365,11 @@ footer{text-align:center;color:var(--dim);font-size:12px;padding:26px 16px;line-
     <label style="display:block;margin-top:8px;cursor:pointer"><input type="checkbox" id="shareToggle"> <b>Share my battle results with the alliance tool</b> — anonymous (a random ID, hero names, result, war rule). Helps the recommendations learn what actually wins. You can turn this off anytime.</label>
   </div>
   <div class="addform">
-    <select id="lgMode"><option>Raid Attack</option><option>Raid Defense</option><option>War Attack</option><option>Tournament</option><option>Titan</option></select>
+    <select id="lgMode"><option>Raid Attack</option><option>Raid Defense</option><option>War Attack</option><option>Tournament</option></select>
     <select id="lgResult"><option>Win</option><option>Loss</option></select>
-    <select id="lgTank"><option value="">Enemy tank color…</option><option>Fire</option><option>Ice</option><option>Nature</option><option>Holy</option><option>Dark</option></select>
-    <input id="lgNote" placeholder="Notes (enemy comp, board luck…)">
-    <div id="lgTeam" style="grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px"></div>
+    <input id="lgNote" placeholder="Notes (board luck, key moment…)">
+    <div style="grid-column:1/-1"><div class="cplab" style="margin:2px 0">⚔ Your team</div><div id="lgTeam" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px"></div></div>
+    <div style="grid-column:1/-1"><div class="cplab" style="margin:6px 0 2px">🛡 Enemy team <span style="text-transform:none;color:var(--dim)">— optional, but it trains the counter engine</span></div><div id="lgEnemy" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px"></div></div>
     <button class="chipbtn" id="lgAdd">➕ Log battle</button>
     <button class="chipbtn" id="lgExport">Export JSON</button>
     <label class="chipbtn" style="text-align:center">Import<input type="file" id="lgImport" style="display:none"></label>
@@ -1491,7 +1491,7 @@ function shareEnabled(){ return !!store.get("epShare") && SHARE_ENDPOINT && SHAR
 function shareBattle(entry){
   if(!shareEnabled()) return;
   try{ fetch(SHARE_ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},
-    body:JSON.stringify({uid:installerId(),date:entry.date,mode:entry.mode,result:entry.result,tank:entry.tank||"",ctx:entry.ctx||"standard",team:(entry.team||[]).join("|"),note:entry.note||""})}); }catch(e){}
+    body:JSON.stringify({uid:installerId(),date:entry.date,mode:entry.mode,result:entry.result,tank:entry.tank||"",ctx:entry.ctx||"standard",team:(entry.team||[]).join("|"),note:((entry.enemy&&entry.enemy.length)?("vs "+entry.enemy.join("|")+(entry.note?" | "+entry.note:"")):(entry.note||""))})}); }catch(e){}
 }
 function refreshLearnBadge(){
   document.querySelectorAll("[data-learnbadge]").forEach(el=>{
@@ -1504,14 +1504,13 @@ function refreshLearnBadge(){
 })();
 
 /* ---------- battle log ---------- */
-const lgTeamDiv=document.getElementById("lgTeam");
-if(lgTeamDiv){
-  for(let i=0;i<5;i++){
-    const s=document.createElement("select"); s.className="lgHero";
-    s.innerHTML='<option value="">Hero '+(i+1)+'…</option>'+HEROES.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(h=>`<option>${h.name}</option>`).join("");
-    lgTeamDiv.appendChild(s);
-  }
+function fillHeroSelects(div, cls){
+  if(!div) return;
+  const opts='<option value="">Hero…</option>'+HEROES.slice().filter(h=>!/ \(\d\)$/.test(h.name)).sort((a,b)=>a.name.localeCompare(b.name)).map(h=>`<option>${h.name}</option>`).join("");
+  for(let i=0;i<5;i++){ const s=document.createElement("select"); s.className=cls; s.innerHTML=opts; div.appendChild(s); }
 }
+fillHeroSelects(document.getElementById("lgTeam"),"lgHero");
+fillHeroSelects(document.getElementById("lgEnemy"),"lgEnemy");
 function logEntries(){ return store.get("epLog")||[]; }
 function renderLog(){
   const es=logEntries();
@@ -1524,7 +1523,7 @@ function renderLog(){
   const tb=document.getElementById("lgTable");
   if(tb){
     tb.innerHTML=es.slice().reverse().slice(0,60).map((e,idx)=>
-      `<div class="note">${e.date} — <b>${e.mode}</b> ${e.result==="Win"?"✅ Win":"❌ Loss"}${e.ctx&&CTXS[e.ctx]&&e.ctx!=="standard"?" ("+CTXS[e.ctx].label+")":""} — ${(e.team||[]).join(", ")}${e.tank?" vs "+e.tank+" tank":""}${e.note?" — "+e.note:""} <a href="#" data-del="${es.length-1-idx}" style="color:var(--fire);text-decoration:none">✕</a></div>`).join("");
+      `<div class="note">${e.date} — <b>${e.mode}</b> ${e.result==="Win"?"✅ Win":"❌ Loss"}${e.ctx&&CTXS[e.ctx]&&e.ctx!=="standard"?" ("+CTXS[e.ctx].label+")":""} — ${(e.team||[]).join(", ")}${e.enemy&&e.enemy.length?` <span style="color:var(--dim)">vs</span> ${e.enemy.join(", ")}`:(e.tank?" vs "+e.tank+" tank":"")}${e.note?" — "+e.note:""} <a href="#" data-del="${es.length-1-idx}" style="color:var(--fire);text-decoration:none">✕</a></div>`).join("");
     document.querySelectorAll("[data-del]").forEach(a=>a.onclick=ev=>{ev.preventDefault();const es2=logEntries();es2.splice(+a.getAttribute("data-del"),1);store.set("epLog",es2);renderLog();});
   }
 }
@@ -1533,10 +1532,12 @@ if(lgAddBtn) lgAddBtn.onclick=()=>{
   const team=[...document.querySelectorAll(".lgHero")].map(s=>s.value).filter(Boolean);
   if(!team.length) return alert("Pick at least one hero");
   const es=logEntries();
+  const enemy=[...document.querySelectorAll(".lgEnemy")].map(s=>s.value).filter(Boolean);
   es.push({date:new Date().toISOString().slice(0,10),mode:document.getElementById("lgMode").value,
-    result:document.getElementById("lgResult").value,tank:document.getElementById("lgTank").value,
-    note:document.getElementById("lgNote").value,ctx:CTX,team});
-  store.set("epLog",es); shareBattle(es[es.length-1]); document.getElementById("lgNote").value=""; renderLog();
+    result:document.getElementById("lgResult").value,
+    note:document.getElementById("lgNote").value,ctx:CTX,team,enemy});
+  store.set("epLog",es); shareBattle(es[es.length-1]); document.getElementById("lgNote").value="";
+  document.querySelectorAll(".lgEnemy").forEach(s=>s.value=""); renderLog();
 };
 const lgExportBtn=document.getElementById("lgExport");
 if(lgExportBtn) lgExportBtn.onclick=()=>{
