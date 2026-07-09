@@ -310,8 +310,12 @@ footer{text-align:center;color:var(--dim);font-size:12px;padding:26px 16px;line-
   <h2>Raid / War Defense</h2>
   <div class="note">Builds defenses around <b>engines</b>: family synergies, always-on passives, taunt→payoff loops, mana denial + heal-block chains — then checks speed curve and element spread. Top 3 options shown. <b>Scores are graded against the strongest lineup your roster can field</b> under the selected battle rules — 100% = your ceiling.</div>
   <div class="bar" data-ctxbar></div>
-  <button class="go" onclick="runDefense()">Build my best defenses</button>
+  <div class="bar">
+    <button class="go" onclick="runDefense()">Build my best defenses</button>
+    <button class="chipbtn" onclick="runRuleMatrix()" style="padding:12px 18px">📜 Best team for every battle rule</button>
+  </div>
   <div id="defOut"></div>
+  <div id="ruleMatrixOut"></div>
 </section>
 
 <section class="tab" id="tab-offense">
@@ -967,6 +971,35 @@ function runDefense(){
       `Card power ${pw} · engine score ${Math.round(r.score)} — <b style="color:${g.color}">${i===0?"your benchmark (100%)":g.label+" ("+g.pct+"% of option 1)"}</b>`,
       slots,whyDefense(r.team),r.team.map(x=>x.h.name));
   }).join("");
+}
+function runRuleMatrix(){
+  const out=document.getElementById("ruleMatrixOut");
+  if(roster().length<5){ out.innerHTML=`<div class="note">Select at least 5 heroes on the Roster tab first.</div>`; return; }
+  const keep=CTX;
+  const rows=[];
+  let stdTeam=null;
+  for(const k of Object.keys(CTXS)){
+    CTX=k;
+    const d=buildDefenses();
+    if(!d||!d.length) continue;
+    const names=d[0].team.map(x=>x.h.name);
+    if(k==="standard") stdTeam=new Set(names);
+    rows.push({k, names, score:d[0].score});
+  }
+  CTX=keep; BENCH={sig:null,v:0};
+  out.innerHTML=`<div class="teamcard"><h3>📜 Best defense per battle rule</h3>
+    <div class="sub">Heroes in <b style="color:var(--gold2)">gold</b> differ from your Standard best — those are the rule-specific swaps. Click a name for details, 🛠️ to open in the Team Builder.</div>`+
+    rows.map(r=>{
+      const pills=r.names.map(n=>{
+        const h=findHero(n)||{};
+        const diff=stdTeam&&!stdTeam.has(n)&&r.k!=="standard";
+        return `<span class="pill" data-h="${n}" style="cursor:pointer;border-color:var(--${(h.el||"ice").toLowerCase()});${diff?"color:var(--gold2);font-weight:800;":""}">${n}</span>`;
+      }).join(" ");
+      return `<div class="note" style="border-left-color:var(--${r.k==="standard"?"gold":"accent"})">
+        <b>${CTXS[r.k].label}</b> · score ${Math.round(r.score)}
+        <button class="chipbtn sb-open" data-team="${r.names.join("|")}" style="float:right;font-size:10.5px;padding:4px 10px">🛠️</button><br>
+        ${pills}<br><span style="font-size:12px;opacity:.8">${CTXS[r.k].d}</span></div>`;
+    }).join("")+`</div>`;
 }
 function colorButtons(containerId, handler){
   const c=document.getElementById(containerId);
