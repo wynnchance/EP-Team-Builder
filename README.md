@@ -1,4 +1,4 @@
-[README.md](https://github.com/user-attachments/files/29831300/README.md)
+[README.md](https://github.com/user-attachments/files/29831623/README.md)
 # ⚔ E&P Team Builder
 
 An unofficial **Empires & Puzzles** companion app: hero database, engine-based team recommendations, sandbox team builder, and battle tracking — all in a single HTML file.
@@ -7,7 +7,7 @@ An unofficial **Empires & Puzzles** companion app: hero database, engine-based t
 
 ## Features
 
-**📋 My Roster** — the full catalog of **1,300+ heroes**: select which ones you own from a searchable, filterable list. Team suggestions use only your selection. Add heroes not yet in the database by pasting their skill text; roles are auto-detected.
+**📋 My Roster** — the full catalog of **1,300+ heroes**: select which ones you own, set **copies owned** (duplicates can fill multiple war teams) and **costumes owned** (each adds a stat bonus the engine counts). Team suggestions use only your selection. Add heroes not yet in the database by pasting their skill text; roles are auto-detected.
 
 **📖 Hero Database** — browse every hero with portraits, full special skills, passives, and family bonuses. Search by name *or skill text* (try "taunt", "fiend", "revive"). Click any hero for a detail page with:
 - Their role on defense and offense
@@ -32,7 +32,7 @@ An unofficial **Empires & Puzzles** companion app: hero database, engine-based t
 ## Notes
 
 - All data (roster selection, saved teams, battle log, custom heroes) is stored **in your own browser** — nothing is uploaded anywhere. Use Export in the Battle Log tab to back up.
-- Recommendations are rule-based on hero skills, families, synergy pairs, speed, and power. Emblems and troops are not yet modeled per-copy.
+- Recommendations are rule-based on hero skills, families, synergy pairs, speed, power, copies, and costume bonuses. Family bonuses correctly count unique heroes only. Emblems and troops are not yet modeled per-copy.
 - Catalog data is parsed from the [E&P Fandom wiki](https://empiresandpuzzles.fandom.com) (text content CC-BY-SA). Older heroes' listed power reflects their era's max-level values and may undervalue them relative to modern heroes; balance changes can lag on wiki pages.
 - Mana breakpoint and troop data sourced from community references ([Empuzzled](https://empuzzled.com), [Old Cynic](https://oldcynic.com)), July 2026.
 
