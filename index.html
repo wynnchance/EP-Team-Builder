@@ -125,6 +125,8 @@ h2{font-family:'Cinzel',serif;color:var(--gold);font-size:22px;letter-spacing:1.
 .cplab{font-size:10.5px;letter-spacing:.4px;text-transform:uppercase}
 .cpbtn{display:inline-block;width:18px;height:18px;line-height:16px;text-align:center;border:1px solid var(--line2);border-radius:5px;cursor:pointer;user-select:none;background:var(--panel2)}
 .cpbtn:hover{color:var(--gold2);border-color:var(--gold)}
+.gbar{display:inline-block;width:min(240px,60vw);height:8px;background:rgba(10,21,34,.8);border:1px solid var(--line);border-radius:5px;overflow:hidden;vertical-align:middle;margin-top:3px}
+.gbar span{display:block;height:100%;border-radius:5px;transition:width .25s ease}
 .hport{float:left;width:44px;height:44px;border-radius:9px;margin-right:9px;object-fit:cover;object-position:top;border:1px solid var(--line2);background:#0d1b2a}
 .sport{width:54px;height:54px;border-radius:50%;object-fit:cover;object-position:top;margin:4px auto 2px;border:2px solid rgba(255,255,255,.55);box-shadow:0 2px 10px rgba(0,0,0,.45);background:#0d1b2a}
 .mport{width:88px;height:88px;border-radius:12px;object-fit:cover;object-position:top;border:2px solid var(--line2);background:#0d1b2a}
@@ -265,7 +267,7 @@ footer{text-align:center;color:var(--dim);font-size:12px;padding:26px 16px;line-
 
 <section class="tab" id="tab-builder">
   <h2>Team Builder</h2>
-  <div class="note">Build any five-hero team and get <b>live analysis</b> — synergy rules firing, anti-synergy warnings, speed curve, colors and engine score. Click a slot to select it, then click a hero below to place them (or just click heroes to fill left-to-right). Save teams and log results in one click. Every suggestion card also has a 🛠️ button that opens it here.</div>
+  <div class="note">Build any five-hero team and get <b>live analysis</b> — synergy rules firing, anti-synergy warnings, speed curve, colors and an engine score <b>graded against the best team your roster can field</b> (Very weak → Elite). Click a slot to select it, then click a hero below to place them (or just click heroes to fill left-to-right). Save teams and log results in one click. Every suggestion card also has a 🛠️ button that opens it here.</div>
   <div class="bar" data-ctxbar></div>
   <div class="lineup" id="sbSlots"></div>
   <div class="bar" style="margin-top:10px">
@@ -306,7 +308,7 @@ footer{text-align:center;color:var(--dim);font-size:12px;padding:26px 16px;line-
 
 <section class="tab" id="tab-defense">
   <h2>Raid / War Defense</h2>
-  <div class="note">Builds defenses around <b>engines</b>: family synergies, always-on passives, taunt→payoff loops, mana denial + heal-block chains — then checks speed curve and element spread. Top 3 options shown.</div>
+  <div class="note">Builds defenses around <b>engines</b>: family synergies, always-on passives, taunt→payoff loops, mana denial + heal-block chains — then checks speed curve and element spread. Top 3 options shown. <b>Scores are graded against the strongest lineup your roster can field</b> under the selected battle rules — 100% = your ceiling.</div>
   <div class="bar" data-ctxbar></div>
   <button class="go" onclick="runDefense()">Build my best defenses</button>
   <div id="defOut"></div>
@@ -701,6 +703,33 @@ function teamTotal(team){ // team = [{h,slot}...]
        + synergyScore(team.map(x=>x.h)) + elementPenalty(team.map(x=>x.h));
 }
 
+/* ---------- score grading ---------- */
+let BENCH = {sig:null, v:0};
+function benchScore(){
+  const sig = CTX + "|" + sel.size + "|" + [...sel].reduce((a,n)=>a+((OWN[n]||{}).n||1)*10+((OWN[n]||{}).c||0),0);
+  if(BENCH.sig === sig) return BENCH.v;
+  const d = buildDefenses();
+  BENCH = {sig, v: d && d.length ? d[0].score : 0};
+  return BENCH.v;
+}
+function gradeOf(score, bench){
+  if(!bench || bench <= 0) return {label:"", color:"var(--dim)", pct:0};
+  const p = score / bench;
+  const pct = Math.round(p * 100);
+  if(p >= 0.97) return {label:"Elite — as good as your roster gets", color:"#ffd166", pct};
+  if(p >= 0.88) return {label:"Very strong", color:"#2eb56e", pct};
+  if(p >= 0.75) return {label:"Strong", color:"#7cc95e", pct};
+  if(p >= 0.60) return {label:"Average", color:"#3d9be9", pct};
+  if(p >= 0.45) return {label:"Weak", color:"#e0a54b", pct};
+  return {label:"Very weak", color:"#e05a4b", pct};
+}
+function gradeHtml(score, bench){
+  const g = gradeOf(score, bench);
+  if(!g.label) return `${Math.round(score)}`;
+  const w = Math.max(2, Math.min(100, g.pct));
+  return `${Math.round(score)} — <b style="color:${g.color}">${g.label}</b> (${Math.min(g.pct,150)}% of your best)<br><span class="gbar"><span style="width:${w}%;background:${g.color}"></span></span>`;
+}
+
 /* ---------- defense builder ---------- */
 function permAll(a){ if(a.length<=1) return [a]; const out=[]; a.forEach((x,i)=>{ permAll(a.slice(0,i).concat(a.slice(i+1))).forEach(p=>out.push([x].concat(p))); }); return out; }
 function arrange(tank, others){
@@ -929,10 +958,14 @@ function runDefense(){
   const out=document.getElementById("defOut");
   const res=buildDefenses();
   if(!res){ out.innerHTML=`<div class="note">Select at least 5 heroes on the Roster tab.</div>`; return; }
+  BENCH={sig:null,v:0}; // refresh benchmark alongside these results
   out.innerHTML=res.map((r,i)=>{
     const slots=r.team.map((x,j)=>slotDiv(x.h,POSN[j])).join("");
     const pw=r.team.reduce((a,x)=>a+x.h.power,0);
-    return teamCard(`Option ${i+1}${i===0?" — Recommended":""}`,`Card power ${pw} · engine score ${Math.round(r.score)}`,slots,whyDefense(r.team),r.team.map(x=>x.h.name));
+    const g=gradeOf(r.score,res[0].score);
+    return teamCard(`Option ${i+1}${i===0?" — Recommended":""}`,
+      `Card power ${pw} · engine score ${Math.round(r.score)} — <b style="color:${g.color}">${i===0?"your benchmark (100%)":g.label+" ("+g.pct+"% of option 1)"}</b>`,
+      slots,whyDefense(r.team),r.team.map(x=>x.h.name));
   }).join("");
 }
 function colorButtons(containerId, handler){
@@ -1156,7 +1189,7 @@ function renderSBAnalysis(){
   const bits=[];
   if(hs.length===5){
     const score=SB.reduce((x,h,i)=>x+defScore(h,i===2?"tank":(i===0||i===4)?"wing":"flank"),0)+synergyScore(hs)+elementPenalty(hs);
-    bits.push(`<b>Engine score (${CTXS[CTX].label}):</b> ${Math.round(score)} — compare with the Defense tab options`);
+    bits.push(`<b>Engine score (${CTXS[CTX].label}):</b> ${gradeHtml(score, benchScore())}`);
   }
   bits.push(`<b>Power:</b> ${hs.reduce((x,h)=>x+h.power,0)}${hs.length<5?` (${hs.length}/5 heroes)`:""}`);
   bits.push(`<b>Speed curve:</b> ${SB.map(h=>h?h.speed:"—").join(" · ")}`);
