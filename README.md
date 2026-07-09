@@ -1,4 +1,4 @@
-[README.md](https://github.com/user-attachments/files/29831623/README.md)
+[README.md](https://github.com/user-attachments/files/29831790/README.md)
 # ⚔ E&P Team Builder
 
 An unofficial **Empires & Puzzles** companion app: hero database, engine-based team recommendations, sandbox team builder, and battle tracking — all in a single HTML file.
