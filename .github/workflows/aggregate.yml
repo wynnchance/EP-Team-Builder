@@ -1,0 +1,27 @@
+# .github/workflows/aggregate.yml
+# Auto-regenerates winrates.json from the collector's live CSV feed (Apps Script doGet).
+name: Aggregate battle logs
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch: {}
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch logs and aggregate
+        run: |
+          curl -sL "https://script.google.com/macros/s/AKfycbzjQKdZzmf9QwwiXaBBofG3qHm-GkV03Sjt183ctfb8reunrWj9h_r3ie7_43DEDZBY/exec" -o logs.csv
+          python3 aggregate_logs.py logs.csv > winrates.json
+          echo "Rows fetched:"; wc -l logs.csv
+      - name: Commit if changed
+        run: |
+          git config user.name "ep-bot"
+          git config user.email "ep-bot@users.noreply.github.com"
+          git add winrates.json
+          git commit -m "Update community winrates" || echo "no changes"
+          git push
+
