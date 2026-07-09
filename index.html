@@ -115,6 +115,11 @@ h2{font-family:'Cinzel',serif;color:var(--gold);font-size:22px;letter-spacing:1.
 .el-Nature:hover{box-shadow:0 4px 18px rgba(34,153,90,.3)}
 .el-Fire:hover{box-shadow:0 4px 18px rgba(207,67,53,.3)}
 .dbcard{opacity:1}
+.sbslot.empty{background:var(--panel2);border:2px dashed var(--line2);color:var(--dim);box-shadow:none}
+.selslot{outline:2px solid var(--accent) !important;outline-offset:1px}
+.sbclear{position:absolute;top:6px;right:9px;cursor:pointer;font-size:12px;opacity:.75;z-index:2}
+.sbclear:hover{opacity:1;color:#ffd166}
+.sbpick.used{opacity:.25;pointer-events:none}
 .hport{float:left;width:44px;height:44px;border-radius:9px;margin-right:9px;object-fit:cover;object-position:top;border:1px solid var(--line2);background:#0d1b2a}
 .sport{width:54px;height:54px;border-radius:50%;object-fit:cover;object-position:top;margin:4px auto 2px;border:2px solid rgba(255,255,255,.55);box-shadow:0 2px 10px rgba(0,0,0,.45);background:#0d1b2a}
 .mport{width:88px;height:88px;border-radius:12px;object-fit:cover;object-position:top;border:2px solid var(--line2);background:#0d1b2a}
@@ -243,6 +248,27 @@ footer{text-align:center;color:var(--dim);font-size:12px;padding:26px 16px;line-
   </div>
   <div class="bar"><span class="count" id="dbCount"></span></div>
   <div class="grid" id="dbGrid"></div>
+</section>
+
+<section class="tab" id="tab-builder">
+  <h2>Team Builder</h2>
+  <div class="note">Build any five-hero team and get <b>live analysis</b> — synergy rules firing, anti-synergy warnings, speed curve, colors and engine score. Click a slot to select it, then click a hero below to place them (or just click heroes to fill left-to-right). Save teams and log results in one click. Every suggestion card also has a 🛠️ button that opens it here.</div>
+  <div class="bar" data-ctxbar></div>
+  <div class="lineup" id="sbSlots"></div>
+  <div class="bar" style="margin-top:10px">
+    <button class="chipbtn" id="sbArrange">✨ Auto-arrange</button>
+    <button class="chipbtn" id="sbClear">Clear team</button>
+    <input type="text" id="sbName" placeholder="Team name…" style="max-width:200px">
+    <button class="chipbtn" id="sbSave">💾 Save team</button>
+  </div>
+  <div id="sbAnalysis"></div>
+  <div id="sbSaved"></div>
+  <h2 style="margin-top:18px;font-size:17px">Pick heroes</h2>
+  <div class="bar">
+    <input type="text" id="sbSearch" placeholder="Search heroes…">
+    <select id="sbEl"><option value="">All elements</option><option>Fire</option><option>Ice</option><option>Nature</option><option>Holy</option><option>Dark</option></select>
+  </div>
+  <div class="grid" id="sbGrid"></div>
 </section>
 
 <section class="tab" id="tab-defense">
@@ -384,6 +410,22 @@ const BASE_HEROES = [
 "pas": "EMPOWERED RESIST SPECIAL BLOCKING: Immune to status ailments that prevent the use of Special Skills; gains 450 boosted health and 5% mana each time they resist. MINION CORE: Activates each time Special Skill is cast - with fully charged Core, summons a Killer Bot Minion (33% HP / 55% attack inherited, scaled by Core charge) on all allies; before hitting, the Killer Bot destroys all Minions on the target and damages Mega Minions; recovers 5% health for its owner each turn; Wither: each Killer Bot hit gives its target -50 attack. CONSTRUCT FAMILY: Core charges each time this hero receives damage from normal attacks or Special Skills. Aether Power: Defense Up.",
 "tal": "Paladin: MASTER PROTECT - 25% chance to get +25% defense for 2 turns after receiving damage; caster and nearby allies get the bonus.",
 "img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/4/43/Featherweight_-_Hero_Card.gif/revision/latest/scale-to-width-down/240?cb=20260703130822"
+},
+{
+"name": "Hua Pi Gui",
+"el": "Holy",
+"speed": "Slow",
+"fam": "Yang Jian Ghosts",
+"cls": "Sorcerer",
+"power": 1748,
+"tags": [
+"engine",
+"manaboost"
+],
+"skill": "Surrender Your Heart (Slow, 8/8): After the Special Skill has been cast, increases the mana of the caster by 25%. Deals 500% damage to 5 random enemies. For 5 turns, all hit enemies are forced to cast Mindless Heal when at full mana. MINDLESS HEAL: Recovers 60% health for the character on the OPPOSING side with the lowest remaining HP \u2014 their charged heroes heal YOUR team instead of firing.",
+"pas": "VENGEFUL HAUNTING: When this character loses more than 25% of max health at once - casts Full Removal on themselves and shifts into Vengeful Ghost form for 2 turns. At the end of each turn, Vengeful Ghost deals 450% damage to a random enemy and dispels buffs from them. This effect is undispellable. GHOSTS OF YANG JIAN FAMILY BONUS (1/2 heroes): Gain 40%/45% mana when a Ghost form on this character expires. MORALE BOOST (War of the Three Kingdoms): +10% attack, +3% defense, +7% health for this family and allies. Aether Power: Regen.",
+"tal": "Sorcerer: MASTER DELAY (5/5) - If this character dealt any damage by the end of its turn, +15% chance to activate: drop the mana generation of the target by -50% for 2 turns; the target gets -20% attack for 2 turns.",
+"img": "https://static.wikia.nocookie.net/empiresandpuzzles/images/0/07/Hua_Pi_Gui_-_Hero_Card.gif/revision/latest/scale-to-width-down/240?cb=20260705172151"
 },
 {
 "name": "Duval",
@@ -3113,7 +3155,8 @@ const HERO_NOTES = {
 "Fafnir":{o:"Flat 2100 hit-3 + 35% damage amp — titan and stack amplifier."},
 "Salvatore":{o:"Dire Ghost pressure with Insanity; self-reset via Full Removal."},
 "Vivica":{o:"42% heal + 63% defense — budget sustain; costume boosted."},
-"Hathor":{o:"Fast def-down sniper; Moon family cleanse synergy."}
+"Hathor":{o:"Fast def-down sniper; Moon family cleanse synergy."},
+"Hua Pi Gui":{o:"500% to 5 random enemies + forces them to cast Mindless Heal for 5 turns — their charged heroes heal YOUR team instead of firing; refunds herself 25% mana.",d:"Vengeful Haunting punishes burst (2 turns untouchable, auto 450% + dispel); forced Mindless Heals turn the attacker's own mana engine against them."}
 };
 const TAGDESC={taunt:"taunt soaks specials",healer:"sustain",bigheal:"big team heal",revive:"revive safety net",cleanse:"cleanses ailments",dispel:"strips enemy buffs",manactl:"cuts enemy mana",healblock:"blocks enemy healing",aoe:"AoE damage",sniper:"heavy single-target hit",hit3:"hits three",minions:"minion summoner",fiends:"fiend pressure that eats healing",dot:"damage over time",defdown:"defense-down amplifies everything",atkbuff:"attack buff multiplies all tiles",crit:"critical chance",ninelives:"revives up to 9x (Nine Lives)",counter:"counterattack",teamimmune:"team immunity",insanity:"Insanity pressure",amp:"amplifies damage taken",engine:"always-on passive engine",wall:"damage-reduction wall",cc:"crowd control",bypass:"bypasses defensive buffs",overheal:"boosted health past max",antirevive:"prevents or punishes revives",dodge:"dodge chance",minionhate:"destroys or punishes minions",titanspec:"Titan specialist"};
 function noteFor(h,ctx){
@@ -3385,7 +3428,7 @@ function buildWar(pool){
 }
 
 /* ---------- UI ---------- */
-const TABS=[["roster","📋 My Roster"],["db","📖 Hero Database"],["defense","🛡️ Defense"],["offense","⚔️ Raid Offense"],["war","🏰 War"],["titan","🐉 Titans"],["log","📊 Battle Log"]];
+const TABS=[["roster","📋 My Roster"],["db","📖 Hero Database"],["builder","🛠️ Team Builder"],["defense","🛡️ Defense"],["offense","⚔️ Raid Offense"],["war","🏰 War"],["titan","🐉 Titans"],["log","📊 Battle Log"]];
 const nav=document.getElementById("nav");
 TABS.forEach(([id,label],i)=>{
   const b=document.createElement("button"); b.textContent=label;
@@ -3456,8 +3499,8 @@ const POSN=["Left Wing","Left Flank","Tank","Right Flank","Right Wing"];
 function slotDiv(h,pos,extra){
   return `<div class="slot bg-${h.el}${pos==="Tank"?" tankslot":""}" data-h="${h.name}" title="Click for details"><span class="pos">${pos}</span>${h.img?`<img class="sport" src="${h.img}" loading="lazy" onerror="this.remove()">`:""}<span class="n">${h.name}</span><span class="d">${h.el} · ${h.speed}${extra?"<br>"+extra:""} · ${h.power}</span></div>`;
 }
-function teamCard(title,sub,slots,whyBits){
-  return `<div class="teamcard"><h3>${title}</h3><div class="sub">${sub}</div>
+function teamCard(title,sub,slots,whyBits,names){
+  return `<div class="teamcard"><h3>${title}${names?` <button class="chipbtn sb-open" data-team="${names.join("|")}" style="float:right;font-size:11px">🛠️ Open in Team Builder</button>`:""}</h3><div class="sub">${sub}</div>
     <div class="lineup">${slots}</div>
     ${whyBits&&whyBits.length?`<div class="why">${whyBits.map(b=>"• "+b).join("<br>")}</div>`:""}</div>`;
 }
@@ -3468,7 +3511,7 @@ function runDefense(){
   out.innerHTML=res.map((r,i)=>{
     const slots=r.team.map((x,j)=>slotDiv(x.h,POSN[j])).join("");
     const pw=r.team.reduce((a,x)=>a+x.h.power,0);
-    return teamCard(`Option ${i+1}${i===0?" — Recommended":""}`,`Card power ${pw} · engine score ${Math.round(r.score)}`,slots,whyDefense(r.team));
+    return teamCard(`Option ${i+1}${i===0?" — Recommended":""}`,`Card power ${pw} · engine score ${Math.round(r.score)}`,slots,whyDefense(r.team),r.team.map(x=>x.h.name));
   }).join("");
 }
 function colorButtons(containerId, handler){
@@ -3487,7 +3530,7 @@ colorButtons("tankColors", tc=>{
     ...o.stack.map(h=>`<b>${h.name}:</b> ${noteFor(h,"o")}`),
     ...o.sup.map(h=>`<b>${h.name} (support):</b> ${noteFor(h,"o")}`)];
   applySyn(o.stack.concat(o.sup)).whys.forEach(x=>bits.push(x));
-  document.getElementById("offOut").innerHTML=teamCard(`vs ${tc} tank`,`Bring ${o.color} tiles`,slots,bits);
+  document.getElementById("offOut").innerHTML=teamCard(`vs ${tc} tank`,`Bring ${o.color} tiles`,slots,bits,o.stack.concat(o.sup).map(h=>h.name));
 });
 colorButtons("titanColors", tc=>{
   const pool=roster(); if(pool.length<5){document.getElementById("titanOut").innerHTML=`<div class="note">Select at least 5 heroes first.</div>`;return;}
@@ -3496,7 +3539,7 @@ colorButtons("titanColors", tc=>{
   const slots=t.team.map(h=>slotDiv(h,"Mono "+t.color)).join("");
   const bits=[`<b>Mono ${t.color}</b> vs ${tc} Titan — tile damage is king; attack-up, defense-down and amps multiply every tile`,
     ...t.team.map(h=>`<b>${h.name}:</b> ${noteFor(h,"o")}`)];
-  document.getElementById("titanOut").innerHTML=teamCard(`vs ${tc} Titan`,`Top 5 ${t.color} by titan value`,slots,bits);
+  document.getElementById("titanOut").innerHTML=teamCard(`vs ${tc} Titan`,`Top 5 ${t.color} by titan value`,slots,bits,t.team.map(h=>h.name));
 });
 function runWar(){
   const pool=roster();
@@ -3506,7 +3549,7 @@ function runWar(){
     if(t.stack.length<3) return teamCard(`Team ${i+1}: ${t.label}`,"Not enough heroes left for a full stack","", []);
     const slots=t.stack.map(h=>slotDiv(h,t.color?`${t.color} stack`:"Attacker")).join("")+t.sup.map(h=>slotDiv(h,"Support")).join("");
     const bits=[...t.stack.map(h=>`<b>${h.name}:</b> ${noteFor(h,"o")}`),...t.sup.map(h=>`<b>${h.name} (support):</b> ${noteFor(h,"o")}`)];
-    return teamCard(`Team ${i+1}: ${t.label}`,t.color?`3× ${t.color} + 2 support`:"Best remaining heroes",slots,bits);
+    return teamCard(`Team ${i+1}: ${t.label}`,t.color?`3× ${t.color} + 2 support`:"Best remaining heroes",slots,bits,t.stack.concat(t.sup).map(h=>h.name));
   }).join("");
 }
 
@@ -3639,9 +3682,103 @@ function closeHero(){ const m=document.getElementById("heroModal"); m.classList.
 document.addEventListener("click",e=>{
   const m=document.getElementById("heroModal");
   if(m && e.target===m) closeHero();
-  const c=e.target.closest&&e.target.closest("[data-h]");
+  const q=sel2=>e.target.closest&&e.target.closest(sel2);
+  const cl=q(".sbclear"); if(cl){ SB[+cl.getAttribute("data-i")]=null; renderSB(); return; }
+  const so=q(".sb-open"); if(so){ toBuilder(so.getAttribute("data-team").split("|")); return; }
+  const sl=q(".sbslot"); if(sl){ sbSel=(sbSel===+sl.getAttribute("data-i"))?null:+sl.getAttribute("data-i"); renderSB(); return; }
+  const pk=q(".sbpick"); if(pk){ const n=pk.getAttribute("data-n");
+    if(!SB.some(h=>h&&h.name===n)){ const idx=sbSel!==null?sbSel:SB.findIndex(x=>!x);
+      if(idx>=0){ SB[idx]=HEROES.find(h=>h.name===n); sbSel=null; renderSB(); } } return; }
+  const ld=q(".sbload"); if(ld){ e.preventDefault(); toBuilder(sbTeams()[+ld.getAttribute("data-i")].heroes); return; }
+  const lg=q(".sblog"); if(lg){ e.preventDefault(); const t2=sbTeams()[+lg.getAttribute("data-i")];
+    const es=logEntries(); es.push({date:new Date().toISOString().slice(0,10),mode:"Raid Attack",result:lg.getAttribute("data-r"),tank:"",note:"Team: "+t2.name,ctx:CTX,team:t2.heroes});
+    store.set("epLog",es); renderLog(); alert("Logged "+lg.getAttribute("data-r")+" for "+t2.name); return; }
+  const dl=q(".sbdel"); if(dl){ e.preventDefault(); const ts=sbTeams(); ts.splice(+dl.getAttribute("data-i"),1); store.set("epTeams",ts); renderSBSaved(); return; }
+  const c=q("[data-h]");
   if(c) openHero(c.getAttribute("data-h"));
 });
+
+/* ---------- sandbox team builder ---------- */
+let SB=[null,null,null,null,null], sbSel=null;
+function sbTeams(){ return store.get("epTeams")||[]; }
+function renderSBGrid(){
+  const g=document.getElementById("sbGrid"); if(!g) return;
+  const q=(document.getElementById("sbSearch").value||"").toLowerCase();
+  const fe=document.getElementById("sbEl").value;
+  const used=new Set(SB.filter(Boolean).map(h=>h.name));
+  const list=HEROES.filter(h=>(!q||h.name.toLowerCase().includes(q))&&(!fe||h.el===fe)).sort((a,b)=>b.power-a.power).slice(0,60);
+  g.innerHTML=list.map(h=>`<div class="hero el-${h.el} dbcard sbpick${used.has(h.name)?" used":""}" data-n="${h.name}">${h.img?`<img class="hport" src="${h.img}" loading="lazy" onerror="this.remove()">`:""}<span class="pw">${h.power}</span><div class="nm">${h.name}</div><div class="meta">${h.el} · ${h.speed} · ${h.cls}</div></div>`).join("");
+}
+function renderSB(){
+  const s=document.getElementById("sbSlots"); if(!s) return;
+  s.innerHTML=SB.map((h,i)=>{
+    if(!h) return `<div class="slot sbslot empty${sbSel===i?" selslot":""}" data-i="${i}"><span class="pos">${POSN[i]}</span><span class="n" style="opacity:.6">＋ empty</span></div>`;
+    return `<div class="slot sbslot bg-${h.el}${i===2?" tankslot":""}${sbSel===i?" selslot":""}" data-i="${i}"><span class="pos">${POSN[i]}</span>${h.img?`<img class="sport" src="${h.img}" onerror="this.remove()">`:""}<span class="n">${h.name}</span><span class="d">${h.el} · ${h.speed}</span><span class="sbclear" data-i="${i}" title="Remove">✕</span></div>`;
+  }).join("");
+  renderSBAnalysis(); renderSBSaved(); renderSBGrid();
+}
+function renderSBAnalysis(){
+  const a=document.getElementById("sbAnalysis"); if(!a) return;
+  const hs=SB.filter(Boolean);
+  if(!hs.length){ a.innerHTML=""; return; }
+  const bits=[];
+  if(hs.length===5){
+    const score=SB.reduce((x,h,i)=>x+defScore(h,i===2?"tank":(i===0||i===4)?"wing":"flank"),0)+synergyScore(hs)+elementPenalty(hs);
+    bits.push(`<b>Engine score (${CTXS[CTX].label}):</b> ${Math.round(score)} — compare with the Defense tab options`);
+  }
+  bits.push(`<b>Power:</b> ${hs.reduce((x,h)=>x+h.power,0)}${hs.length<5?` (${hs.length}/5 heroes)`:""}`);
+  bits.push(`<b>Speed curve:</b> ${SB.map(h=>h?h.speed:"—").join(" · ")}`);
+  const els={}; hs.forEach(h=>els[h.el]=(els[h.el]||0)+1);
+  let adj=0; for(let i=0;i<4;i++) if(SB[i]&&SB[i+1]&&SB[i].el===SB[i+1].el) adj++;
+  bits.push(`<b>Colors:</b> ${Object.entries(els).map(([e,n])=>n>1?`${e}×${n}`:e).join(", ")}${adj?` — ⚠️ ${adj} same-element neighbor${adj>1?"s":""} (try Auto-arrange)`:hs.length>1?" — no same-element neighbors":""}`);
+  const c=famCounts(hs);
+  for(const f in c) if(FAMS[f]&&c[f]>=2) bits.push(`<b>${f} ×${c[f]}:</b> ${FAMS[f].d}`);
+  applySyn(hs).whys.forEach(x=>bits.push(x));
+  if(CTX!=="bloody"&&hs.length===5&&!hs.some(h=>T(h,"healer"))) bits.push("⚠️ No healer — high pressure but no recovery if the fight goes long");
+  const tk=SB[2];
+  if(hs.length===5&&tk&&!T(tk,"taunt")&&!T(tk,"wall")&&!T(tk,"healer")&&!T(tk,"counter")) bits.push(`⚠️ ${tk.name} has no tanking mechanic (taunt/wall/heal/counter) — consider Auto-arrange or a different middle`);
+  a.innerHTML=`<div class="why">${bits.map(b=>"• "+b).join("<br>")}</div>`;
+}
+function renderSBSaved(){
+  const d=document.getElementById("sbSaved"); if(!d) return;
+  const ts=sbTeams();
+  d.innerHTML=ts.length?`<h2 style="margin-top:16px;font-size:17px">Saved teams</h2>`+ts.map((t2,i)=>
+    `<div class="note"><b>${t2.name}</b> — ${t2.heroes.join(", ")}<span style="float:right;white-space:nowrap">
+      <a href="#" class="sbload" data-i="${i}" style="color:var(--accent)">Load</a> · <a href="#" class="sblog" data-i="${i}" data-r="Win" style="color:var(--nature)">✅ Win</a> · <a href="#" class="sblog" data-i="${i}" data-r="Loss" style="color:var(--fire)">❌ Loss</a> · <a href="#" class="sbdel" data-i="${i}" style="color:var(--fire)">✕</a></span></div>`).join(""):"";
+}
+function toBuilder(names){
+  SB=[null,null,null,null,null];
+  names.slice(0,5).forEach((n,i)=>{ SB[i]=HEROES.find(h=>h.name===n)||null; });
+  sbSel=null;
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("show"));
+  const tb=document.getElementById("tab-builder"); if(tb) tb.classList.add("show");
+  nav.querySelectorAll("button").forEach((x,i)=>x.classList.toggle("active",TABS[i]&&TABS[i][0]==="builder"));
+  renderSB();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+(function(){
+  const w=id=>document.getElementById(id);
+  if(!w("sbGrid")) return;
+  w("sbSearch").oninput=renderSBGrid;
+  w("sbEl").onchange=renderSBGrid;
+  w("sbArrange").onclick=()=>{
+    const hs=SB.filter(Boolean);
+    if(hs.length<5) return alert("Fill all five slots first");
+    const tank=hs.slice().sort((a,b)=>defScore(b,"tank")-defScore(a,"tank"))[0];
+    const arr=arrange(tank,hs.filter(h=>h!==tank));
+    SB=arr.order.map(x=>x.h); sbSel=null; renderSB();
+  };
+  w("sbClear").onclick=()=>{ SB=[null,null,null,null,null]; sbSel=null; renderSB(); };
+  w("sbSave").onclick=()=>{
+    const hs=SB.filter(Boolean);
+    if(!hs.length) return alert("Add some heroes first");
+    const ts=sbTeams();
+    const name=w("sbName").value.trim()||("Team "+(ts.length+1));
+    ts.push({name, heroes:hs.map(h=>h.name), ctx:CTX});
+    store.set("epTeams",ts); w("sbName").value=""; renderSBSaved();
+  };
+  renderSB();
+})();
 
 /* ---------- battle-rules selector ---------- */
 function renderCtxBars(){
@@ -3651,7 +3788,7 @@ function renderCtxBars(){
     const s=document.createElement("select");
     for(const k in CTXS){ const o=document.createElement("option"); o.value=k; o.textContent=CTXS[k].label; s.appendChild(o); }
     s.value=CTX;
-    s.onchange=()=>{ CTX=s.value; renderCtxBars(); };
+    s.onchange=()=>{ CTX=s.value; renderCtxBars(); if(typeof renderSB==="function") renderSB(); };
     div.appendChild(s);
     const d=document.createElement("span"); d.style.cssText="color:var(--dim);font-size:12px"; d.textContent=CTXS[CTX].d; div.appendChild(d);
   });
