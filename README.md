@@ -1,4 +1,4 @@
-[README.md](https://github.com/user-attachments/files/29831790/README.md)
+[README.md](https://github.com/user-attachments/files/29833531/README.md)
 # ⚔ E&P Team Builder
 
 An unofficial **Empires & Puzzles** companion app: hero database, engine-based team recommendations, sandbox team builder, and battle tracking — all in a single HTML file.
@@ -7,7 +7,7 @@ An unofficial **Empires & Puzzles** companion app: hero database, engine-based t
 
 ## Features
 
-**📋 My Roster** — the full catalog of **1,300+ heroes**: select which ones you own, set **copies owned** (duplicates can fill multiple war teams) and **costumes owned** (each adds a stat bonus the engine counts). Team suggestions use only your selection. Add heroes not yet in the database by pasting their skill text; roles are auto-detected.
+**📋 My Roster** — the full catalog of **1,750+ heroes**: select which ones you own, set **copies owned** (duplicates can fill multiple war teams) and **costumes owned** (each adds a stat bonus the engine counts). Team suggestions use only your selection. Add heroes not yet in the database by pasting their skill text; roles are auto-detected.
 
 **📖 Hero Database** — browse every hero with portraits, full special skills, passives, and family bonuses. Search by name *or skill text* (try "taunt", "fiend", "revive"). Click any hero for a detail page with:
 - Their role on defense and offense
