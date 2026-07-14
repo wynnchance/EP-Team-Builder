@@ -751,15 +751,36 @@ function emFrac(n){
   return 1;
 }
 const LBLABEL=["Base (max)","LB1","LB2"];
+/* Master Emblems (Jul 2026): ALL rarities get talent levels 21-25 with the same bonuses.
+   Levels 21/22/24 are a choice node (⚔ +50 attack OR 🛡 +60 defense); levels 23/25 are fixed +50 health.
+   Level 25 also upgrades the class talent to its Master version (not stat-modelled).
+   Verified from in-game grids across Ranger/Druid/Paladin/Monk/Sorcerer/Barbarian/Rogue/Cleric. */
+function masterAdd(n, path){
+  const lv=Math.max(0,Math.min(5,n-20));
+  const add={atk:0,def:0,hp:0}; let c=0;
+  for(let l=1;l<=lv;l++){
+    if(l===3||l===5){ add.hp+=50; continue; }
+    c++;
+    if(path==="attack") add.atk+=50;
+    else if(path==="defense") add.def+=60;
+    else { if(c===2) add.def+=60; else add.atk+=50; } // balanced: ⚔ / 🛡 / ⚔
+  }
+  return add;
+}
+const maxNodes = h => 25;
 function heroStats(h, lb, nodes, path){
   const r=h.r||5, mult=(LBMULT[r]||LBMULT[5])[lb]||1;
   const bA=+h.atk||0, bD=+h.dfn||0, bH=+h.hp||0;
   const aLB=bA*mult, dLB=bD*mult, hLB=bH*mult;
-  const em=EMTOTAL[path]||EMTOTAL.balanced, f=emFrac(nodes);
-  const atk=Math.round(aLB+em.atk*f), def=Math.round(dLB+em.def*f), hp=Math.round(hLB+em.hp*f);
+  const em=EMTOTAL[path]||EMTOTAL.balanced, f=emFrac(Math.min(nodes,20));
+  const mNodes=Math.max(0,Math.min(nodes,25)-20);
+  const ma=masterAdd(20+mNodes, path);
+  const atk=Math.round(aLB+em.atk*f+ma.atk), def=Math.round(dLB+em.def*f+ma.def), hp=Math.round(hLB+em.hp*f+ma.hp);
+  // classic nodes ≈ +5 power each; master nodes carry ~3x the stats ≈ +13 each (derived from the power stat weights — approximate until pinned against a 20→21 node card)
+  const npow=Math.min(nodes,20)*5 + mNodes*13;
   let power;
-  if(bA&&bD&&bH) power=(BASECP[r]||90)+Math.floor(aLB*0.35+dLB*0.28+hLB*0.14)+35+nodes*5;
-  else power=Math.round((h.power||1300)*mult)+nodes*5;
+  if(bA&&bD&&bH) power=(BASECP[r]||90)+Math.floor(aLB*0.35+dLB*0.28+hLB*0.14)+35+npow;
+  else power=Math.round((h.power||1300)*mult)+npow;
   return {atk,def,hp,power,estimated:!(bA&&bD&&bH)};
 }
 function ownCfg(h){ const o=OWN[baseName(h.name)]||OWN[h.name]; return o; }
@@ -954,7 +975,11 @@ document.getElementById("rosterImport").onchange=ev=>{
       const own=d.own||d; let n=0;
       Object.entries(own).forEach(([name,o])=>{
         if(!HEROES.some(h=>h.name===name)) return;
-        OWN[name]={n:Math.max(1,Math.min(4,(o&&o.n)||1)), c:Math.max(0,Math.min(5,(o&&o.c)||0))};
+        const e={n:Math.max(1,Math.min(4,(o&&o.n)||1)), c:Math.max(0,Math.min(5,(o&&o.c)||0))};
+        if(o&&o.lb!=null) e.lb=Math.max(0,Math.min(2,+o.lb||0));
+        if(o&&o.em!=null) e.em=Math.max(0,Math.min(25,+o.em||0));
+        if(o&&o.path) e.path=o.path;
+        OWN[name]=e;
         sel.add(name); n++;
       });
       save(); RV="mine"; renderGrid(); alert("Imported "+n+" heroes into your roster.");
@@ -1223,7 +1248,7 @@ function calcHtml(h){
     <div class="calchead">📊 Stat Calculator ${owned?'<span style="color:var(--gold2);font-size:11px">· saves to your hero</span>':'<span style="color:var(--dim);font-size:11px">· what-if (not owned)</span>'}${s.estimated?' <span style="color:#e0a54b;font-size:11px">· ⚠ stats estimated</span>':''}</div>
     <div class="calcrow"><span class="calclab">Limit Break</span>${[0,1,2].map(l=>btn("lb",l,LBLABEL[l],cur.lb===l)).join("")}</div>
     <div class="calcrow"><span class="calclab">Emblems</span>
-      <input type="range" min="0" max="20" value="${cur.em}" class="calcrange" data-calc="em"> <b style="color:var(--gold2)">${cur.em}/20 nodes</b></div>
+      <input type="range" min="0" max="${maxNodes(h)}" value="${Math.min(cur.em,maxNodes(h))}" class="calcrange" data-calc="em"> <b style="color:var(--gold2)">${cur.em}/${maxNodes(h)} nodes${cur.em>20?" · ★ Master":""}</b></div>
     <div class="calcrow"><span class="calclab">Path</span>${[["attack","⚔ Attack"],["balanced","⚖ Balanced"],["defense","🛡 Defense"]].map(p=>btn("path",p[0],p[1],cur.path===p[0])).join("")}</div>
     <div class="calcstats">
       <span class="cst" style="border-color:var(--fire)"><b>${s.atk}</b><br>Attack</span>
