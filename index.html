@@ -1013,6 +1013,7 @@ function renderGrid(){
       <span class="cplab" style="margin-left:8px">🎭</span> <span class="cpbtn" data-n="${h.name}" data-k="c" data-d="-1">−</span><b>${o.c||0}</b><span class="cpbtn" data-n="${h.name}" data-k="c" data-d="1">＋</span></div>`:""}`;
     d.title=(h.skill||"")+(h.pas?"\n\nPASSIVES: "+h.pas:"");
     d.onclick=(ev)=>{ if(ev.target.closest(".cpbtn")) return;
+      if(RV==="mine"){ openHero(h.name); return; } // owned view: open info — remove lives in the popup
       if(sel.has(h.name)){ sel.delete(h.name); delete OWN[h.name]; }
       else { sel.add(h.name); OWN[h.name]=OWN[h.name]||{n:1,c:0}; }
       save(); renderGrid(); };
@@ -1276,7 +1277,10 @@ function openHero(name){
   m.innerHTML=`<div class="mcard">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
       <div style="display:flex;align-items:center;gap:14px">${h.img?`<img class="mport" src="${h.img}" onerror="this.remove()">`:""}<h3 style="color:#fff;background:var(--${h.el.toLowerCase()});padding:6px 16px;border-radius:8px;font-size:18px">${h.name}</h3></div>
-      <button class="chipbtn" onclick="closeHero()">✕ Close</button></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">${OWN[baseName(h.name)]
+        ?`<button class="chipbtn mrost" data-act="rm" data-n="${h.name.replace(/"/g,"&quot;")}" style="border-color:var(--fire);color:var(--fire)">🗑 Remove from roster</button>`
+        :`<button class="chipbtn mrost" data-act="add" data-n="${h.name.replace(/"/g,"&quot;")}" style="border-color:var(--gold);color:var(--gold2)">➕ Add to my roster</button>`}
+      <button class="chipbtn" onclick="closeHero()">✕ Close</button></div></div>
     <div class="sub" style="margin-top:8px">${h.costume?`<span style="color:var(--gold2)">🎭 ${h.costume} costume of ${h.base}</span> · `:""}${h.r||5}★ · ${h.el} · ${h.speed} · ${h.cls} · ${h.fam||"—"} · Power ${h.power}${h.atk?` · ⚔ ${h.atk} 🛡 ${h.dfn} ❤ ${h.hp}`:""}${OWN[baseName(h.name)]?` · <b style="color:var(--gold2)">You own ${(OWN[baseName(h.name)].n||1)}× · 🎭 ${(OWN[baseName(h.name)].c||0)} costume${(OWN[baseName(h.name)].c||0)===1?"":"s"}</b>`:""}</div>
     <div>${h.tags.map(x=>`<span class="pill">${TAGDESC[x]||x}</span>`).join("")}</div>
     <div id="calcBox">${calcHtml(h)}</div>
@@ -1320,6 +1324,14 @@ document.addEventListener("click",e=>{
     const es=logEntries(); es.push({date:new Date().toISOString().slice(0,10),mode:"Raid Attack",result:lg.getAttribute("data-r"),tank:"",note:"Team: "+t2.name,ctx:CTX,team:t2.heroes});
     store.set("epLog",es); shareBattle(es[es.length-1]); renderLog(); alert("Logged "+lg.getAttribute("data-r")+" for "+t2.name); return; }
   const dl=q(".sbdel"); if(dl){ e.preventDefault(); const ts=sbTeams(); ts.splice(+dl.getAttribute("data-i"),1); store.set("epTeams",ts); renderSBSaved(); return; }
+  const mr=q(".mrost"); if(mr){
+    const n=mr.getAttribute("data-n"), b=baseName(n);
+    if(mr.getAttribute("data-act")==="rm"){
+      if(!confirm("Remove "+b+" from your roster?")) return;
+      sel.delete(b); delete OWN[b];
+    } else { sel.add(b); OWN[b]=OWN[b]||{n:1,c:0}; }
+    save(); if(typeof renderGrid==="function") renderGrid();
+    openHero(n); return; }
   const c=q("[data-h]");
   if(c) openHero(c.getAttribute("data-h"));
 });
