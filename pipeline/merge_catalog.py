@@ -54,12 +54,18 @@ except Exception:
     # and heroes the wiki doesn't know (toon variants etc.); everything else re-derives from wiki
     try: _prev_list = json.load(open("heroes_full.json"))
     except Exception: _prev_list = []
-    _cat_keys = set()
+    _cat_keys = set(); _cat_names = {}
     import re as _re
-    for _h in catalog: _cat_keys.add(key(_h["name"]))
-    curated = [h for h in _prev_list
-               if _re.search(r" \(2\)$", h["name"]) or key(h["name"]) not in _cat_keys]
-    curated = [dict(h) for h in curated if not h.get("costume")]
+    for _h in catalog:
+        _cat_keys.add(key(_h["name"])); _cat_names.setdefault(key(_h["name"]), _h["name"])
+    _prev_names = {h["name"] for h in _prev_list}
+    # keep: copy entries, wiki-unknown heroes, bases of copies, and heroes whose
+    # display name differs from the wiki spelling (accents) - roster files match by exact name
+    curated = [dict(h) for h in _prev_list if (not h.get("costume")) and (
+        _re.search(r" \(2\)$", h["name"])
+        or key(h["name"]) not in _cat_keys
+        or _cat_names.get(key(h["name"])) != h["name"]
+        or (h["name"] + " (2)") in _prev_names)]
     print("no heroes.json - derived", len(curated), "curated entries from previous build")
 try: cimgs = json.load(open("catalog_imgs.json"))
 except Exception: cimgs = {}
