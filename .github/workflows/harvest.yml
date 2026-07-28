@@ -1,0 +1,53 @@
+# .github/workflows/harvest.yml
+# Re-harvests the hero catalog from the E&P Fandom wiki, rebuilds heroes_full.json,
+# and rebuilds index.html from app_template.html - no manual app uploads needed.
+# Manual trigger: Actions -> "Re-harvest hero catalog" -> Run workflow.
+name: Re-harvest hero catalog
+on:
+  workflow_dispatch: {}
+permissions:
+  contents: write
+jobs:
+  harvest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - name: Seed previous build
+        working-directory: pipeline
+        run: |
+          if [ -f ../heroes_full.json ]; then cp ../heroes_full.json heroes_full.json;
+          else python3 extract_prev.py; fi
+      - name: Harvest wiki and rebuild DB
+        working-directory: pipeline
+        run: |
+          python3 harvest.py
+          python3 parse_catalog.py
+          python3 catalog_imgs.py || echo "portrait resolution failed - merge will backfill from previous build"
+          python3 parse_costumes.py
+          python3 merge_catalog.py
+          python3 corrections.py
+      - name: Rebuild app from template
+        run: |
+          if [ -f app_template.html ]; then
+            python3 -c "data=open('pipeline/heroes_full.json').read(); tpl=open('app_template.html').read(); assert '__HERO_DATA__' in tpl; open('index.html','w').write(tpl.replace('__HERO_DATA__', data)); print('index.html rebuilt')"
+          else
+            echo "no app_template.html in repo - skipping app rebuild"
+          fi
+      - name: Commit results
+        run: |
+          git config user.name "ep-bot"
+          git config user.email "ep-bot@users.noreply.github.com"
+          cp pipeline/heroes_full.json heroes_full.json
+          git add heroes_full.json index.html pipeline/fieldnames_report.json || true
+          git commit -m "Re-harvest hero catalog + rebuild app" || echo "no changes"
+          git push
+      - name: Upload outputs as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: harvest-outputs
+          path: |
+            pipeline/heroes_full.json
+            pipeline/catalog_parsed.json
+            pipeline/fieldnames_report.json
+          retention-days: 14
