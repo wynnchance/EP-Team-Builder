@@ -213,6 +213,7 @@ footer{text-align:center;color:var(--dim);font-size:12px;padding:26px 16px;line-
   main{padding:18px 12px 32px}
   .grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
 }
+#eva1Preview{margin:auto} #eva1Preview p,#eva1Preview h3,#eva1Preview .bar{margin:12px 0} #eva1Preview::backdrop{background:rgba(0,0,0,.7)}
 </style>
 </head>
 <body>
@@ -242,7 +243,10 @@ footer{text-align:center;color:var(--dim);font-size:12px;padding:26px 16px;line-
     <button class="chipbtn" id="selNone">Clear all</button>
     <button class="chipbtn" id="rosterExport">⬇ Export roster</button>
     <label class="chipbtn" style="cursor:pointer">⬆ Import roster<input type="file" id="rosterImport" accept=".json" style="display:none"></label>
+    <label class="chipbtn" style="cursor:pointer">⬆ Import game save (.eva1)<input type="file" id="eva1Import" accept=".eva1" style="display:none"></label>
   </div>
+  <div class="note" id="eva1Status" role="status"></div>
+  <details><summary>How to get your game save</summary><div class="note">On Android, copy <b>Android/data/com.smallgiantgames.empires/files/pts.eva1</b> to your computer using USB file transfer, then choose <b>Import game save (.eva1)</b>. Copy the file; leave the original in place. Android access varies by device/version. If the folder is unavailable, follow <a href="https://empuzzled.com/roster/" target="_blank" rel="noopener">Empuzzled’s current Android import instructions</a>. Each alliance member imports their own file in their own browser. Export roster to back it up or share it. This importer supports Android EVA1 files; it does not fetch an account from the game.</div></details>
   <div class="grid" id="heroGrid"></div>
   <details>
     <summary>➕ Add a hero not in the database</summary>
@@ -385,8 +389,12 @@ footer{text-align:center;color:var(--dim);font-size:12px;padding:26px 16px;line-
 
 <div class="modal" id="heroModal"></div>
 </main>
+  <dialog id="eva1Preview" style="max-width:720px;width:calc(100% - 48px);max-height:85vh;overflow:auto;background:var(--panel-solid);color:var(--txt);border:1px solid var(--accent);border-radius:12px;padding:24px"></dialog>
+
 <footer>Full hero catalog (1,750+ heroes incl. costumes) sourced from the E&P Fandom wiki (CC-BY-SA) with a hand-curated core roster, July 2026. Team recommendations are rule-based on skills, families, synergy pairs, speed and power. Emblem paths and troop picks use community breakpoint data (empuzzled / oldcynic, July 2026). Hero portraits hotlinked from the <a href='https://empiresandpuzzles.fandom.com' style='color:var(--accent)'>E&P Fandom wiki</a> — artwork © Small Giant Games / Zynga. </footer>
 
+<script src="eva1-hero-ids.js"></script>
+<script src="eva1-import.js"></script>
 <script>
 const BASE_HEROES = __HERO_DATA__;
 /* ===== community learning config ===== */
@@ -546,7 +554,7 @@ const store = {
   if(!own){ // migrate old flat selection (X + "X (2)" entries -> copies)
     own = {};
     (store.get("epSel")||[]).forEach(n=>{
-      const m=n.match(/^(.*) \((\d)\)$/);
+      const m=n.match(/^(.*) \((\d+)\)$/);
       const base=m?m[1]:n;
       if(!HEROES.some(h=>h.name===base)) return;
       own[base]=own[base]||{n:1,c:0};
@@ -557,12 +565,12 @@ const store = {
   sel = new Set(Object.keys(OWN).filter(n=>HEROES.some(h=>h.name===n)));
   RV = sel.size ? "mine" : "all";
 })();
-const baseName = n=>n.replace(/ \(\d\)$/,"");
+const baseName = n=>n.replace(/ \(\d+\)$/,"");
 const H_BY_NAME = Object.fromEntries(HEROES.map(h=>[h.name,h]));
 function baseOf(h){ if(typeof h==="string") h=H_BY_NAME[h]||{name:h}; return h.base || baseName(h.name); }
 function findHero(n){
   let h=HEROES.find(x=>x.name===n); if(h) return h;
-  const m=n.match(/^(.*) \((\d)\)$/);
+  const m=n.match(/^(.*) \((\d+)\)$/);
   if(m){ const b=HEROES.find(x=>x.name===m[1]); if(b) return Object.assign({},b,{name:n}); }
   return null;
 }
@@ -572,21 +580,21 @@ function roster(){
     const h=HEROES.find(x=>x.name===n); if(!h) return;
     out.push(h);
     const o=OWN[n]||{n:1};
-    for(let k=2;k<=Math.min(o.n||1,4);k++){ const c=findHero(n+" ("+k+")"); if(c) out.push(c); }
+    for(let k=2;k<=Math.min(o.n||1,1000);k++){ const c=findHero(n+" ("+k+")"); if(c) out.push(c); }
   });
   return out;
 }
 function sbPool(){
   const extra=[];
   Object.entries(OWN).forEach(([n,o])=>{
-    for(let k=2;k<=Math.min(o.n||1,4);k++){ const c=findHero(n+" ("+k+")"); if(c&&!HEROES.some(x=>x.name===c.name)) extra.push(c); }
+    for(let k=2;k<=Math.min(o.n||1,1000);k++){ const c=findHero(n+" ("+k+")"); if(c&&!HEROES.some(x=>x.name===c.name)) extra.push(c); }
   });
   return HEROES.concat(extra);
 }
 function adjustOwn(n,k,d){
   const o=OWN[n]; if(!o) return;
   if(k==="n"){
-    o.n=Math.max(1,Math.min(4,(o.n||1)+d));
+    o.n=Math.max(1,Math.min(1000,(o.n||1)+d));
     if(Array.isArray(o.ps)){ o.ps=o.ps.slice(0,o.n); while(o.ps.length<o.n)o.ps.push(null); }
   }
   else o.c=Math.max(0,Math.min(5,(o.c||0)+d));
@@ -799,7 +807,7 @@ const copyIndex = h=>{ const m=h.name.match(/ \((\d+)\)$/); return m?Math.max(0,
 function exactOwnedPower(h){
   const o=ownCfg(h); if(!o) return null;
   const i=copyIndex(h);
-  if(Array.isArray(o.ps)&&validPower(o.ps[i])) return Math.round(+o.ps[i]);
+  if(Array.isArray(o.ps)) return validPower(o.ps[i])?Math.round(+o.ps[i]):null;
   if(validPower(o.p)) return Math.round(+o.p);
   return null;
 }
@@ -807,13 +815,16 @@ function effPower(h){
   const o=ownCfg(h);
   if(!o) return h.power||0;
   const exact=exactOwnedPower(h); if(exact) return exact;
-  return heroStats(h, o.lb!=null?o.lb:2, o.em!=null?o.em:20, o.path||"balanced").power + cosBonus(h);
+  const imported=o.instances&&o.instances[copyIndex(h)];
+  const lb=Number.isInteger(imported?.limitBreak)&&imported.limitBreak>=0&&imported.limitBreak<=2?imported.limitBreak:o.lb??2;
+  const em=Number.isInteger(imported?.unlockedTalentNodes)&&imported.unlockedTalentNodes>=0&&imported.unlockedTalentNodes<=25?imported.unlockedTalentNodes:o.em??20;
+  return heroStats(h, lb, em, o.path||"balanced").power + cosBonus(h);
 }
 
 /* ---------- score grading ---------- */
 let BENCH = {sig:null, v:0};
 function benchScore(){
-  const sig = CTX + "|" + [...sel].sort().map(n=>{ const o=OWN[n]||{}; return [n,o.n||1,o.c||0,o.p||0,(o.ps||[]).join(","),o.lb??2,o.em??20,o.path||"balanced"].join(":"); }).join("|");
+  const sig = CTX + "|" + [...sel].sort().map(n=>{ const o=OWN[n]||{}; return [n,o.n||1,o.c||0,o.p||0,(o.ps||[]).join(","),JSON.stringify(o.instances||[]),o.lb??2,o.em??20,o.path||"balanced"].join(":"); }).join("|");
   if(BENCH.sig === sig) return BENCH.v;
   const d = buildDefenses();
   BENCH = {sig, v: d && d.length ? d[0].score : 0};
@@ -984,7 +995,7 @@ document.getElementById("selNone").onclick=()=>{
   sel.clear(); OWN={}; save(); renderGrid();
 };
 document.getElementById("rosterExport").onclick=()=>{
-  const blob=new Blob([JSON.stringify({v:3,own:OWN},null,1)],{type:"application/json"});
+  const blob=new Blob([JSON.stringify({v:4,own:OWN,eva1:store.get("epEvaRoster"),evaAliases:store.get("epEvaAliases")},null,1)],{type:"application/json"});
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="ep-roster.json"; a.click();
 };
 document.getElementById("rosterImport").onchange=ev=>{
@@ -995,10 +1006,12 @@ document.getElementById("rosterImport").onchange=ev=>{
       const own=d.own||d; let n=0;
       Object.entries(own).forEach(([name,o])=>{
         if(!HEROES.some(h=>h.name===name)) return;
-        const e={n:Math.max(1,Math.min(4,(o&&o.n)||1)), c:Math.max(0,Math.min(5,(o&&o.c)||0))};
+        const e={n:Math.max(1,Math.min(1000,(o&&o.n)||1)), c:Math.max(0,Math.min(5,(o&&o.c)||0))};
         if(o&&o.lb!=null) e.lb=Math.max(0,Math.min(2,+o.lb||0));
         if(o&&o.em!=null) e.em=Math.max(0,Math.min(25,+o.em||0));
-        if(o&&o.path) e.path=o.path;
+        if(o&&["attack","balanced","defense"].includes(o.path)) e.path=o.path;
+        if(o&&Array.isArray(o.instances)) e.instances=o.instances.filter(x=>x&&typeof x.instanceId==="string"&&typeof x.definitionId==="string").slice(0,1000);
+        if(o&&typeof o.definitionId==="string") e.definitionId=o.definitionId;
         if(o&&Number.isFinite(+o.p)&&+o.p>=100&&+o.p<=3000) e.p=Math.round(+o.p);
         if(o&&Array.isArray(o.ps)){
           const ps=o.ps.slice(0,e.n).map(p=>Number.isFinite(+p)&&+p>=100&&+p<=3000?Math.round(+p):null);
@@ -1007,6 +1020,8 @@ document.getElementById("rosterImport").onchange=ev=>{
         OWN[name]=e;
         sel.add(name); n++;
       });
+      if(d.eva1&&Array.isArray(d.eva1.heroes)&&d.eva1.version===1) store.set("epEvaRoster",d.eva1);
+      if(d.evaAliases&&typeof d.evaAliases==="object") store.set("epEvaAliases",d.evaAliases);
       save(); RV="mine"; renderGrid(); alert("Imported "+n+" heroes into your roster.");
     }catch(e){ alert("Invalid roster file"); }
   });
@@ -1014,10 +1029,11 @@ document.getElementById("rosterImport").onchange=ev=>{
 function shown(){
   const q=document.getElementById("search").value.toLowerCase();
   const fc=document.getElementById("fClass").value, ff=document.getElementById("fFam").value;
-  return HEROES.filter(h=>(RV!=="mine"||sel.has(h.name))&&!/ \(\d\)$/.test(h.name)&&(!q||h.name.toLowerCase().includes(q))
+  return HEROES.filter(h=>(RV!=="mine"||sel.has(h.name))&&!/ \(\d+\)$/.test(h.name)&&(!q||h.name.toLowerCase().includes(q))
     &&(!elFilter.size||elFilter.has(h.el))&&(!fc||h.cls===fc)&&(!ff||h.fam===ff));
 }
 function save(){ store.set("epOwn",OWN); store.set("epSel",[...sel]); }
+const importedNumber = v=>Number.isSafeInteger(v)&&v>=0?v:"?";
 function renderGrid(){
   const g=document.getElementById("heroGrid"); g.innerHTML="";
   const all=shown().sort((a,b)=>(RV==="mine"?effPower(b)-effPower(a):b.power-a.power));
@@ -1035,6 +1051,7 @@ function renderGrid(){
     const shownPower=RV==="mine"?effPower(h):h.power;
     d.innerHTML=`${h.img?`<img class="hport" src="${h.img}" loading="lazy" onerror="this.remove()">`:""}<span class="pw" title="${RV==="mine"?(o&&o.p?"Exact card power":"Calculated power"):"Base-max catalog power"}">${shownPower}</span><div class="nm">${h.name}</div>
       <div class="meta">${h.r||5}★ · ${h.el} · ${h.speed} · ${h.cls}${h.fam?" · "+h.fam:""}</div>${o?`
+      ${o.instances?`<div class="meta">Imported: ${o.instances.map(x=>`Lv ${importedNumber(x.level)} · Asc ${importedNumber(x.ascension)} · LB ${importedNumber(x.limitBreak)} · ${importedNumber(x.unlockedTalentNodes)} nodes`).join(" / ")}</div>`:""}
       <div class="cprow"><span class="cplab">Copies</span> <span class="cpbtn" data-n="${h.name}" data-k="n" data-d="-1">−</span><b>${o.n||1}</b><span class="cpbtn" data-n="${h.name}" data-k="n" data-d="1">＋</span>
       <span class="cplab" style="margin-left:8px">🎭</span> <span class="cpbtn" data-n="${h.name}" data-k="c" data-d="-1">−</span><b>${o.c||0}</b><span class="cpbtn" data-n="${h.name}" data-k="c" data-d="1">＋</span></div>
       ${(o.n||1)>1?`<div class="meta">Copy power: ${Array.from({length:o.n||1},(_,i)=>effPower(i?findHero(h.name+" ("+(i+1)+")"):h)).join(" / ")}</div>`:""}`:""}`;
@@ -1255,7 +1272,7 @@ function renderDb(){
   const fe=document.getElementById("dbEl").value, fc=document.getElementById("dbClass").value, fr=document.getElementById("dbRarity").value,
         fs=document.getElementById("dbSpeed").value, ff=document.getElementById("dbFam").value,
         ft=document.getElementById("dbTag").value, srt=document.getElementById("dbSort").value;
-  let list=HEROES.filter(h=>!/ \(\d\)$/.test(h.name)&&
+  let list=HEROES.filter(h=>!/ \(\d+\)$/.test(h.name)&&
     (!q || h.name.toLowerCase().includes(q) || (h.skill||"").toLowerCase().includes(q) || (h.pas||"").toLowerCase().includes(q))
     && (!fe||h.el===fe) && (!fc||h.cls===fc) && (!fr||(fr==="2"?(h.r||5)<=2:(h.r||5)===+fr)) && (!fs||h.speed===fs) && (!ff||h.fam===ff) && (!ft||T(h,ft)));
   if(srt==="name") list.sort((a,b)=>a.name.localeCompare(b.name));
@@ -1300,7 +1317,7 @@ function calcApply(clearExact){
   const h=findHero(window.__calcHero); if(!h) return;
   // persist to owned config
   const o=ownCfg(h);
-  if(o){ o.lb=window.__calc.lb; o.em=window.__calc.em; o.path=window.__calc.path; if(clearExact){ delete o.p; delete o.ps; } save(); }
+  if(o){ o.lb=window.__calc.lb; o.em=window.__calc.em; o.path=window.__calc.path; if(o.instances) o.instances=o.instances.map(x=>({...x,limitBreak:o.lb,unlockedTalentNodes:o.em})); if(clearExact){ delete o.p; delete o.ps; } save(); }
   box.innerHTML=calcHtml(h);
 }
 
@@ -1601,7 +1618,7 @@ function refreshLearnBadge(){
 /* ---------- battle log ---------- */
 function fillHeroSelects(div, cls){
   if(!div) return;
-  const opts='<option value="">Hero…</option>'+HEROES.slice().filter(h=>!/ \(\d\)$/.test(h.name)).sort((a,b)=>a.name.localeCompare(b.name)).map(h=>`<option>${h.name}</option>`).join("");
+  const opts='<option value="">Hero…</option>'+HEROES.slice().filter(h=>!/ \(\d+\)$/.test(h.name)).sort((a,b)=>a.name.localeCompare(b.name)).map(h=>`<option>${h.name}</option>`).join("");
   for(let i=0;i<5;i++){ const s=document.createElement("select"); s.className=cls; s.innerHTML=opts; div.appendChild(s); }
 }
 fillHeroSelects(document.getElementById("lgTeam"),"lgHero");
@@ -1711,6 +1728,7 @@ renderLog();
 })();
 refreshLearnBadge();
 </script>
+<script src="eva1-ui.js"></script>
 </body>
 </html>
                                                                                                                                                                                                                                                             
