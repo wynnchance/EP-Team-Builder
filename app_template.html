@@ -135,6 +135,7 @@ h2{font-family:'Cinzel',serif;color:var(--gold);font-size:22px;letter-spacing:1.
 .calcbtn:hover{border-color:var(--line2)}
 .calcbtn.on{background:linear-gradient(180deg,#2b5782,#1c334d);color:var(--gold2);border-color:var(--gold)}
 .calcrange{flex:1;min-width:120px;accent-color:var(--gold)}
+.calc select,.calc input[type=number],#troopList select{background:var(--panel2);color:var(--txt);border:1px solid var(--line2);border-radius:6px;padding:4px 6px;font:inherit;font-size:12.5px}
 .calcstats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px}
 .cst{background:var(--panel);border:1px solid var(--line);border-left:3px solid gray;border-radius:8px;padding:7px 4px;text-align:center;font-size:11px;color:var(--dim)}
 .cst b{color:var(--txt);font-size:16px}
@@ -227,7 +228,7 @@ footer{text-align:center;color:var(--dim);font-size:12px;padding:26px 16px;line-
 
 <section class="tab" id="tab-roster">
   <h2>My Roster</h2>
-  <div class="note">The full catalog is here — <b>select only the heroes you own</b>, then set copies and costumes. Open an owned hero to enter the <b>exact Power shown on its card</b>; that value overrides the calculator and makes team rankings accurate for costumes and newer heroes. Team suggestions use your roster; the Hero Database always shows base-max catalog values.</div>
+  <div class="note">The full catalog is here — <b>select only the heroes you own</b>, then set copies and costumes. Open an owned hero to set each <b>copy</b>'s build, form and the <b>exact Power shown on its card</b>; that value overrides the estimate for that copy only. Markers: ✓ card Power · ~ estimate from imported level/ascension/LB · ≈ assumed fully levelled (manual entry) · ? progression unknown (ranked at the minimum). Team suggestions use your roster; the Hero Database always shows base-max catalog values.</div>
   <div class="bar">
     <button class="chipbtn" id="rvMine">👤 My heroes</button>
     <button class="chipbtn" id="rvAll">➕ Add heroes</button>
@@ -247,6 +248,7 @@ footer{text-align:center;color:var(--dim);font-size:12px;padding:26px 16px;line-
     <label class="chipbtn" style="cursor:pointer">⬆ Import game save (.eva1)<input type="file" id="eva1Import" accept=".eva1" style="display:none"></label>
   </div>
   <div class="note" id="eva1Status" role="status"></div>
+  <details id="troopPanel" style="display:none"><summary>🛡 Troops from your game save</summary><div class="note" style="font-size:12.5px">Troops are matched by their definition ID. Mana bonuses are used only where verified: 4★ mana troops at every level, Magic/Styx at level 30. Breakpoints are calculated for Very Fast, Fast, Average, Slow and Very Slow heroes (offense, tiles that hit; ceil(base tiles ÷ (1 + bonus))). Charge, Magic, Styx and other speeds are not calculated. If an ID is not recognised, you can label it yourself.</div><div id="troopList"></div></details>
   <details><summary>How to get your game save</summary><div class="note">On Android, copy <b>Android/data/com.smallgiantgames.empires/files/pts.eva1</b> to your computer using USB file transfer, then choose <b>Import game save (.eva1)</b>. Copy the file; leave the original in place. Android access varies by device/version. If the folder is unavailable, follow <a href="https://empuzzled.com/roster/" target="_blank" rel="noopener">Empuzzled’s current Android import instructions</a>. Each alliance member imports their own file in their own browser. Export roster to back it up or share it. This importer supports Android EVA1 files; it does not fetch an account from the game.</div></details>
   <div class="grid" id="heroGrid"></div>
   <details>
@@ -396,6 +398,7 @@ footer{text-align:center;color:var(--dim);font-size:12px;padding:26px 16px;line-
 
 <script src="eva1-hero-ids.js"></script>
 <script src="eva1-import.js"></script>
+<script src="ep-engine.js"></script>
 <script>
 const BASE_HEROES = __HERO_DATA__;
 /* ===== community learning config ===== */
@@ -529,9 +532,9 @@ const HERO_NOTES = {
 "Hathor":{o:"Fast def-down sniper; Moon family cleanse synergy."},
 "Hua Pi Gui":{o:"500% to 5 random enemies + forces them to cast Mindless Heal for 5 turns — their charged heroes heal YOUR team instead of firing; refunds herself 25% mana.",d:"Vengeful Haunting punishes burst (2 turns untouchable, auto 450% + dispel); forced Mindless Heals turn the attacker's own mana engine against them."}
 };
-const TAGDESC={growth:"Growth stacks — persist even through Equalizer wipes",wither:"Wither defense cut — persists through Equalizer wipes",taunt:"taunt soaks specials",healer:"sustain",directheal:"direct heal lowers Insanity",bigheal:"big team heal",revive:"revive safety net",cleanse:"cleanses ailments",dispel:"strips enemy buffs",manactl:"cuts enemy mana",healblock:"blocks enemy healing",aoe:"AoE damage",sniper:"heavy single-target hit",hit3:"hits three",minions:"minion summoner",fiends:"fiend pressure that eats healing",dot:"damage over time",defdown:"defense-down amplifies everything",atkbuff:"attack buff multiplies all tiles",crit:"critical chance",ninelives:"revives up to 9x (Nine Lives)",counter:"counterattack",teamimmune:"team immunity",insanity:"Insanity pressure",amp:"amplifies damage taken",engine:"always-on passive engine",wall:"damage-reduction wall",cc:"crowd control",bypass:"bypasses defensive buffs",overheal:"boosted health past max",antirevive:"prevents or punishes revives",dodge:"dodge chance",minionhate:"destroys or punishes minions",titanspec:"Titan specialist",insimmune:"immune to Insanity"};
+const TAGDESC={growth:"Growth stacks — persist even through Equalizer wipes",wither:"Wither defense cut — persists through Equalizer wipes",taunt:"taunt soaks specials",healer:"sustain",directheal:"direct heal lowers Insanity",bigheal:"big team heal",revive:"revive safety net",cleanse:"cleanses ailments",dispel:"strips enemy buffs",manactl:"cuts enemy mana",healblock:"blocks enemy healing",aoe:"AoE damage",sniper:"heavy single-target hit",hit3:"hits three",minions:"minion summoner",fiends:"fiend pressure that eats healing",dot:"damage over time",defdown:"defense-down amplifies everything",atkbuff:"attack buff multiplies all tiles",crit:"critical chance",ninelives:"revives up to 9x (Nine Lives)",counter:"counterattack",teamimmune:"team immunity",insanity:"Insanity pressure",amp:"amplifies damage taken",engine:"always-on passive engine",wall:"damage-reduction wall",cc:"crowd control",bypass:"bypasses defensive buffs",overheal:"boosted health past max",antirevive:"prevents or punishes revives",dodge:"dodge chance",minionhate:"destroys or punishes minions",titanspec:"Titan specialist",insimmune:"immune to Insanity",eldefdown:"-defense against one colour (stacks with defense down)",antioverheal:"blocks enemy boosted health",fiendhate:"destroys fiends"};
 function noteFor(h,ctx){
-  const base=h.name.replace(/ \(2\)$/,"");
+  const base=h.name.replace(/ \(\d+\)$/,"");
   const n=HERO_NOTES[base];
   if(n){ if(n[ctx]) return n[ctx]; if(n.o) return n.o; if(n.d) return n.d; }
   const t=h.tags.filter(x=>TAGDESC[x]).slice(0,4).map(x=>TAGDESC[x]).join("; ");
@@ -551,6 +554,7 @@ const store = {
 (function init(){
   const custom = store.get("epCustom")||[];
   HEROES = HEROES.concat(custom);
+  HEROES.forEach(h=>EPEngine.retag(h)); // derived tags survive template rebuilds and wiki re-harvests
   let own = store.get("epOwn");
   if(!own){ // migrate old flat selection (X + "X (2)" entries -> copies)
     own = {};
@@ -569,34 +573,43 @@ const store = {
 const baseName = n=>n.replace(/ \(\d+\)$/,"");
 const H_BY_NAME = Object.fromEntries(HEROES.map(h=>[h.name,h]));
 function baseOf(h){ if(typeof h==="string") h=H_BY_NAME[h]||{name:h}; return h.base || baseName(h.name); }
+/* ---------- owned copies (units) -> recommendation pool ---------- */
+// Each owned copy is a unit keyed by its imported instance ID (or a manual key).
+// A unit's base hero and its costumes are alternate forms of the SAME copy.
+const POOL={dirty:true,version:0,units:[],pool:[],byName:new Map(),byUnit:new Map(),unitsByHero:new Map(),troops:[]};
+function invalidatePool(){ POOL.dirty=true; }
+function poolState(){
+  if(!POOL.dirty) return POOL;
+  const units=EPEngine.buildUnits({heroes:HEROES,own:OWN,selected:[...sel],aliases:typeof EVA1_HERO_IDS!=="undefined"?EVA1_HERO_IDS:{}});
+  const pool=EPEngine.poolFrom(units);
+  POOL.units=units; POOL.pool=pool; POOL.byName=new Map(pool.map(h=>[h.name,h]));
+  POOL.byUnit=new Map(); pool.forEach(h=>{ if(!POOL.byUnit.has(h.__unit)) POOL.byUnit.set(h.__unit,[]); POOL.byUnit.get(h.__unit).push(h); });
+  POOL.unitsByHero=new Map(); units.forEach(u=>{ if(!POOL.unitsByHero.has(u.name)) POOL.unitsByHero.set(u.name,[]); POOL.unitsByHero.get(u.name).push(u); });
+  POOL.troops=EPEngine.troopsFrom(store.get("epEvaRoster"),store.get("epTroopLabels")||{});
+  POOL.dirty=false; POOL.version++;
+  return POOL;
+}
 function findHero(n){
+  const p=poolState().byName.get(n); if(p) return p;
   let h=HEROES.find(x=>x.name===n); if(h) return h;
   const m=n.match(/^(.*) \((\d+)\)$/);
   if(m){ const b=HEROES.find(x=>x.name===m[1]); if(b) return Object.assign({},b,{name:n}); }
   return null;
 }
-function roster(){
-  const out=[];
-  sel.forEach(n=>{
-    const h=HEROES.find(x=>x.name===n); if(!h) return;
-    out.push(h);
-    const o=OWN[n]||{n:1};
-    for(let k=2;k<=Math.min(o.n||1,1000);k++){ const c=findHero(n+" ("+k+")"); if(c) out.push(c); }
-  });
-  return out;
-}
+function roster(){ return poolState().pool; }
+function unitCount(){ return poolState().units.length; }
+// Base form of one owned copy, for places that show "the hero" rather than a form.
+function unitBaseEntry(u){ const fs=poolState().byUnit.get(u.key)||[]; return fs.find(h=>h.__form===(u.pinned||"base"))||fs[0]||null; }
 function sbPool(){
-  const extra=[];
-  Object.entries(OWN).forEach(([n,o])=>{
-    for(let k=2;k<=Math.min(o.n||1,1000);k++){ const c=findHero(n+" ("+k+")"); if(c&&!HEROES.some(x=>x.name===c.name)) extra.push(c); }
-  });
-  return HEROES.concat(extra);
+  const pool=roster(), names=new Set(pool.map(h=>h.name));
+  return pool.concat(HEROES.filter(h=>!names.has(h.name)));
 }
 function adjustOwn(n,k,d){
   const o=OWN[n]; if(!o) return;
   if(k==="n"){
     o.n=Math.max(1,Math.min(1000,(o.n||1)+d));
     if(Array.isArray(o.ps)){ o.ps=o.ps.slice(0,o.n); while(o.ps.length<o.n)o.ps.push(null); }
+    if(Array.isArray(o.copies)) o.copies=o.copies.slice(0,o.n);
   }
   else o.c=Math.max(0,Math.min(5,(o.c||0)+d));
   save(); renderGrid();
@@ -664,51 +677,28 @@ const ctxMod=t=>{const m=CTXS[CTX].mod;return m&&m[t]!==undefined?m[t]:1;};
 const spd=h=>CTX==="rush"?5:(SPEED[h.speed]||3);
 const slowPen=(h,a,b)=>CTX==="rush"?0:(h.speed==="Very Slow"?a:h.speed==="Slow"?b:0);
 
-/* ---------- synergy knowledge base ---------- */
-/* a/b are matchers: {tag}, {anyTag:[...]}, {name}, {speed:[...]} — combine freely. Negative w = anti-synergy. */
-const SYN_RULES=[
- {a:{tag:"manaboost"},b:{speed:["Slow","Very Slow"],anyTag:["aoe","sniper","hit3","bigheal","defdown"]},w:14,why:"mana battery accelerates the slow heavy-hitter — the classic battery+nuke engine"},
- {a:{name:"Edwin"},b:{tag:"dot"},w:12,why:"Edwin blocks ailment-cleansing — the DoTs cannot be removed"},
- {a:{tag:"healblock"},b:{anyTag:["dot","aoe","fiends"]},w:8,why:"healing block makes the chip damage stick"},
- {a:{tag:"manactl"},b:{tag:"healblock"},w:10,why:"strangle chain: no mana for their healers, no healing for their heroes"},
- {a:{tag:"amp"},b:{anyTag:["sniper","aoe","hit3"]},w:8,why:"damage amp multiplies every hit that follows"},
- {a:{tag:"defdown"},b:{anyTag:["sniper","aoe"]},w:8,why:"defense-down feeds the nukes (and every tile)"},
- {a:{tag:"taunt"},b:{speed:["Slow","Very Slow"],anyTag:["aoe","sniper","bigheal","defdown"]},w:8,why:"taunt buys the slow payload time to charge"},
- {a:{tag:"counter"},b:{tag:"healer"},w:8,why:"counterattack + sustain turns their own hits against them"},
- {a:{tag:"atkbuff"},b:{tag:"counter"},w:6,why:"attack buff also boosts counterattack damage"},
- {a:{name:"Lyria"},b:{name:"Merith"},w:12,why:"stacked revival reduction — enemy revives drop to ~3% (Nine Lives killer)"},
- {a:{tag:"insanity"},b:{tag:"insanity"},w:8,why:"Insanity floods faster than it can be cleansed"},
- {a:{tag:"cc"},b:{anyTag:["dot","fiends"]},w:6,why:"crowd control stops them cleansing the pressure"},
- {a:{tag:"dispel"},b:{tag:"bypass"},w:5,why:"strip their buffs, then hit through whatever remains"},
- {a:{tag:"antirevive"},b:{anyTag:["sniper","aoe"]},w:5,why:"kills stay dead — no revive comebacks"},
- {a:{tag:"growth"},b:{name:"Devyani"},w:10,why:"Growth attack gift feeds Devyani's Growth Boon — 2x extra damage per point, and Growth survives Equalizer"},
- {a:{tag:"growth"},b:{anyTag:["sniper","hit3"]},w:5,why:"persistent Growth attack stacks amplify every hit"},
- {a:{tag:"cleanse"},b:{tag:"dot"},w:-4,why:"anti: own cleanse can pop enemy sleep/ailment setups — mind the order"},
- {a:{tag:"taunt"},b:{tag:"taunt"},w:-18,why:"anti: two taunts compete — one is always wasted"},
- {a:{tag:"manaboost"},b:{tag:"manaboost"},w:-6,why:"anti: overlapping mana batteries — one is usually enough"},
- {a:{tag:"bigheal"},b:{tag:"bigheal"},w:-10,why:"anti: two big healers trade kill pressure for redundancy"}
-];
+/* ---------- synergy knowledge base (ep-engine.js) ---------- */
+/* Rules live in EPEngine.RULES: setup->payoff pairs with timing, conflicts for same-kind
+   effects, elemental defense down, and opponent needs. */
+const SYN_RULES=EPEngine.RULES;
+function engineCtx(){ return {key:CTX, mod:ctxMod}; }
 function matchH(h,m){
   if(!m) return false;
-  if(m.name && h.name.replace(/ \(2\)$/,"")!==m.name) return false;
+  if(m.name && baseName(h.name)!==m.name) return false;
   if(m.tag && !T(h,m.tag)) return false;
   if(m.anyTag && !m.anyTag.some(x=>T(h,x))) return false;
   if(m.speed && !m.speed.includes(h.speed)) return false;
   return true;
 }
 function applySyn(hs){
-  let score=0; const whys=[];
-  for(const r of SYN_RULES){
-    let found=null;
-    for(const x of hs){ for(const y of hs){ if(x!==y && matchH(x,r.a) && matchH(y,r.b)){ found=[x,y]; break; } } if(found) break; }
-    if(found){ score+=r.w; whys.push(`<b>${r.w<0?"⚠️ ":"🔗 "}${found[0].name} + ${found[1].name}:</b> ${r.why}`); }
-  }
-  return {score, whys};
+  const r=EPEngine.synergy(hs,engineCtx());
+  return {score:r.score, items:r.items, whys:r.items.map(i=>`<b>${i.conflict?"⚠️ ":"🔗 "}${esc(i.a)} + ${esc(i.b)}:</b> ${esc(i.why)}`)};
 }
+const esc=v=>String(v==null?"":v).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 /* ---------- scoring ---------- */
-const cosBonus = h => (((typeof OWN!=="undefined"&&OWN[baseName(h.name)])||{}).c||0)*30;
-const powerBase = h => Math.max(0,(effPower(h)-1250))/5.5;
+// Linear in the copy's own power (no floor), so under-levelled copies rank lower.
+const powerBase = h => (effPower(h)-1250)/5.5;
 function defScore(h, slot){
   let s = powerBase(h);
   const sp = spd(h);
@@ -744,7 +734,7 @@ function synergyScore(team){
   const c=famCounts(team);
   for(const f in c){ if(FAMS[f] && c[f]>=2) s += FAMS[f].w * (Math.min(c[f],FAMS[f].max)-1); }
   s += applySyn(team).score;
-  if(CTX!=="bloody"){ if(team.some(h=>T(h,"healer"))) s+=10; else s-=16; }
+  if(CTX!=="bloody"){ if(team.some(h=>T(h,"healer"))) s+=10; else if(!team.some(h=>T(h,"overheal")||T(h,"wall"))) s-=16; else s-=6; }
   if(team.filter(h=>T(h,"fiends")).length>=2) s+=8;
   if(team.filter(h=>T(h,"minions")).length>=2) s+=6;
   return s;
@@ -759,73 +749,31 @@ function teamTotal(team){ // team = [{h,slot}...]
        + synergyScore(team.map(x=>x.h)) + elementPenalty(team.map(x=>x.h));
 }
 
-/* ---------- stat calculator (verified E&P formulas) ---------- */
-const LBMULT = {5:[1,1.0761,1.1405], 4:[1,1.0863,1.1446], 3:[1,1.1334,1.2255], 2:[1,1.1334,1.2255], 1:[1,1.1334,1.2255]};
-const BASECP = {5:90,4:50,3:30,2:10,1:0};
-const EMTOTAL = { attack:{atk:140,def:40,hp:160}, balanced:{atk:80,def:80,hp:300}, defense:{atk:40,def:100,hp:440} };
-function emFrac(n){
-  const pts=[[0,0],[5,.22],[10,.48],[15,.73],[20,1]];
-  n=Math.max(0,Math.min(20,n));
-  for(let i=1;i<pts.length;i++){ if(n<=pts[i][0]){ const a=pts[i-1],b=pts[i]; return a[1]+(b[1]-a[1])*(n-a[0])/(b[0]-a[0]); } }
-  return 1;
-}
+/* ---------- stat calculator (ep-engine.js; sources in ENGINE_NOTES.md) ---------- */
 const LBLABEL=["Base (max)","LB1","LB2"];
-/* Master Emblems (Jul 2026): ALL rarities get talent levels 21-25 with the same bonuses.
-   Levels 21/22/24 are a choice node (⚔ +50 attack OR 🛡 +60 defense); levels 23/25 are fixed +50 health.
-   Level 25 also upgrades the class talent to its Master version (not stat-modelled).
-   Verified from in-game grids across Ranger/Druid/Paladin/Monk/Sorcerer/Barbarian/Rogue/Cleric. */
-function masterAdd(n, path){
-  const lv=Math.max(0,Math.min(5,n-20));
-  const add={atk:0,def:0,hp:0}; let c=0;
-  for(let l=1;l<=lv;l++){
-    if(l===3||l===5){ add.hp+=50; continue; }
-    c++;
-    if(path==="attack") add.atk+=50;
-    else if(path==="defense") add.def+=60;
-    else { if(c===2) add.def+=60; else add.atk+=50; } // balanced: ⚔ / 🛡 / ⚔
-  }
-  return add;
-}
 const maxNodes = h => 25;
-function heroStats(h, lb, nodes, path){
-  const r=h.r||5, mult=(LBMULT[r]||LBMULT[5])[lb]||1;
-  const bA=+h.atk||0, bD=+h.dfn||0, bH=+h.hp||0;
-  const aLB=bA*mult, dLB=bD*mult, hLB=bH*mult;
-  const em=EMTOTAL[path]||EMTOTAL.balanced, f=emFrac(Math.min(nodes,20));
-  const mNodes=Math.max(0,Math.min(nodes,25)-20);
-  const ma=masterAdd(20+mNodes, path);
-  const atk=Math.round(aLB+em.atk*f+ma.atk), def=Math.round(dLB+em.def*f+ma.def), hp=Math.round(hLB+em.hp*f+ma.hp);
-  // classic nodes ≈ +5 power each; master nodes carry ~3x the stats ≈ +13 each (derived from the power stat weights — approximate until pinned against a 20→21 node card)
-  const npow=Math.min(nodes,20)*5 + mNodes*13;
-  let power;
-  if(bA&&bD&&bH) power=(BASECP[r]||90)+Math.floor(aLB*0.35+dLB*0.28+hLB*0.14)+35+npow;
-  else power=Math.round((h.power||1300)*mult)+npow;
-  return {atk,def,hp,power,estimated:!(bA&&bD&&bH)};
-}
-function ownCfg(h){ const o=OWN[baseName(h.name)]||OWN[h.name]; return o; }
-const validPower = p=>Number.isFinite(+p)&&+p>=100&&+p<=3000;
-const copyIndex = h=>{ const m=h.name.match(/ \((\d+)\)$/); return m?Math.max(0,+m[1]-1):0; };
+const heroStats = (h, lb, nodes, path) => EPEngine.heroStats(h, lb, nodes, path);
+function ownCfg(h){ return OWN[baseName(h.name)]||OWN[h.base]||OWN[h.name]; }
+const validPower = EPEngine.validPower;
+const copyIndex = h=>{ if(h&&h.__copy) return h.__copy-1; const m=h.name.match(/ \((\d+)\)$/); return m?Math.max(0,+m[1]-1):0; };
 function exactOwnedPower(h){
-  const o=ownCfg(h); if(!o) return null;
-  const i=copyIndex(h);
-  if(Array.isArray(o.ps)) return validPower(o.ps[i])?Math.round(+o.ps[i]):null;
-  if(validPower(o.p)) return Math.round(+o.p);
-  return null;
+  const p=h&&h.__str?h:poolState().byName.get(h.name);
+  return p&&p.__str.status==="exact"?p.__str.power:null;
 }
+// Power used for ranking: the copy's own exact card Power, otherwise its estimate.
 function effPower(h){
-  const o=ownCfg(h);
-  if(!o) return h.power||0;
-  const exact=exactOwnedPower(h); if(exact) return exact;
-  const imported=o.instances&&o.instances[copyIndex(h)];
-  const lb=Number.isInteger(imported?.limitBreak)&&imported.limitBreak>=0&&imported.limitBreak<=2?imported.limitBreak:o.lb??2;
-  const em=Number.isInteger(imported?.unlockedTalentNodes)&&imported.unlockedTalentNodes>=0&&imported.unlockedTalentNodes<=25?imported.unlockedTalentNodes:o.em??20;
-  return heroStats(h, lb, em, o.path||"balanced").power + cosBonus(h);
+  if(h&&h.__str) return h.__str.power;
+  const p=poolState().byName.get(h.name); if(p) return p.__str.power;
+  return h.power||0;
 }
+const STATUS_TXT={exact:"card Power you entered",estimate:"estimate from imported progression",assumed:"assumed fully levelled (manual entry)",unknown:"progression unknown — ranked at the minimum"};
+const STATUS_MARK={exact:"✓",estimate:"~",assumed:"≈",unknown:"?"};
+function strengthTag(h){ const s=h&&h.__str; if(!s) return ""; return `<span title="${esc(STATUS_TXT[s.status])}">${STATUS_MARK[s.status]}${s.power}</span>`; }
 
 /* ---------- score grading ---------- */
 let BENCH = {sig:null, v:0};
 function benchScore(){
-  const sig = CTX + "|" + [...sel].sort().map(n=>{ const o=OWN[n]||{}; return [n,o.n||1,o.c||0,o.p||0,(o.ps||[]).join(","),JSON.stringify(o.instances||[]),o.lb??2,o.em??20,o.path||"balanced"].join(":"); }).join("|");
+  const sig = CTX + "|" + poolState().version;
   if(BENCH.sig === sig) return BENCH.v;
   const d = buildDefenses();
   BENCH = {sig, v: d && d.length ? d[0].score : 0};
@@ -897,15 +845,19 @@ function buildDefenses(){
 }
 function whyDefense(team){
   const hs=team.map(x=>x.h);
-  const bits=team.map((x,j)=>`<b>${POSN[j]} — ${x.h.name}:</b> ${noteFor(x.h,"d")}`);
+  const bits=team.map((x,j)=>`<b>${POSN[j]} — ${esc(x.h.name)}:</b> ${noteFor(x.h,"d")}`);
   const c=famCounts(hs);
   for(const f in c) if(FAMS[f]&&c[f]>=2) bits.push(`<b>${f} ×${c[f]}:</b> ${FAMS[f].d}`);
   applySyn(hs).whys.forEach(x=>bits.push(x));
-  if(CTX!=="bloody" && !hs.some(h=>T(h,"healer"))) bits.push("⚠️ No healer — high pressure but fragile if the attacker survives the opening");
   let adj=0; for(let i=0;i<4;i++) if(team[i].h.el===team[i+1].h.el) adj++;
   const els={}; hs.forEach(h=>els[h.el]=(els[h.el]||0)+1);
   bits.push(`<b>Colors:</b> ${Object.entries(els).map(([e,n])=>n>1?`${e}×${n}`:e).join(", ")}${adj?` — ⚠️ ${adj} same-element neighbor${adj>1?"s":""} (unavoidable with this five)`:" — no same-element neighbors"}`);
   return bits;
+}
+function defenseEval(hs){
+  const ctx=engineCtx(), syn=EPEngine.synergy(hs,ctx);
+  const ev={syn,mu:null,weak:EPEngine.weaknesses(hs,ctx,null,{syn,defense:true}),assume:EPEngine.assumptions(hs,null),troopPlan:null};
+  return {ev,ex:EPEngine.explain(hs,ev)};
 }
 
 /* ---------- offense builder ---------- */
@@ -917,16 +869,11 @@ function supScore(h){
   const w=(t,v)=>T(h,t)?v*ctxMod(t):0;
   return powerBase(h)*0.8 + spd(h)*2 + w("atkbuff",24)+w("healer",18)+w("bigheal",6)+w("manactl",12)+w("cleanse",6)+w("dispel",6)+w("teamimmune",6)+w("overheal",5)+learnAdj(h);
 }
-function buildOffense(tankColor, pool, used, usedBase){
-  used = used||new Set(); if(usedBase) used.__base=usedBase;
-  const color = BRING[tankColor];
-  const stack = pool.filter(h=>h.el===color&&!used.has(h.name)).sort((a,b)=>offScore(b)-offScore(a)).filter((h,i,arr)=>arr.findIndex(x=>baseOf(x)===baseOf(h))===i).slice(0,3);
-  stack.forEach(h=>{used.add(h.name); if(used.__base) used.__base.add(baseOf(h));});
-  const pick=(penalizeHealer)=>pool.filter(h=>!used.has(h.name)&&!(used.__base&&used.__base.has(baseOf(h))))
-    .sort((a,b)=>(supScore(b)-(penalizeHealer&&T(b,"healer")?15:0))-(supScore(a)-(penalizeHealer&&T(a,"healer")?15:0)))[0];
-  const s1=pick(false); if(s1) used.add(s1.name);
-  const s2=pick(s1&&T(s1,"healer")); if(s2) used.add(s2.name);
-  return {color, stack, sup:[s1,s2].filter(Boolean)};
+function roleScore(h,role){ return role==="support"?supScore(h):offScore(h); }
+// Best 3-2 stack: searches combinations, scoring roles, skill combinations (with timing),
+// conflicts, opponent needs and supported troop breakpoints. Each owned copy is one unit.
+function buildOffense(tankColor, pool, enemy, usedUnits){
+  return EPEngine.searchTeam({pool, color:BRING[tankColor], ctx:engineCtx(), troops:poolState().troops, roleScore, enemy:enemy||null, usedUnits});
 }
 
 /* ---------- titan builder ---------- */
@@ -940,19 +887,9 @@ function buildTitan(titanColor, pool){
 }
 
 /* ---------- war builder ---------- */
-function buildWar(pool){
-  const order = ["Holy","Dark","Fire","Ice","Nature"];
-  const used = new Set();
-  const usedBase = new Set();
-  const teams = order.map(tc=>({label:`vs ${tc} tank`, ...buildOffense(tc,pool,used,usedBase)}));
-  // team 6: best remaining
-  const rest = pool.filter(h=>!used.has(h.name)).sort((a,b)=>offScore(b)-offScore(a));
-  const six=[]; const sb=new Set();
-  for(const h of rest){ if(six.length>=3) break; if(sb.has(baseOf(h))) continue; six.push(h); sb.add(baseOf(h)); used.add(h.name); }
-  const sup = pool.filter(h=>!used.has(h.name)).sort((a,b)=>supScore(b)-supScore(a)).slice(0,2);
-  teams.push({label:"Cleanup / flex", color:null, stack:six, sup});
-  return teams;
-}
+// Six teams; an owned instance is never used twice. Separate copies are separate units.
+// Troops are not reserved across attacks (the game's cross-attack troop rule is unverified).
+function buildWar(pool){ return EPEngine.buildWar({pool, ctx:engineCtx(), troops:poolState().troops, roleScore}); }
 
 /* ---------- UI ---------- */
 const TABS=[["roster","📋 My Roster"],["db","📖 Hero Database"],["builder","🛠️ Team Builder"],["counter","🎯 Counter"],["defense","🛡️ Defense"],["offense","⚔️ Raid Offense"],["war","🏰 War"],["titan","🐉 Titans"],["log","📊 Battle Log"]];
@@ -1014,6 +951,7 @@ document.getElementById("rosterImport").onchange=ev=>{
         if(o&&Array.isArray(o.instances)) e.instances=o.instances.filter(x=>x&&typeof x.instanceId==="string"&&typeof x.definitionId==="string").slice(0,1000);
         if(o&&typeof o.definitionId==="string") e.definitionId=o.definitionId;
         if(o&&Number.isFinite(+o.p)&&+o.p>=100&&+o.p<=3000) e.p=Math.round(+o.p);
+        if(o&&Array.isArray(o.copies)) e.copies=o.copies.slice(0,e.n).map(sanitizeCopyCfg);
         if(o&&Array.isArray(o.ps)){
           const ps=o.ps.slice(0,e.n).map(p=>Number.isFinite(+p)&&+p>=100&&+p<=3000?Math.round(+p):null);
           if(ps.some(Boolean)) e.ps=ps;
@@ -1027,15 +965,25 @@ document.getElementById("rosterImport").onchange=ev=>{
     }catch(e){ alert("Invalid roster file"); }
   });
 };
+function sanitizeCopyCfg(c){
+  if(!c||typeof c!=="object") return null;
+  const x={};
+  if(["attack","balanced","defense"].includes(c.path)) x.path=c.path;
+  if(typeof c.form==="string"&&c.form.length<200) x.form=c.form;
+  if(Number.isInteger(c.lb)&&c.lb>=0&&c.lb<=2) x.lb=c.lb;
+  if(Number.isInteger(c.em)&&c.em>=0&&c.em<=25) x.em=c.em;
+  if(c.cosMax===true) x.cosMax=true;
+  return Object.keys(x).length?x:null;
+}
 function shown(){
   const q=document.getElementById("search").value.toLowerCase();
   const fc=document.getElementById("fClass").value, ff=document.getElementById("fFam").value;
   return HEROES.filter(h=>(RV!=="mine"||sel.has(h.name))&&!/ \(\d+\)$/.test(h.name)&&(!q||h.name.toLowerCase().includes(q))
     &&(!elFilter.size||elFilter.has(h.el))&&(!fc||h.cls===fc)&&(!ff||h.fam===ff));
 }
-function save(){ store.set("epOwn",OWN); store.set("epSel",[...sel]); }
-const importedNumber = v=>Number.isSafeInteger(v)&&v>=0?v:"?";
+function save(){ invalidatePool(); store.set("epOwn",OWN); store.set("epSel",[...sel]); }
 function renderGrid(){
+  invalidatePool();
   const g=document.getElementById("heroGrid"); g.innerHTML="";
   const all=shown().sort((a,b)=>(RV==="mine"?effPower(b)-effPower(a):b.power-a.power));
   if(RV==="mine"&&!all.length){
@@ -1049,13 +997,16 @@ function renderGrid(){
     const d=document.createElement("div");
     d.className=`hero el-${h.el}`+(sel.has(h.name)?" sel":"");
     const o=OWN[h.name];
-    const shownPower=RV==="mine"?effPower(h):h.power;
-    d.innerHTML=`${h.img?`<img class="hport" src="${h.img}" loading="lazy" onerror="this.remove()">`:""}<span class="pw" title="${RV==="mine"?(o&&o.p?"Exact card power":"Calculated power"):"Base-max catalog power"}">${shownPower}</span><div class="nm">${h.name}</div>
+    const us=o?(poolState().unitsByHero.get(h.name)||[]):[];
+    const s1=us[0]&&us[0].forms[0].strength;
+    const shownPower=RV==="mine"&&s1?STATUS_MARK[s1.status]+s1.power:(RV==="mine"?effPower(h):h.power);
+    const copyLine=us.length?`<div class="meta">${us.slice(0,6).map(u=>{ const st=u.forms[0].strength, cos=u.forms.length-1; return `<span title="${esc(STATUS_TXT[st.status])}">#${u.copy} ${esc(st.label)} ${STATUS_MARK[st.status]}${st.power}${cos?` · 🎭${cos}`:""}</span>`; }).join(" / ")}${us.length>6?` / +${us.length-6} more`:""}</div>`:"";
+    d.innerHTML=`${h.img?`<img class="hport" src="${h.img}" loading="lazy" onerror="this.remove()">`:""}<span class="pw" title="${RV==="mine"&&s1?esc(STATUS_TXT[s1.status]):"Base-max catalog power"}">${shownPower}</span><div class="nm">${h.name}</div>
       <div class="meta">${h.r||5}★ · ${h.el} · ${h.speed} · ${h.cls}${h.fam?" · "+h.fam:""}</div>${o?`
-      ${o.instances?`<div class="meta">Imported: ${o.instances.map(x=>`Lv ${importedNumber(x.level)} · Asc ${importedNumber(x.ascension)} · LB ${importedNumber(x.limitBreak)} · ${importedNumber(x.unlockedTalentNodes)} nodes`).join(" / ")}</div>`:""}
+      ${copyLine}
       <div class="cprow"><span class="cplab">Copies</span> <span class="cpbtn" data-n="${h.name}" data-k="n" data-d="-1">−</span><b>${o.n||1}</b><span class="cpbtn" data-n="${h.name}" data-k="n" data-d="1">＋</span>
-      <span class="cplab" style="margin-left:8px">🎭</span> <span class="cpbtn" data-n="${h.name}" data-k="c" data-d="-1">−</span><b>${o.c||0}</b><span class="cpbtn" data-n="${h.name}" data-k="c" data-d="1">＋</span></div>
-      ${(o.n||1)>1?`<div class="meta">Copy power: ${Array.from({length:o.n||1},(_,i)=>effPower(i?findHero(h.name+" ("+(i+1)+")"):h)).join(" / ")}</div>`:""}`:""}`;
+      <span class="cplab" style="margin-left:8px" title="Costumes owned (ownership only; a costume's bonus counts once it is fully levelled)">🎭</span> <span class="cpbtn" data-n="${h.name}" data-k="c" data-d="-1">−</span><b>${o.c||0}</b><span class="cpbtn" data-n="${h.name}" data-k="c" data-d="1">＋</span></div>
+      `:""}`;
     d.title=(h.skill||"")+(h.pas?"\n\nPASSIVES: "+h.pas:"");
     d.onclick=(ev)=>{ if(ev.target.closest(".cpbtn")) return;
       if(RV==="mine"){ openHero(h.name); return; } // owned view: open info — remove lives in the popup
@@ -1065,9 +1016,32 @@ function renderGrid(){
     g.appendChild(d);
   });
   const copies=[...sel].reduce((a,n)=>a+((OWN[n]||{}).n||1),0);
+  if(typeof renderTroops==="function") renderTroops();
   document.getElementById("selCount").textContent=`${sel.size} heroes owned (${copies} copies)`;
 }
 renderGrid();
+
+function renderTroops(){
+  const panel=document.getElementById("troopPanel"), box=document.getElementById("troopList"); if(!panel||!box) return;
+  const ts=poolState().troops;
+  panel.style.display=ts.length?"":"none"; if(!ts.length){ box.innerHTML=""; return; }
+  const labels=store.get("epTroopLabels")||{};
+  const kinds=[["","Label…"],["mana","Mana 4★"],["magic","Magic"],["styx","Styx"],["other","Other (no verified mana bonus)"]];
+  box.innerHTML=`<table style="width:100%;font-size:12.5px;border-collapse:collapse"><tr style="color:var(--dim)"><th align="left">Troop</th><th align="left">Save ID</th><th>Level</th><th>Mana bonus</th><th align="left">Label</th></tr>`+
+    ts.slice().sort((a,b)=>(a.color||"~").localeCompare(b.color||"~")||(b.level||0)-(a.level||0)).map(t=>{
+      const lab=labels[t.defId]||{};
+      const editable=t.defId&&(t.source!=="pattern"||t.kind==="other");
+      return `<tr><td>${esc(EPEngine.troopLabel(t))}</td><td style="color:var(--dim)">${esc(t.defId||"(no ID)")}</td><td align="center">${t.level??"?"}</td><td align="center">${t.mana==null?"unknown":"+"+t.mana+"%"}</td><td>${editable?`<select class="trooplab" data-id="${esc(t.defId)}" data-k="kind">${kinds.map(([v,l])=>`<option value="${v}"${lab.kind===v?" selected":""}>${l}</option>`).join("")}</select> <select class="trooplab" data-id="${esc(t.defId)}" data-k="color"><option value="">Colour…</option>${ELS.map(e=>`<option${(lab.color||t.color)===e?" selected":""}>${e}</option>`).join("")}</select>`:"from ID"}</td></tr>`;
+    }).join("")+`</table>`;
+}
+document.addEventListener("change",e=>{
+  const s2=e.target.closest&&e.target.closest(".trooplab"); if(!s2) return;
+  const labels=store.get("epTroopLabels")||{}, id=s2.getAttribute("data-id"), k=s2.getAttribute("data-k");
+  labels[id]=Object.assign({},labels[id]); if(s2.value) labels[id][k]=s2.value; else delete labels[id][k];
+  if(!Object.keys(labels[id]).length) delete labels[id];
+  store.set("epTroopLabels",labels); invalidatePool(); renderTroops();
+});
+renderTroops();
 
 document.getElementById("anAdd").onclick=()=>{
   const name=document.getElementById("anName").value.trim();
@@ -1087,12 +1061,40 @@ document.getElementById("anAdd").onclick=()=>{
 /* ---------- render helpers ---------- */
 const POSN=["Left Wing","Left Flank","Tank","Right Flank","Right Wing"];
 function slotDiv(h,pos,extra){
-  return `<div class="slot bg-${h.el}${pos==="Tank"?" tankslot":""}" data-h="${h.name}" title="Click for details"><span class="pos">${pos}</span>${h.img?`<img class="sport" src="${h.img}" loading="lazy" onerror="this.remove()">`:""}<span class="n">${h.name}</span><span class="d">${h.el} · ${h.speed}${extra?"<br>"+extra:""} · ${effPower(h)}</span></div>`;
+  const pw=h.__str?strengthTag(h):effPower(h);
+  const prog=h.__str&&h.__str.label&&h.__str.label!=="max"?` · ${esc(h.__str.label)}`:"";
+  return `<div class="slot bg-${h.el}${pos==="Tank"?" tankslot":""}" data-h="${esc(h.name)}" title="Click for details"><span class="pos">${pos}</span>${h.img?`<img class="sport" src="${h.img}" loading="lazy" onerror="this.remove()">`:""}<span class="n">${esc(h.name)}</span><span class="d">${h.el} · ${h.speed}${extra?"<br>"+extra:""} · ${pw}${prog}</span></div>`;
 }
-function teamCard(title,sub,slots,whyBits,names){
-  return `<div class="teamcard"><h3>${title}${names?` <button class="chipbtn sb-open" data-team="${names.join("|")}" style="float:right;font-size:11px">🛠️ Open in Team Builder</button>`:""}</h3><div class="sub">${sub}</div>
+function teamCard(title,sub,slots,whyBits,names,extra){
+  return `<div class="teamcard"><h3>${title}${names?` <button class="chipbtn sb-open" data-team="${esc(names.join("|"))}" style="float:right;font-size:11px">🛠️ Open in Team Builder</button>`:""}</h3><div class="sub">${sub}</div>
     <div class="lineup">${slots}</div>
-    ${whyBits&&whyBits.length?`<div class="why">${whyBits.map(b=>"• "+b).join("<br>")}</div>`:""}</div>`;
+    ${extra||""}
+    ${whyBits&&whyBits.length?`<details class="why"><summary>Hero-by-hero notes</summary>${whyBits.map(b=>"• "+b).join("<br>")}</details>`:""}</div>`;
+}
+// Plain-language summary: why it works, main weakness, assumptions; then troops and upgrades.
+function explainHtml(ex){
+  return `<div class="why"><b>Why it works:</b> ${esc(ex.why)}<br><b>Main weakness:</b> ${esc(ex.weakness)}${ex.assumptions&&ex.assumptions.length?`<br><b>Assumptions:</b> ${ex.assumptions.map(esc).join(" ")}`:""}</div>`;
+}
+function troopHtml(plan){
+  if(!plan) return "";
+  const rows=[...plan.entries()].map(([h,p])=>{
+    if(!p.troop) return p.base!=null?`${esc(h.name)}: no matching ${h.el} troop owned (${p.base} tiles)`:"";
+    const t=EPEngine.troopLabel(p.troop);
+    if(p.tiles==null) return `${esc(h.name)}: ${esc(t)} — ${p.base==null?`${esc(h.speed)} breakpoints not supported`:"mana bonus unknown"}`;
+    return `${esc(h.name)}: ${esc(t)} (+${p.troop.mana}% mana) → ${p.tiles} tiles${p.gain>0?` instead of ${p.base}`:""}`;
+  }).filter(Boolean);
+  return rows.length?`<div class="note" style="font-size:12.5px"><b>Troops</b> (one per hero, matching colour; offense, tiles that hit; other mana bonuses such as emblems or costumes not included): ${rows.join(" · ")}</div>`:"";
+}
+function upgradesHtml(team,plan){
+  const ups=EPEngine.suggestUpgrades(team,{troopPlan:plan});
+  if(!ups.length) return "";
+  return `<details class="note" style="font-size:12.5px"><summary><b>Upgrades that would help this team</b></summary>${ups.map(u=>`• <b style="color:${u.verified?"var(--nature)":"var(--gold2)"}">${u.verified?"Verified":"Estimate"}:</b> ${esc(u.text)}`).join("<br>")}</details>`;
+}
+function attackCard(title,sub,r,slotLabel){
+  const slots=r.team.map((h,i)=>slotDiv(h,slotLabel(h,i))).join("");
+  const bits=r.team.map(h=>`<b>${esc(h.name)}:</b> ${noteFor(h,"o")}`);
+  const extra=explainHtml(r.explain)+troopHtml(r.ev.troopPlan)+upgradesHtml(r.team,r.ev.troopPlan);
+  return teamCard(title,sub,slots,bits,r.team.map(h=>h.name),extra);
 }
 function runDefense(){
   const out=document.getElementById("defOut");
@@ -1105,7 +1107,7 @@ function runDefense(){
     const g=gradeOf(r.score,res[0].score);
     return teamCard(`Option ${i+1}${i===0?" — Recommended":""}`,
       `Roster power ${pw} · engine score ${Math.round(r.score)} — <b style="color:${g.color}">${i===0?"your benchmark (100%)":g.label+" ("+g.pct+"% of option 1)"}</b>`,
-      slots,whyDefense(r.team),r.team.map(x=>x.h.name));
+      slots,whyDefense(r.team),r.team.map(x=>x.h.name),(()=>{const d=defenseEval(r.team.map(x=>x.h)); return explainHtml(d.ex)+upgradesHtml(r.team.map(x=>x.h),null);})());
   }).join("");
 }
 function runRuleMatrix(){
@@ -1146,33 +1148,32 @@ function colorButtons(containerId, handler){
   });
 }
 colorButtons("tankColors", tc=>{
-  const pool=roster(); if(pool.length<5){document.getElementById("offOut").innerHTML=`<div class="note">Select at least 5 heroes first.</div>`;return;}
-  const o=buildOffense(tc,pool);
-  const slots=o.stack.map(h=>slotDiv(h,`${o.color} stack`)).join("")+o.sup.map(h=>slotDiv(h,"Support")).join("");
-  const bits=[`<b>3-2 principle:</b> 3× ${o.color} for tile damage vs the ${tc} tank + 2 support`,
-    ...o.stack.map(h=>`<b>${h.name}:</b> ${noteFor(h,"o")}`),
-    ...o.sup.map(h=>`<b>${h.name} (support):</b> ${noteFor(h,"o")}`)];
-  applySyn(o.stack.concat(o.sup)).whys.forEach(x=>bits.push(x));
-  document.getElementById("offOut").innerHTML=teamCard(`vs ${tc} tank`,`Bring ${o.color} tiles`,slots,bits,o.stack.concat(o.sup).map(h=>h.name));
+  const out=document.getElementById("offOut");
+  const pool=roster(); if(unitCount()<5){out.innerHTML=`<div class="note">Select at least 5 heroes first.</div>`;return;}
+  const r=buildOffense(tc,pool);
+  if(!r||r.team.length<5){out.innerHTML=`<div class="note">Not enough ${BRING[tc]} heroes for a 3-2 stack.</div>`;return;}
+  out.innerHTML=attackCard(`vs ${tc} tank`,`Bring ${r.stack[0].el} tiles: 3× ${r.stack[0].el} for tile damage + 2 support`,r,(h,i)=>i<r.stack.length?`${h.el} stack`:"Support");
 });
 colorButtons("titanColors", tc=>{
-  const pool=roster(); if(pool.length<5){document.getElementById("titanOut").innerHTML=`<div class="note">Select at least 5 heroes first.</div>`;return;}
+  const pool=roster(); if(unitCount()<5){document.getElementById("titanOut").innerHTML=`<div class="note">Select at least 5 heroes first.</div>`;return;}
   const t=buildTitan(tc,pool);
   if(t.team.length<5){document.getElementById("titanOut").innerHTML=`<div class="note">Fewer than 5 ${t.color} heroes selected — mono stack not possible.</div>`;return;}
   const slots=t.team.map(h=>slotDiv(h,"Mono "+t.color)).join("");
-  const bits=[`<b>Mono ${t.color}</b> vs ${tc} Titan — tile damage is king; attack-up, defense-down and amps multiply every tile`,
-    ...t.team.map(h=>`<b>${h.name}:</b> ${noteFor(h,"o")}`)];
-  document.getElementById("titanOut").innerHTML=teamCard(`vs ${tc} Titan`,`Top 5 ${t.color} by titan value`,slots,bits,t.team.map(h=>h.name));
+  const bits=t.team.map(h=>`<b>${esc(h.name)}:</b> ${noteFor(h,"o")}`);
+  const syn=EPEngine.synergy(t.team,engineCtx());
+  const ex=EPEngine.explain(t.team,{syn,mu:null,weak:EPEngine.weaknesses(t.team,engineCtx(),null,{syn}).filter(w=>!/it must win fast/.test(w)),assume:EPEngine.assumptions(t.team,null)});
+  document.getElementById("titanOut").innerHTML=teamCard(`vs ${tc} Titan`,`Mono ${t.color}: tile damage is king; attack-up, defense-down and amps multiply every tile`,slots,bits,t.team.map(h=>h.name),explainHtml(ex)+upgradesHtml(t.team,null));
 });
 function runWar(){
-  const pool=roster();
-  if(pool.length<12){document.getElementById("warOut").innerHTML=`<div class="note">Select at least 12 heroes for meaningful war teams.</div>`;return;}
-  const teams=buildWar(pool);
-  document.getElementById("warOut").innerHTML=teams.map((t,i)=>{
-    if(t.stack.length<3) return teamCard(`Team ${i+1}: ${t.label}`,"Not enough heroes left for a full stack","", []);
-    const slots=t.stack.map(h=>slotDiv(h,t.color?`${t.color} stack`:"Attacker")).join("")+t.sup.map(h=>slotDiv(h,"Support")).join("");
-    const bits=[...t.stack.map(h=>`<b>${h.name}:</b> ${noteFor(h,"o")}`),...t.sup.map(h=>`<b>${h.name} (support):</b> ${noteFor(h,"o")}`)];
-    return teamCard(`Team ${i+1}: ${t.label}`,t.color?`3× ${t.color} + 2 support`:"Best remaining heroes",slots,bits,t.stack.concat(t.sup).map(h=>h.name));
+  const out=document.getElementById("warOut");
+  if(unitCount()<12){out.innerHTML=`<div class="note">Select at least 12 heroes (copies count) for meaningful war teams.</div>`;return;}
+  const war=buildWar(roster());
+  const dup=EPEngine.duplicateUnits(war.teams.filter(t=>t.result).map(t=>t.result.team));
+  out.innerHTML=`<div class="note">${war.used.size} owned copies used across ${war.teams.filter(t=>t.result).length} teams; ${dup.length?`<b style="color:var(--fire)">⚠️ ${dup.length} copies reused — please report this</b>`:"no copy is used twice"}. Separate copies of the same hero are independent. Troops are suggested per team only; the app does not yet reserve a troop across attacks.</div>`+
+  war.teams.map((t,i)=>{
+    const r=t.result;
+    if(!r||r.team.length<5) return teamCard(`Team ${i+1}: ${t.label}`,"Not enough heroes left for a full team","",[]);
+    return attackCard(`Team ${i+1}: ${t.label}`,t.color?`3× ${t.color} + 2 support`:"Best remaining heroes",r,(h,j)=>t.color&&j<r.stack.length?`${t.color} stack`:(t.color?"Support":"Attacker"));
   }).join("");
 }
 
@@ -1238,7 +1239,7 @@ function troopAdvice(h){
 }
 function synPartners(h){
   const seen={}, out=[];
-  const base=n=>n.replace(/ \(2\)$/,"");
+  const base=n=>baseOf(n);
   for(const r of SYN_RULES){
     if(r.w<=0) continue;
     for(const p of HEROES){
@@ -1283,58 +1284,108 @@ function renderDb(){
   g.innerHTML=list.slice(0,250).map(h=>`<div class="hero el-${h.el} dbcard" data-h="${h.name}">${h.img?`<img class="hport" src="${h.img}" loading="lazy" onerror="this.remove()">`:""}<span class="pw">${h.power}</span><div class="nm">${h.name}</div><div class="meta">${h.costume?`<span style="color:var(--gold2)">🎭 ${h.costume}</span> · `:""}${h.r||5}★ · ${h.el} · ${h.speed} · ${h.cls}${h.fam?" · "+h.fam:""}</div><div class="meta">${h.tags.slice(0,5).map(x=>TAGDESC[x]||x).join(" · ")}</div></div>`).join("");
 }
 renderDb();
-function calcHtml(h){
-  const o=ownCfg(h);
-  const cur = window.__calc || {lb:o?(o.lb!=null?o.lb:2):0, em:o?(o.em!=null?o.em:20):0, path:o?(o.path||"balanced"):"attack"};
-  window.__calc = cur; window.__calcHero = h.name;
+// Owned-roster key for any hero object: a pool copy, a catalog hero or a costume entry.
+function ownedNameOf(h){
+  if(!h) return null;
+  if(h.__u) return h.__u.name;
+  const b=baseName(h.name);
+  if(OWN[b]) return b;
+  if(h.base&&OWN[h.base]) return h.base;
+  return null;
+}
+function copyCfg(name,i){
+  const o=OWN[name]; if(!o) return null;
+  if(!Array.isArray(o.copies)) o.copies=[];
+  while(o.copies.length<=i) o.copies.push(null);
+  if(!o.copies[i]||typeof o.copies[i]!=="object") o.copies[i]={};
+  return o.copies[i];
+}
+function whatIfHtml(h){
+  const cur = window.__calc || {lb:0, em:0, path:"attack"};
+  window.__calc = cur; window.__calcHero = h.name; window.__calcOwned=false;
   const s = heroStats(h, cur.lb, cur.em, cur.path);
-  const owned = !!o;
-  const exact=owned?exactOwnedPower(h):null;
-  const exactInputs=owned?Array.from({length:o.n||1},(_,i)=>{
-    const copy=i?findHero(baseName(h.name)+" ("+(i+1)+")"):findHero(baseName(h.name));
-    const p=copy?exactOwnedPower(copy):null;
-    return `<label style="display:flex;align-items:center;gap:6px"><span style="font-size:11px;color:var(--dim)">Copy ${i+1}</span><input class="actualpower" data-copy="${i}" type="number" min="100" max="3000" step="1" value="${p||""}" placeholder="${s.power}"></label>`;
-  }).join(""):"";
   const btn=(k,v,label,active)=>`<span class="calcbtn${active?" on":""}" data-calc="${k}" data-v="${v}">${label}</span>`;
   return `<div class="calc">
-    <div class="calchead">📊 Stat Calculator ${owned?'<span style="color:var(--gold2);font-size:11px">· saves to your hero</span>':'<span style="color:var(--dim);font-size:11px">· what-if (not owned)</span>'}${s.estimated?' <span style="color:#e0a54b;font-size:11px">· ⚠ stats estimated</span>':''}</div>
+    <div class="calchead">📊 Stat Calculator <span style="color:var(--dim);font-size:11px">· what-if (not owned)</span>${s.estimated?' <span style="color:#e0a54b;font-size:11px">· ⚠ stats estimated</span>':''}</div>
     <div class="calcrow"><span class="calclab">Limit Break</span>${[0,1,2].map(l=>btn("lb",l,LBLABEL[l],cur.lb===l)).join("")}</div>
     <div class="calcrow"><span class="calclab">Emblems</span>
       <input type="range" min="0" max="${maxNodes(h)}" value="${Math.min(cur.em,maxNodes(h))}" class="calcrange" data-calc="em"> <b style="color:var(--gold2)">${cur.em}/${maxNodes(h)} nodes${cur.em>20?" · ★ Master":""}</b></div>
     <div class="calcrow"><span class="calclab">Path</span>${[["attack","⚔ Attack"],["balanced","⚖ Balanced"],["defense","🛡 Defense"]].map(p=>btn("path",p[0],p[1],cur.path===p[0])).join("")}</div>
-    ${owned?`<div class="calcrow"><span class="calclab">Exact card power</span>${exactInputs}<span style="font-size:11px;color:var(--dim)">Use the number shown in-game; blank uses the estimate.</span></div>`:""}
     <div class="calcstats">
       <span class="cst" style="border-color:var(--fire)"><b>${s.atk}</b><br>Attack</span>
       <span class="cst" style="border-color:var(--ice)"><b>${s.def}</b><br>Defense</span>
       <span class="cst" style="border-color:var(--nature)"><b>${s.hp}</b><br>Health</span>
-      <span class="cst" style="border-color:var(--gold)"><b>${exact||s.power}</b><br>${exact?"Card power":"Estimated power"}</span>
+      <span class="cst" style="border-color:var(--gold)"><b>${s.power}</b><br>Estimated power</span>
     </div>
-    ${exact?`<div style="font-size:11.5px;color:var(--gold2);margin-top:6px">Team scoring uses your exact card power. Calculator estimate: ${s.power}.</div>`:""}
-    ${owned?'':`<div style="font-size:11.5px;color:var(--dim);margin-top:6px">Own this hero? Add it on the Roster tab to save its build and feed team scoring.</div>`}
+    <div style="font-size:11.5px;color:var(--dim);margin-top:6px">Max level${cur.lb?" with LB"+cur.lb+" fully levelled":""}. Own this hero? Add it on the Roster tab to save each copy's build and feed team scoring.</div>
   </div>`;
 }
-function calcApply(clearExact){
-  const box=document.getElementById("calcBox"); if(!box) return;
-  const h=findHero(window.__calcHero); if(!h) return;
-  // persist to owned config
-  const o=ownCfg(h);
-  if(o){ o.lb=window.__calc.lb; o.em=window.__calc.em; o.path=window.__calc.path; if(o.instances) o.instances=o.instances.map(x=>({...x,limitBreak:o.lb,unlockedTalentNodes:o.em})); if(clearExact){ delete o.p; delete o.ps; } save(); }
-  box.innerHTML=calcHtml(h);
+// Per-copy calculator: each owned copy keeps its own form, path, build and card Power.
+function calcHtml(h){
+  const name=ownedNameOf(h);
+  const units=name?(poolState().unitsByHero.get(name)||[]):[];
+  if(!units.length) return whatIfHtml(h);
+  let ci=window.__calcCopy;
+  if(!(ci>=0&&ci<units.length)) ci=h.__copy?h.__copy-1:0;
+  window.__calcCopy=ci; window.__calcHero=name; window.__calcOwned=true;
+  const u=units[ci], cfg=((OWN[name].copies||[])[ci])||{};
+  const btn=(k,v,label,active,extra)=>`<span class="calcbtn${active?" on":""}" data-calc="${k}" data-v="${v}"${extra||""}>${label}</span>`;
+  const copies=units.length>1?`<div class="calcrow"><span class="calclab">Copy</span>${units.slice(0,40).map((x,i)=>btn("copy",i,`${i+1}${x.forms[0].strength.status==="unknown"?"?":""}`,i===ci,` title="${esc(x.instanceId?"Game instance "+x.instanceId:"Manual copy")}"`)).join("")}${units.length>40?`<span style="font-size:11px;color:var(--dim)">first 40 shown</span>`:""}</div>`:"";
+  const src=u.source==="import"
+    ?`From your game save (instance ${esc(u.instanceId)}): ${esc(u.forms[0].strength.label)} · ${u.nodesKnown?u.nodes+" talent nodes":"talent count unknown"}${Number.isInteger(u.raw&&u.raw.specialSkillLevel)?" · skill "+u.raw.specialSkillLevel+"/8":""}. Re-import to refresh.`
+    :`Manual copy: assumed fully levelled unless you set it below.`;
+  const formOpts=[`<option value="">Auto — recommendations may use any developed form</option>`]
+    .concat(u.forms.map(f=>`<option value="${esc(f.id)}"${u.pinned===f.id?" selected":""}>${f.isCostume?"🎭 "+esc(f.hero.costume||f.hero.name):"Base hero"} · ${esc(f.strength.label)} · ${STATUS_MARK[f.strength.status]}${f.strength.power}</option>`))
+    .concat(u.source==="manual"?HEROES.filter(x=>x.base===u.base&&!u.forms.some(f=>f.hero===x)).map(x=>`<option value="costume:${esc(x.name)}">🎭 ${esc(x.costume||x.name)} (I use this costume; development assumed)</option>`):[]).join("");
+  const manual=u.source==="manual"?`
+    <div class="calcrow"><span class="calclab">Limit Break</span>${[0,1,2].map(l=>btn("lb",l,LBLABEL[l],(cfg.lb??OWN[name].lb??2)===l)).join("")}</div>
+    <div class="calcrow"><span class="calclab">Emblems</span><input type="range" min="0" max="25" value="${u.nodes}" class="calcrange" data-calc="em"> <b style="color:var(--gold2)">${u.nodes}/25 nodes${u.nodes>20?" · ★ Master":""}</b></div>
+    <div class="calcrow"><span class="calclab">Costume</span><label style="font-size:12px"><input type="checkbox" class="calccos"${cfg.cosMax?" checked":""}> This copy has a fully levelled costume (adds the costume bonus)</label></div>`:"";
+  const exact=u.forms[0].strength.status==="exact"?u.forms[0].strength.power:"";
+  const rows=u.forms.map(f=>{ const s=f.strength; return `<tr><td>${f.isCostume?"🎭 "+esc(f.hero.costume||f.hero.name):"Base"}</td><td>${esc(s.label)}</td><td>${s.atk??"?"} / ${s.def??"?"} / ${s.hp??"?"}</td><td title="${esc(STATUS_TXT[s.status])}">${STATUS_MARK[s.status]}${s.power}</td></tr>`; }).join("");
+  const notes=[...new Set(u.notes.concat(...u.forms.map(f=>f.strength.notes)))];
+  return `<div class="calc">
+    <div class="calchead">📊 Your copy ${ci+1} of ${units.length} <span style="color:var(--gold2);font-size:11px">· saves to this copy only</span></div>
+    ${copies}
+    <div style="font-size:12px;color:var(--dim);margin:4px 0">${src}</div>
+    <div class="calcrow"><span class="calclab">Form</span><select class="calcform" style="max-width:100%">${formOpts}</select></div>
+    <div class="calcrow"><span class="calclab">Talent path</span>${[["attack","⚔ Attack"],["balanced","⚖ Balanced"],["defense","🛡 Defense"]].map(p=>btn("path",p[0],p[1],u.path===p[0])).join("")}<span style="font-size:11px;color:var(--dim)">the save's path is not decoded</span></div>
+    ${manual}
+    <div class="calcrow"><span class="calclab">Card power</span><input class="actualpower" data-copy="${ci}" type="number" min="100" max="3000" step="1" value="${exact}" placeholder="${u.forms[0].strength.calcPower}"><span style="font-size:11px;color:var(--dim)">Power shown in-game for this copy; overrides the estimate for this copy only.</span></div>
+    <table style="width:100%;font-size:12.5px;margin-top:6px;border-collapse:collapse"><tr style="color:var(--dim)"><th align="left">Form</th><th align="left">Progress</th><th align="left">Atk / Def / HP</th><th align="left">Power</th></tr>${rows}</table>
+    <div style="font-size:11.5px;color:var(--dim);margin-top:6px">✓ card Power · ~ estimate · ≈ assumed · ? unknown. ${notes.map(esc).join(" ")}</div>
+  </div>`;
+}
+function calcRefresh(){
+  invalidatePool(); BENCH={sig:null,v:0};
+  // Re-render after the current input/change/blur sequence has finished.
+  setTimeout(()=>{
+    const box=document.getElementById("calcBox"), h=findHero(window.__calcHero);
+    if(box&&h) box.innerHTML=calcHtml(h);
+    if(typeof renderGrid==="function") renderGrid();
+  },0);
+}
+function calcSet(k,v){
+  if(!window.__calcOwned){ window.__calc[k]=v; calcRefresh(); return; }
+  if(k==="copy"){ window.__calcCopy=v; calcRefresh(); return; }
+  const c=copyCfg(window.__calcHero,window.__calcCopy); if(!c) return;
+  if(v===null||v===undefined||v==="") delete c[k]; else c[k]=v;
+  save(); calcRefresh();
 }
 
 function openHero(name){
   const h=findHero(name); if(!h) return;
-  window.__calc=null; // reset so calc reflects this hero's config
+  window.__calc=null; window.__calcCopy=h.__copy?h.__copy-1:null; // reset so calc reflects this copy's config
   const partners=synPartners(h);
   const m=document.getElementById("heroModal");
   m.innerHTML=`<div class="mcard">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
       <div style="display:flex;align-items:center;gap:14px">${h.img?`<img class="mport" src="${h.img}" onerror="this.remove()">`:""}<h3 style="color:#fff;background:var(--${h.el.toLowerCase()});padding:6px 16px;border-radius:8px;font-size:18px">${h.name}</h3></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">${OWN[baseName(h.name)]
+      <div style="display:flex;gap:8px;flex-wrap:wrap">${ownedNameOf(h)
         ?`<button class="chipbtn mrost" data-act="rm" data-n="${h.name.replace(/"/g,"&quot;")}" style="border-color:var(--fire);color:var(--fire)">🗑 Remove from roster</button>`
         :`<button class="chipbtn mrost" data-act="add" data-n="${h.name.replace(/"/g,"&quot;")}" style="border-color:var(--gold);color:var(--gold2)">➕ Add to my roster</button>`}
       <button class="chipbtn" onclick="closeHero()">✕ Close</button></div></div>
-    <div class="sub" style="margin-top:8px">${h.costume?`<span style="color:var(--gold2)">🎭 ${h.costume} costume of ${h.base}</span> · `:""}${h.r||5}★ · ${h.el} · ${h.speed} · ${h.cls} · ${h.fam||"—"} · Base power ${h.power}${ownCfg(h)?` · <b style="color:var(--gold2)">Roster power ${effPower(h)}</b>`:""}${h.atk?` · ⚔ ${h.atk} 🛡 ${h.dfn} ❤ ${h.hp}`:""}${OWN[baseName(h.name)]?` · <b style="color:var(--gold2)">You own ${(OWN[baseName(h.name)].n||1)}× · 🎭 ${(OWN[baseName(h.name)].c||0)} costume${(OWN[baseName(h.name)].c||0)===1?"":"s"}</b>`:""}</div>
+    <div class="sub" style="margin-top:8px">${h.costume?`<span style="color:var(--gold2)">🎭 ${h.costume} costume of ${h.base}</span> · `:""}${h.r||5}★ · ${h.el} · ${h.speed} · ${h.cls} · ${h.fam||"—"} · Base power ${h.power}${ownCfg(h)?` · <b style="color:var(--gold2)">Roster power ${effPower(h)}</b>`:""}${h.atk?` · ⚔ ${h.atk} 🛡 ${h.dfn} ❤ ${h.hp}`:""}${ownedNameOf(h)?` · <b style="color:var(--gold2)">You own ${(OWN[ownedNameOf(h)].n||1)}× · 🎭 ${(OWN[ownedNameOf(h)].c||0)} costume${(OWN[ownedNameOf(h)].c||0)===1?"":"s"} owned</b>`:""}</div>
     <div>${h.tags.map(x=>`<span class="pill">${TAGDESC[x]||x}</span>`).join("")}</div>
     <div id="calcBox">${calcHtml(h)}</div>
     <h4>⚡ Special Skill</h4><p>${h.skill||"—"}</p>
@@ -1350,30 +1401,33 @@ function openHero(name){
 function closeHero(){ const m=document.getElementById("heroModal"); m.classList.remove("show"); m.innerHTML=""; }
 document.addEventListener("input",e=>{
   const r=e.target.closest&&e.target.closest(".calcrange");
-  if(r){ window.__calc.em=+r.value; calcApply(true); }
+  if(r) calcSet("em",+r.value);
 });
 document.addEventListener("change",e=>{
+  const f=e.target.closest&&e.target.closest(".calcform");
+  if(f){ calcSet("form",f.value||null); return; }
+  const cc=e.target.closest&&e.target.closest(".calccos");
+  if(cc){ calcSet("cosMax",cc.checked?true:null); return; }
   const p=e.target.closest&&e.target.closest(".actualpower");
   if(!p) return;
-  const h=findHero(window.__calcHero), o=h&&ownCfg(h); if(!o) return;
+  const name=window.__calcHero, o=name&&OWN[name]; if(!o) return;
   const v=+p.value;
   if(p.value!==""&&(!Number.isFinite(v)||v<100||v>3000)){ alert("Enter the Power shown on the hero card (100–3000), or leave it blank."); return; }
   const copy=+p.getAttribute("data-copy")||0;
-  if((o.n||1)===1){ if(p.value==="") delete o.p; else o.p=Math.round(v); delete o.ps; }
+  if((o.n||1)===1&&!Array.isArray(o.ps)){ if(p.value==="") delete o.p; else o.p=Math.round(v); }
   else {
-    const ps=Array.from({length:o.n||1},(_,i)=>Array.isArray(o.ps)&&validPower(o.ps[i])?Math.round(+o.ps[i]):validPower(o.p)?Math.round(+o.p):null);
+    // Per-copy array; a legacy single value belongs to copy 1 only.
+    const ps=Array.from({length:o.n||1},(_,i)=>Array.isArray(o.ps)?(validPower(o.ps[i])?Math.round(+o.ps[i]):null):(i===0&&validPower(o.p)?Math.round(+o.p):null));
     ps[copy]=p.value===""?null:Math.round(v); o.ps=ps;
     if(validPower(ps[0])) o.p=ps[0]; else delete o.p;
   }
-  save(); BENCH={sig:null,v:0};
-  const box=document.getElementById("calcBox"); if(box) box.innerHTML=calcHtml(h);
-  if(typeof renderGrid==="function") renderGrid();
+  save(); calcRefresh();
 });
 document.addEventListener("click",e=>{
   const m=document.getElementById("heroModal");
   if(m && e.target===m) closeHero();
   const q=sel2=>e.target.closest&&e.target.closest(sel2);
-  const cb=q(".calcbtn"); if(cb){ const k=cb.getAttribute("data-calc"), v=cb.getAttribute("data-v"); window.__calc[k]=(k==="path")?v:+v; calcApply(true); return; }
+  const cb=q(".calcbtn"); if(cb){ const k=cb.getAttribute("data-calc"), v=cb.getAttribute("data-v"); calcSet(k,(k==="path")?v:+v); return; }
   const cp=q(".cpbtn"); if(cp){ adjustOwn(cp.getAttribute("data-n"), cp.getAttribute("data-k"), +cp.getAttribute("data-d")); return; }
   const ec=q(".enclear"); if(ec){ EN[+ec.getAttribute("data-i")]=null; renderEN(); return; }
   const cl=q(".sbclear"); if(cl){ SB[+cl.getAttribute("data-i")]=null; renderSB(); return; }
@@ -1387,15 +1441,18 @@ document.addEventListener("click",e=>{
   const so=q(".sb-open"); if(so){ toBuilder(so.getAttribute("data-team").split("|")); return; }
   const sl=q(".sbslot"); if(sl){ sbSel=(sbSel===+sl.getAttribute("data-i"))?null:+sl.getAttribute("data-i"); renderSB(); return; }
   const pk=q(".sbpick"); if(pk){ const n=pk.getAttribute("data-n");
-    if(!SB.some(h=>h&&h.name===n)){ const idx=sbSel!==null?sbSel:SB.findIndex(x=>!x);
-      if(idx>=0){ SB[idx]=findHero(n); sbSel=null; renderSB(); } } return; }
-  const ld=q(".sbload"); if(ld){ e.preventDefault(); toBuilder(sbTeams()[+ld.getAttribute("data-i")].heroes); return; }
+    const ph=findHero(n);
+    if(ph&&!SB.some((h,i)=>h&&(h.name===n||(ph.__unit&&h.__unit===ph.__unit))&&i!==sbSel)){ const idx=sbSel!==null?sbSel:SB.findIndex(x=>!x);
+      if(idx>=0){ SB[idx]=ph; sbSel=null; renderSB(); } } return; }
+  const ld=q(".sbload"); if(ld){ e.preventDefault(); const t2=sbTeams()[+ld.getAttribute("data-i")]; toBuilder(t2.heroes,t2.units,t2.forms); return; }
+  const gl=q(".gtload"); if(gl){ e.preventDefault(); const t=gameTeamsList()[+gl.getAttribute("data-i")]; if(!t) return;
+    const ms=t.members.filter(m=>!m.empty).slice(0,5); toBuilder(ms.map(m=>{ const x=gameTeamEntry(m); return x?x.name:""; }),ms.map(m=>m.unit?m.unit.key:null)); return; }
   const lg=q(".sblog"); if(lg){ e.preventDefault(); const t2=sbTeams()[+lg.getAttribute("data-i")];
     const es=logEntries(); es.push({date:new Date().toISOString().slice(0,10),mode:"Raid Attack",result:lg.getAttribute("data-r"),tank:"",note:"Team: "+t2.name,ctx:CTX,team:t2.heroes});
     store.set("epLog",es); shareBattle(es[es.length-1]); renderLog(); alert("Logged "+lg.getAttribute("data-r")+" for "+t2.name); return; }
   const dl=q(".sbdel"); if(dl){ e.preventDefault(); const ts=sbTeams(); ts.splice(+dl.getAttribute("data-i"),1); store.set("epTeams",ts); renderSBSaved(); return; }
   const mr=q(".mrost"); if(mr){
-    const n=mr.getAttribute("data-n"), b=baseName(n);
+    const n=mr.getAttribute("data-n"), b=ownedNameOf(findHero(n))||baseName(n);
     if(mr.getAttribute("data-act")==="rm"){
       if(!confirm("Remove "+b+" from your roster?")) return;
       sel.delete(b); delete OWN[b];
@@ -1413,9 +1470,9 @@ function renderSBGrid(){
   const g=document.getElementById("sbGrid"); if(!g) return;
   const q=(document.getElementById("sbSearch").value||"").toLowerCase();
   const fe=document.getElementById("sbEl").value;
-  const used=new Set(SB.filter(Boolean).map(h=>h.name));
-  const list=sbPool().filter(h=>(!q||h.name.toLowerCase().includes(q))&&(!fe||h.el===fe)).sort((a,b)=>b.power-a.power).slice(0,60);
-  g.innerHTML=list.map(h=>`<div class="hero el-${h.el} dbcard sbpick${used.has(h.name)?" used":""}" data-n="${h.name}">${h.img?`<img class="hport" src="${h.img}" loading="lazy" onerror="this.remove()">`:""}<span class="pw">${effPower(h)}</span><div class="nm">${h.name}</div><div class="meta">${h.el} · ${h.speed} · ${h.cls}</div></div>`).join("");
+  const used=new Set(SB.filter(Boolean).map(h=>h.__unit||h.name));
+  const list=sbPool().filter(h=>(!q||h.name.toLowerCase().includes(q))&&(!fe||h.el===fe)).sort((a,b)=>(!!b.__str-!!a.__str)||(effPower(b)-effPower(a))).slice(0,60);
+  g.innerHTML=list.map(h=>`<div class="hero el-${h.el} dbcard sbpick${used.has(h.__unit||h.name)?" used":""}" data-n="${esc(h.name)}">${h.img?`<img class="hport" src="${h.img}" loading="lazy" onerror="this.remove()">`:""}<span class="pw">${h.__str?strengthTag(h):h.power}</span><div class="nm">${esc(h.name)}</div><div class="meta">${h.el} · ${h.speed} · ${h.cls}${h.__str?` · ${h.__str.label==="max"?"yours":esc(h.__str.label)}`:" · not owned"}</div></div>`).join("");
 }
 function renderSB(){
   const s=document.getElementById("sbSlots"); if(!s) return;
@@ -1442,21 +1499,42 @@ function renderSBAnalysis(){
   const c=famCounts(hs);
   for(const f in c) if(FAMS[f]&&c[f]>=2) bits.push(`<b>${f} ×${c[f]}:</b> ${FAMS[f].d}`);
   applySyn(hs).whys.forEach(x=>bits.push(x));
-  if(CTX!=="bloody"&&hs.length===5&&!hs.some(h=>T(h,"healer"))) bits.push("⚠️ No healer — high pressure but no recovery if the fight goes long");
   const tk=SB[2];
-  if(hs.length===5&&tk&&!T(tk,"taunt")&&!T(tk,"wall")&&!T(tk,"healer")&&!T(tk,"counter")) bits.push(`⚠️ ${tk.name} has no tanking mechanic (taunt/wall/heal/counter) — consider Auto-arrange or a different middle`);
-  a.innerHTML=`<div class="why">${bits.map(b=>"• "+b).join("<br>")}</div>`;
+  if(hs.length===5&&tk&&!T(tk,"taunt")&&!T(tk,"wall")&&!T(tk,"healer")&&!T(tk,"counter")) bits.push(`⚠️ ${esc(tk.name)} has no tanking mechanic (taunt/wall/heal/counter) — consider Auto-arrange or a different middle`);
+  const bases=hs.map(baseOf); if(new Set(bases).size<bases.length) bits.push("⚠️ The same hero appears twice (copies or costume forms of one hero). The game allows one of each hero per team.");
+  if(hs.some(h=>!h.__str)) bits.push("ℹ️ Heroes marked “not owned” use catalog max-level values.");
+  let extra="";
+  if(hs.length>=2){
+    const ev=EPEngine.evaluate(hs,{ctx:engineCtx(),troops:poolState().troops,roles:hs.map(()=>"attack")});
+    extra=explainHtml(EPEngine.explain(hs,ev))+troopHtml(ev.troopPlan)+upgradesHtml(hs,ev.troopPlan);
+  }
+  a.innerHTML=`<div class="why">${bits.map(b=>"• "+b).join("<br>")}</div>${extra}`;
 }
 function renderSBSaved(){
   const d=document.getElementById("sbSaved"); if(!d) return;
   const ts=sbTeams();
   d.innerHTML=ts.length?`<h2 style="margin-top:16px;font-size:17px">Saved teams</h2>`+ts.map((t2,i)=>
-    `<div class="note"><b>${t2.name}</b> — ${t2.heroes.join(", ")}<span style="float:right;white-space:nowrap">
+    `<div class="note"><b>${esc(t2.name)}</b> — ${t2.heroes.map(esc).join(", ")}<span style="float:right;white-space:nowrap">
       <a href="#" class="sbload" data-i="${i}" style="color:var(--accent)">Load</a> · <a href="#" class="sblog" data-i="${i}" data-r="Win" style="color:var(--nature)">✅ Win</a> · <a href="#" class="sblog" data-i="${i}" data-r="Loss" style="color:var(--fire)">❌ Loss</a> · <a href="#" class="sbdel" data-i="${i}" style="color:var(--fire)">✕</a></span></div>`).join(""):"";
+  d.innerHTML+=gameTeamsHtml();
 }
-function toBuilder(names){
+// Teams saved inside the imported game save, offered as editable starting points.
+function gameTeamsList(){ const st=poolState(); return EPEngine.gameTeams(store.get("epEvaRoster"),st.units,st.troops); }
+function gameTeamEntry(m){ return m.unit?unitBaseEntry(m.unit):null; }
+function gameTeamsHtml(){
+  const gts=gameTeamsList(); if(!gts.length) return "";
+  return `<h2 style="margin-top:16px;font-size:17px">Teams from your game save</h2><div class="note" style="font-size:12.5px">Loaded as editable starting points. Being saved in the game does not make a team strong — check the analysis. Costume choice per team is not read from the save; each copy uses its chosen form.</div>`+
+    gts.map((t,i)=>{ const names=t.members.filter(m=>!m.empty).map(m=>{ const e=gameTeamEntry(m); return e?esc(e.name):`<i>unknown copy ${esc(m.instanceId)}</i>`; });
+      return `<div class="note"><b>${esc(t.key)}</b> — ${names.join(", ")}${t.unresolved?` <span style="color:var(--dim)">(${t.unresolved} not in your matched roster)</span>`:""}<span style="float:right"><a href="#" class="gtload" data-i="${i}" style="color:var(--accent)">Load</a></span></div>`; }).join("");
+}
+function toBuilder(names,units,forms){
   SB=[null,null,null,null,null];
-  names.slice(0,5).forEach((n,i)=>{ SB[i]=findHero(n); });
+  const st=poolState();
+  names.slice(0,5).forEach((n,i)=>{
+    const u=units&&units[i], fs=u&&st.byUnit.get(u);
+    // Prefer the saved owned copy (instance) and form; fall back to the stored name.
+    SB[i]=(fs&&(fs.find(h=>forms&&h.__form===forms[i])||fs.find(h=>h.name===n)||fs[0]))||findHero(n);
+  });
   sbSel=null;
   document.querySelectorAll(".tab").forEach(x=>x.classList.remove("show"));
   const tb=document.getElementById("tab-builder"); if(tb) tb.classList.add("show");
@@ -1482,7 +1560,7 @@ function toBuilder(names){
     if(!hs.length) return alert("Add some heroes first");
     const ts=sbTeams();
     const name=w("sbName").value.trim()||("Team "+(ts.length+1));
-    ts.push({name, heroes:hs.map(h=>h.name), ctx:CTX});
+    ts.push({name, heroes:hs.map(h=>h.name), units:hs.map(h=>h.__unit||null), forms:hs.map(h=>h.__form||null), ctx:CTX});
     store.set("epTeams",ts); w("sbName").value=""; renderSBSaved();
   };
   renderSB();
@@ -1491,35 +1569,16 @@ function toBuilder(names){
 /* ---------- enemy counter-planner ---------- */
 let EN=[null,null,null,null,null], enSel=null;
 function enFoes(){ return store.get("epFoes")||[]; }
-function counterNeeds(en){
-  const any=x=>en.some(h=>T(h,x));
-  const needs=[];
-  if(any("healer")||any("bigheal")) needs.push({tag:"healblock",w:20,why:"they heal — bring healing block"});
-  if(any("ninelives")||any("revive")) needs.push({tag:"antirevive",w:18,why:"they revive — make kills stick"});
-  if(any("counter")) needs.push({tag:"bypass",w:16,why:"counterattack — bypass hits through it"});
-  if(any("taunt")) needs.push({tag:"dispel",w:13,why:"taunt — strip it or hit through"});
-  if(any("atkbuff")||any("teamimmune")||any("wall")) needs.push({tag:"dispel",w:14,why:"buff-heavy — strip their buffs"});
-  if(any("minions")) needs.push({tag:"minionhate",w:14,why:"minion summoners — destroy the wall before it buries you"});
-  if(any("fiends")) needs.push({tag:"healer",w:9,why:"their fiends eat healing — bring extra healing"});
-  if(any("dot")) needs.push({tag:"cleanse",w:12,why:"heavy ailments — cleanse them off"});
-  if(any("cc")||any("insanity")) needs.push({tag:"teamimmune",w:10,why:"crowd control / Insanity — immunity blanks it"});
-  if(any("manactl")) needs.push({tag:"manaboost",w:10,why:"mana denial — bring your own mana engine"});
-  if(any("overheal")) needs.push({tag:"healblock",w:9,why:"boosted health — heal-block caps it"});
-  const m={}; needs.forEach(n=>{ if(!m[n.tag]||m[n.tag].w<n.w) m[n.tag]=n; });
-  return Object.values(m);
-}
 function buildCounter(en){
-  const pool=roster();
-  if(pool.length<5) return {err:"Select at least 5 heroes you own on the Roster tab first."};
+  if(unitCount()<5) return {err:"Select at least 5 heroes you own on the Roster tab first."};
   const tank=en[2]||en.find(Boolean);
   const color=BRING[tank.el];
-  const needs=counterNeeds(en);
-  const nb=h=>needs.reduce((a,n)=>a+(T(h,n.tag)?n.w:0),0);
-  const used=new Set();
-  const stack=pool.filter(h=>h.el===color).sort((a,b)=>(offScore(b)+nb(b))-(offScore(a)+nb(a))).slice(0,3);
-  stack.forEach(h=>used.add(h.name));
-  const sup=pool.filter(h=>!used.has(h.name)).sort((a,b)=>(supScore(b)+nb(b)*1.2)-(supScore(a)+nb(a)*1.2)).slice(0,2);
-  return {color, tankEl:tank.el, stack, sup, needs, nb};
+  const needs=EPEngine.opponentNeeds(en);
+  // Shortlist heroes that answer the enemy's needs, not just the strongest ones.
+  const nb=h=>needs.reduce((a,n)=>{ const q=n.answers.filter(([t])=>T(h,t)).reduce((m,[,v])=>Math.max(m,v),0); return a+n.w*q; },0);
+  const r=EPEngine.searchTeam({pool:roster(),color,ctx:engineCtx(),troops:poolState().troops,enemy:en,roleScore:(h,role)=>roleScore(h,role)+0.5*nb(h)});
+  if(!r||r.team.length<5) return {err:`Not enough ${color} heroes for a 3-2 stack against this tank.`};
+  return Object.assign(r,{color, tankEl:tank.el, needs});
 }
 function renderENGrid(){
   const g=document.getElementById("enGrid"); if(!g) return;
@@ -1548,15 +1607,11 @@ function renderENOut(){
   if(en.length>=3){
     const r=buildCounter(en);
     if(r.err){ o.innerHTML=html+`<div class="note">${r.err}</div>`; return; }
-    const slots=r.stack.map(h=>slotDiv(h,`${r.color} stack`)).join("")+r.sup.map(h=>slotDiv(h,"Support")).join("");
-    const team=r.stack.concat(r.sup);
     const bits=[`<b>Their tank is ${r.tankEl}:</b> bring ${r.color} tiles (3-2 stack)`];
-    r.needs.forEach(n=>{
-      const ans=team.filter(h=>T(h,n.tag)).map(h=>h.name);
-      bits.push(ans.length?`✔ ${n.why} — <b>${ans.join(", ")}</b>`:`⚠️ ${n.why} — <b>no answer in this five</b>${roster().some(h=>T(h,n.tag))?" (you own one — check the bench)":" (nothing in your roster)"}`);
-    });
-    applySyn(team).whys.forEach(x=>bits.push(x));
-    html+=teamCard(`Counter team${en.length<5?" (partial enemy intel)":""}`,`vs ${en.map(h=>h.name).join(", ")}`,slots,bits,team.map(h=>h.name));
+    r.ev.mu.answered.forEach(a=>bits.push(`✔ ${esc(a.need.why)} (${esc(a.need.src.join(", "))}) — <b>${esc(a.by)}</b> brings ${esc(TAGDESC[a.tag]||a.tag)}${a.q<1?" (partial answer)":""}`));
+    r.ev.mu.missing.forEach(n=>bits.push(`⚠️ ${esc(n.why)} (${esc(n.src.join(", "))}) — <b>no answer in this five</b>${roster().some(h=>n.answers.some(([t])=>T(h,t)))?" (you own one — check the bench)":" (nothing in your roster)"}`));
+    r.ev.mu.penalties.forEach(p=>bits.push(`⚠️ ${esc(p)}`));
+    html+=attackCard(`Counter team${en.length<5?" (partial enemy intel)":""}`,`vs ${en.map(h=>esc(h.name)).join(", ")}`,r,(h,i)=>i<r.stack.length?`${r.color} stack`:"Support").replace('<div class="why"><b>Why it works:',`<div class="why">${bits.map(b=>"• "+b).join("<br>")}</div><div class="why"><b>Why it works:`);
   } else html+=`<div class="note">Add at least 3 enemy heroes (ideally all 5, tank in the middle) to build the counter.</div>`;
   o.innerHTML=html;
 }
@@ -1733,4 +1788,3 @@ refreshLearnBadge();
 <script src="command-center.js"></script>
 </body>
 </html>
-                                                                                                                                                                                                                                                            

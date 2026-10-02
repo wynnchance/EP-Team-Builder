@@ -4,7 +4,7 @@
   const input=document.getElementById('eva1Import'),dialog=document.getElementById('eva1Preview');
   const el=(tag,text,parent)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(parent)parent.appendChild(e);return e;};
   let pending=null;
-  function showStatus(){const s=store.get('epEvaRoster'),box=document.getElementById('eva1Status');if(!s){box.textContent='';return;}box.textContent='Imported '+s.accountName+': '+s.heroes.length+' owned copies. Levels, costumes, teams and troops are included in your roster backup.';}
+  function showStatus(){const s=store.get('epEvaRoster'),box=document.getElementById('eva1Status');if(!s){box.textContent='';return;}box.textContent='Imported '+s.accountName+': '+s.heroes.length+' owned copies. Each copy is ranked from its own progression; saved game teams appear in the Team Builder and troops below.';}
   function close(){pending=null;dialog.close();input.value='';}
   function preview(){
     const result=EVA1.prepare(pending.snapshot,HEROES,EVA1_HERO_IDS,OWN,pending.overrides);
@@ -14,7 +14,7 @@
     el('p','Your file is read on this device. Full account balances and shop data are not stored or sent anywhere.',dialog);
     if(result.talentConflicts)el('p',result.talentConflicts+' talent records have different counts in the save. The unlocked-node mask takes priority; both values are kept.',dialog);
     if(result.unknownProgression)el('p',result.unknownProgression+' copies have no explicit level data; their progression stays unknown.',dialog);
-    el('p','Levels, ascension, skills, costumes, talent data, teams and troops are kept in your backup. Rankings still estimate max-level power unless you enter exact card power. Exact talent paths are not inferred.',dialog);
+    el('p','Each copy is ranked from its own level, ascension, limit break and talent count. Copies below max level are labelled estimates; copies without progression data are ranked at the minimum until you enter card Power. Costumes count as alternate forms of the same copy, and their bonus only when fully levelled. Exact talent paths are not inferred.',dialog);
     const prev=store.get('epEvaRoster');if(prev&&prev.accountName!==pending.snapshot.accountName)el('p','Your last import was for '+prev.accountName+'. Choose whether to merge this roster or replace the current roster.',dialog);
     const label=el('label',undefined,dialog),mode=el('select',undefined,label);mode.id='eva1Mode';
     for(const [value,text]of [['merge','Merge: update matching heroes, keep other heroes'],['replace','Replace current roster with matched heroes']]){const o=el('option',text,mode);o.value=value;}

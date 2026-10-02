@@ -58,8 +58,12 @@
     for(const h of snap.heroes)for(const c of h.costumes)remember(h.definitionId,h.definitionId+'_costume_'+c.costumeId);
     for(const [name,rows]of groups){
       const old=existing[name]||{},oldInstances=old.instances||[];
-      const ps=rows.map(h=>{const i=oldInstances.findIndex(o=>o.instanceId===h.instanceId);return i>=0?(Array.isArray(old.ps)?old.ps[i]??null:(i===0?old.p??null:null)):null;});
+      const prior=rows.map(h=>oldInstances.findIndex(o=>o.instanceId===h.instanceId));
+      const ps=prior.map(i=>i>=0?(Array.isArray(old.ps)?old.ps[i]??null:(i===0?old.p??null:null)):null);
+      // Per-copy choices (form, path) follow the same owned instance across refreshes.
+      const copies=prior.map(i=>i>=0&&Array.isArray(old.copies)?old.copies[i]??null:null);
       const first=rows[0],entry={...old,n:rows.length,c:Math.min(5,costumeCount.get(first.definitionId)?.size||0),definitionId:first.definitionId,instances:rows.map(h=>({...h}))};
+      delete entry.copies;if(copies.some(Boolean))entry.copies=copies;
       // Exact powers can survive a refresh only when tied to the same owned instance.
       delete entry.p;delete entry.ps;if(ps.some(p=>Number.isFinite(p)&&p>=100&&p<=3000))entry.ps=ps;
       if(first.limitBreak!==null)entry.lb=first.limitBreak;
