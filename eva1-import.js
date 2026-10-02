@@ -32,8 +32,12 @@
   }
   function talent(h){
     const vt=Number.isSafeInteger(h.t)&&h.t>=0&&(h.t&31)<=25,vf=Number.isSafeInteger(h.f)&&h.f>=0&&h.f<2**25;
-    let count=null;if(vf){let f=BigInt(h.f);count=0;while(f){count+=Number(f&1n);f>>=1n;}}else if(vt)count=h.t&31;
-    return {unlockedTalentNodes:count,talentT:h.t??null,talentF:h.f??null,talentCountConflict:vf&&vt&&count!==(h.t&31)};
+    // Count = t & 31. In a real v389 save, f appears on only some records and its set bits always run
+    // up to bit 24 (e.g. 20-24 on maxed 25-node heroes), so its population count is not the node count.
+    // f is kept raw; its meaning is unverified.
+    let fBits=null;if(vf){let f=BigInt(h.f);fBits=0;while(f){fBits+=Number(f&1n);f>>=1n;}}
+    const count=vt?h.t&31:null;
+    return {unlockedTalentNodes:count,talentT:h.t??null,talentF:h.f??null,talentCountConflict:vf&&vt&&fBits!==count};
   }
   function snapshot(decoded){
     const d=decoded.data,groups=d.heroesState?.ownedHeroesCollection?.heroIdToOwnedData;
@@ -58,8 +62,12 @@
     for(const h of snap.heroes)for(const c of h.costumes)remember(h.definitionId,h.definitionId+'_costume_'+c.costumeId);
     for(const [name,rows]of groups){
       const old=existing[name]||{},oldInstances=old.instances||[];
-      const ps=rows.map(h=>{const i=oldInstances.findIndex(o=>o.instanceId===h.instanceId);return i>=0?(Array.isArray(old.ps)?old.ps[i]??null:(i===0?old.p??null:null)):null;});
+      const prior=rows.map(h=>oldInstances.findIndex(o=>o.instanceId===h.instanceId));
+      const ps=prior.map(i=>i>=0?(Array.isArray(old.ps)?old.ps[i]??null:(i===0?old.p??null:null)):null);
+      // Per-copy choices (form, path) follow the same owned instance across refreshes.
+      const copies=prior.map(i=>i>=0&&Array.isArray(old.copies)?old.copies[i]??null:null);
       const first=rows[0],entry={...old,n:rows.length,c:Math.min(5,costumeCount.get(first.definitionId)?.size||0),definitionId:first.definitionId,instances:rows.map(h=>({...h}))};
+      delete entry.copies;if(copies.some(Boolean))entry.copies=copies;
       // Exact powers can survive a refresh only when tied to the same owned instance.
       delete entry.p;delete entry.ps;if(ps.some(p=>Number.isFinite(p)&&p>=100&&p<=3000))entry.ps=ps;
       if(first.limitBreak!==null)entry.lb=first.limitBreak;
