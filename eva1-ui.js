@@ -12,7 +12,7 @@
     el('h2','Import '+pending.snapshot.accountName,dialog);
     el('p',result.matchedInstances+' of '+result.totalInstances+' owned copies matched to '+result.matchedDefinitions+' heroes. '+result.costumeRecords+' costume builds and '+result.teams+' saved teams found.',dialog);
     el('p','Your file is read on this device. Full account balances and shop data are not stored or sent anywhere.',dialog);
-    if(result.talentConflicts)el('p',result.talentConflicts+' talent records have different counts in the save. The unlocked-node mask takes priority; both values are kept.',dialog);
+    if(result.talentConflicts)el('p',result.talentConflicts+' talent records also carry a second talent field whose meaning is not verified. The node count from the main field is used; both raw values are kept.',dialog);
     if(result.unknownProgression)el('p',result.unknownProgression+' copies have no explicit level data; their progression stays unknown.',dialog);
     el('p','Each copy is ranked from its own level, ascension, limit break and talent count. Copies below max level are labelled estimates; copies without progression data are ranked at the minimum until you enter card Power. Costumes count as alternate forms of the same copy, and their bonus only when fully levelled. Exact talent paths are not inferred.',dialog);
     const prev=store.get('epEvaRoster');if(prev&&prev.accountName!==pending.snapshot.accountName)el('p','Your last import was for '+prev.accountName+'. Choose whether to merge this roster or replace the current roster.',dialog);

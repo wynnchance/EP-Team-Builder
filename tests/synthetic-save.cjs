@@ -13,7 +13,7 @@ function rosterData(){
   const g={
     ice_god_eskimo:{a:[a(max5),a('l60,a3,s6,b0',{t:5,f:31})]},           // Alasie x2: max and partial
     kalevala_aino:{a:[a('l85,a4,s8,b1')]},                                  // Aino LB1
-    ice_god_alexandrine:{a:[a(max5)]},
+    ice_god_alexandrine:{a:[a(max5,{t:25|(796<<5),f:32505856})]},              // t says 25 nodes; f is a bits-20..24 run
     wonderland_alice:{a:[a('l90,a4,s8,b2')]},                               // LB2
     ice_god_october:{b:[201]},                                              // compact: unknown progression
     monster_hunter_sigyn:{a:[a(max5)]},
@@ -41,14 +41,18 @@ function rosterData(){
   return {
     profileState:{name:'Synthetic account'},
     heroesState:{ownedHeroesCollection:{heroIdToOwnedData:g,guestOriginToOwnedInfos:{}},
-      teams:{main_1:{tm:[{hid:'101',tid:'1'},{hid:'103',tid:'2'},{hid:'201',tid:'default'},{hid:'999999',tid:'3'},{hid:'empty',tid:'default'}]}}},
+      teams:{main_1:{tm:[{hid:'101',tid:'1'},{hid:'103',tid:'2'},{hid:'201',tid:'default'},{hid:'999999',tid:'3'},{hid:'empty',tid:'default'}]},
+        main_2:{tm:[{hid:'125',tid:'default',activeHeroDefinitionId:'nordic_chained_werewolf_costume_cute'},{hid:'101',tid:'default'},{hid:'102',tid:'default'}]},
+        'epic|no_red|attack':{tm:[{hid:'126',tid:'default'}]},
+        guest_ip:{tm:[{hid:'888888',tid:'default'}]}}},
     troopsState:{savedOwnedIdToTroopDefinitions:{
       1:{td:{id:'blue_epic_barbarian',lvl:17}},       // Ice 4* mana
       2:{td:{id:'blue_epic_barbarian',lvl:23}},
       3:{td:{id:'green_epic_rogue',lvl:29}},          // Nature 4* mana
       4:{td:{id:'red_epic_magic',lvl:30}},            // Fire Magic max
       5:{td:{id:'purple_epic_styx',lvl:12}},          // Dark Styx not max: unknown
-      6:{td:{id:'mystery_troop_x',lvl:9}}             // unrecognised
+      6:{td:{id:'mystery_troop_x',lvl:9}},            // unrecognised
+      7:{key:'7',td:{id:'blue_legendary_paladin',xp:0,lvl:30}} // Ice legendary class troop (shape seen in a real save)
     }},
     inventoryState:{inventory:{item_nordic_chained_werewolf_costume_cute:1,item_royal_knight_costume_blacksmith:1}}
   };

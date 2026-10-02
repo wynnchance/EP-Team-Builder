@@ -34,6 +34,9 @@
   const MANA4_IDS = new Set(["blue_epic_barbarian","green_epic_rogue","purple_epic_female_cultist","red_epic_female_rogue","yellow_epic_female_mage"]);
   const TROOP_COLORS = {red:"Fire", blue:"Ice", green:"Nature", yellow:"Holy", purple:"Dark"};
   const TROOP_RARITY = {common:1, uncommon:2, rare:3, epic:4, legendary:5};
+  // Costume-bonus passive IDs whose effect matches an engine tag (names only; amounts not modelled).
+  const UCB_TAGS = {resist_insanity:"insimmune"};
+  const CLASSES = ["barbarian","cleric","druid","fighter","monk","paladin","ranger","rogue","sorcerer","wizard"];
   const ELS = ["Fire","Ice","Nature","Holy","Dark"];
   const STRONG = {Fire:"Nature", Nature:"Ice", Ice:"Fire", Holy:"Dark", Dark:"Holy"};
 
@@ -197,11 +200,13 @@
         if(imported){
           source = "import";
           prog = progression(r, inst);
-          nodesKnown = isInt(inst.unlockedTalentNodes) && inst.unlockedTalentNodes >= 0 && inst.unlockedTalentNodes <= 25;
-          nodes = nodesKnown ? inst.unlockedTalentNodes : 0;
+          // Recount from the raw t field so rosters imported before the t/f fix are corrected without re-importing.
+          const tCount = isInt(inst.talentT) && inst.talentT >= 0 && (inst.talentT & 31) <= 25 ? inst.talentT & 31 : null;
+          const count = tCount !== null ? tCount : inst.unlockedTalentNodes;
+          nodesKnown = isInt(count) && count >= 0 && count <= 25;
+          nodes = nodesKnown ? count : 0;
           if(!nodesKnown) notes.push("Talent node count not in the save; counted as 0.");
           else notes.push("Talent stats use the " + path + " path assumption; the exact path is not decoded from the save.");
-          if(inst.talentCountConflict) notes.push("The save holds two different talent counts; the unlocked-node mask was used.");
           if(isInt(inst.specialSkillLevel) && inst.specialSkillLevel < 8) notes.push("Special skill level " + inst.specialSkillLevel + "/8: skill text shows max-level values.");
         } else {
           source = "manual";
@@ -214,9 +219,13 @@
         const cosRecords = imported && Array.isArray(inst.costumes) ? inst.costumes : [];
         const anyMaxed = cosRecords.some(c => costumeMaxed(r, c));
         const costumeBonus = imported ? (anyMaxed ? "low" : null) : (cfg.cosMax ? "low" : null);
+        // ucb: unlocked costume-bonus passive IDs (field seen in a real v389 save; meaning inferred from the names).
+        const ucb = imported && inst.raw && Array.isArray(inst.raw.ucb) ? inst.raw.ucb.filter(x => typeof x === "string") : [];
+        const ucbTags = ucb.map(x => UCB_TAGS[x]).filter(Boolean);
+        if(ucb.length) notes.push("Costume bonus passives unlocked: " + ucb.map(x => x.replace(/_/g, " ")).join(", ") + (ucbTags.length ? " (counted as " + ucbTags.join(", ") + ")" : "") + ".");
         if(costumeBonus) notes.push("Costume bonus counted once at the conservative +3% atk/def, +6% HP (Season 1 costumes give +5%/+10%); multiple costume bonuses are not stacked.");
         const unit = {key, name, display, copy:k, instanceId:imported ? String(inst.instanceId) : null, definitionId:inst ? inst.definitionId : (o.definitionId || null),
-          source, rarity:r, base:baseHero.name, path, nodes, nodesKnown, prog, exact, cfg, forms:[], notes, costumeBonus, raw:inst};
+          source, rarity:r, base:baseHero.name, path, nodes, nodesKnown, prog, exact, cfg, forms:[], notes, costumeBonus, ucb, ucbTags, raw:inst};
         // Base form (or the selected costume entry when a costume was added manually).
         unit.forms.push(makeForm(unit, cat, cat === baseHero ? "base" : "costume:" + cat.name, prog, baseHero, exact));
         // Costume forms from this copy's own costume records.
@@ -258,7 +267,7 @@
       const forms = u.pinned ? u.forms.filter(f => f.id === u.pinned) : u.forms;
       for(const f of forms){
         const name = f.isCostume ? (u.copy === 1 ? f.hero.name : f.hero.name + " (" + u.copy + ")") : u.display;
-        const e = Object.assign({}, f.hero, {name, base:u.base, tags:(f.hero.tags || []).slice()});
+        const e = Object.assign({}, f.hero, {name, base:u.base, tags:[...new Set((f.hero.tags || []).concat(u.ucbTags || []))]});
         Object.defineProperties(e, {
           __unit:{value:u.key}, __copy:{value:u.copy}, __form:{value:f.id}, __str:{value:f.strength}, __u:{value:u}, __f:{value:f}
         });
@@ -293,7 +302,9 @@
     if(m[2] === "epic" && MANA4_IDS.has(t.defId)) kind = "mana";
     else if(m[2] === "epic" && ["magic","styx","ninja"].includes(m[3])) kind = m[3];
     else if(m[2] === "legendary") kind = "legendary";
-    return {color:TROOP_COLORS[m[1]], kind, rarity:TROOP_RARITY[m[2]], source:"pattern"};
+    // Legendary troop IDs end in a class name for the plain class troops (e.g. yellow_legendary_cleric).
+    const cls = kind === "legendary" && CLASSES.includes(m[3]) ? m[3][0].toUpperCase() + m[3].slice(1) : null;
+    return {color:TROOP_COLORS[m[1]], kind, rarity:TROOP_RARITY[m[2]], cls, source:"pattern"};
   }
 
   /** Mana bonus % from a troop, or null when it cannot be verified. */
@@ -301,6 +312,7 @@
     if(!isInt(level)) return null;
     if(kind === "mana"){ if(level < 1 || level > 30) return null; for(const [l, v] of MANA4_STEPS) if(level >= l) return v; }
     if((kind === "magic" || kind === "styx") && level === 30) return 20;
+    if(kind === "legendary" && level === 30) return 11;   // Empuzzled mana guide: legendary troops +11% max
     return null;
   }
 
@@ -320,7 +332,7 @@
   }
 
   const KIND_LABEL = {mana:"Mana 4★", magic:"Magic", styx:"Styx", ninja:"Ninja", legendary:"Legendary", other:"Other", unknown:"Unrecognised"};
-  function troopLabel(t){ return (t.color ? t.color + " " : "") + (KIND_LABEL[t.kind] || t.kind) + (isInt(t.level) ? " lvl " + t.level : "") + (t.source === "pattern" ? "" : t.source === "manual" ? " (your label)" : ""); }
+  function troopLabel(t){ return (t.color ? t.color + " " : "") + (KIND_LABEL[t.kind] || t.kind) + (t.cls ? " " + t.cls : "") + (isInt(t.level) ? " lvl " + t.level : "") + (t.source === "pattern" ? "" : t.source === "manual" ? " (your label)" : ""); }
 
   /** Best troop per hero within one team (one troop per hero, colours must match). */
   function assignTroops(team, troops){
@@ -333,7 +345,8 @@
         if(used.has(t.ownedId) || t.color !== h.el) continue;
         const tiles = tilesNeeded(h.speed, t.mana);
         const gain = tiles === null || base === null ? -1 : base - tiles;
-        const rank = [gain, t.mana === null ? -1 : t.mana, t.level || 0];
+        const classMatch = t.cls && h.cls === t.cls ? 1 : 0;   // tie-breaker only; class passives are not modelled
+        const rank = [gain, classMatch, t.mana === null ? -1 : t.mana, t.level || 0];
         if(!best || cmp(rank, best.rank) > 0) best = {troop:t, tiles, base, gain, rank};
       }
       if(best){ used.add(best.troop.ownedId); out.set(h, best); }
@@ -372,8 +385,9 @@
     {a:{tag:"growth"}, b:{anyTag:["sniper","hit3"]}, w:5, k:["growth"], why:"persistent Growth attack amplifies every hit"},
     // Conflicts and redundancy. Same-kind status effects generally replace each other.
     {a:{tag:"taunt"}, b:{tag:"taunt"}, w:-18, k:["taunt"], why:"two taunts compete; only one can be active"},
-    {a:{tag:"atkbuff"}, b:{tag:"atkbuff"}, w:-6, k:["atkbuff"], why:"two attack buffs of the same kind replace rather than add"},
-    {a:{tag:"defdown"}, b:{tag:"defdown"}, w:-5, k:["defdown"], why:"two ordinary defense-down effects replace rather than add"},
+    // Weights roughly cancel the role credit the second hero earns for the same effect.
+    {a:{tag:"atkbuff"}, b:{tag:"atkbuff"}, w:-18, k:["atkbuff"], why:"two attack buffs of the same kind replace rather than add"},
+    {a:{tag:"defdown"}, b:{tag:"defdown"}, w:-11, k:["defdown"], why:"two ordinary defense-down effects replace rather than add"},
     {a:{tag:"manaboost"}, b:{tag:"manaboost"}, w:-6, k:["manaboost"], why:"overlapping mana support; one is usually enough"},
     {a:{tag:"bigheal"}, b:{tag:"bigheal"}, w:-10, k:["bigheal"], why:"two big healers trade damage for redundant sustain"}
   ];
@@ -386,17 +400,26 @@
     if(m.speed && !m.speed.includes(h.speed)) return false;
     return true;
   }
+  // Rule matching depends only on the hero, so cache it per hero object.
+  const MATCH = new WeakMap();
+  function matches(h){
+    let m = MATCH.get(h);
+    if(!m){ m = RULES.map(r => [matchH(h, r.a), matchH(h, r.b)]); MATCH.set(h, m); }
+    return m;
+  }
   const ruleMod = (r, ctx) => (r.k || []).reduce((a, t) => Math.min(a, ctx && ctx.mod ? ctx.mod(t) : 1), 1.6);
 
   /** Skill-combination analysis of a team (order-independent). */
   function synergy(team, ctx){
     const items = [];
-    for(const r of RULES){
+    const ms = team.map(matches);
+    RULES.forEach((r, ri) => {
       const mod = r.w > 0 ? Math.min(1.6, ruleMod(r, ctx)) : 1;
-      if(r.w > 0 && mod <= 0) continue;
+      if(r.w > 0 && mod <= 0) return;
       let best = null;
-      for(const x of team) for(const y of team){
-        if(x === y || !matchH(x, r.a) || !matchH(y, r.b)) continue;
+      for(let i = 0; i < team.length; i++) for(let j = 0; j < team.length; j++){
+        const x = team[i], y = team[j];
+        if(i === j || !ms[i][ri][0] || !ms[j][ri][1]) continue;
         let w = r.w * mod, late = false;
         if(r.timing && speedOf(x, ctx) < speedOf(y, ctx)){ w *= 0.5; late = true; }
         if(!best || w > best.w) best = {w, x, y, late};
@@ -405,7 +428,7 @@
         const why = r.why + (best.late ? " (but " + best.x.name + " charges slower, so hold " + best.y.name + " until the setup lands)" : "");
         items.push({w:best.w, a:best.x.name, b:best.y.name, why, conflict:r.w < 0});
       }
-    }
+    });
     // Elemental defense down: stacks with ordinary defense down and boosts that colour's tiles.
     for(const x of team){
       if(!Array.isArray(x.eldef)) continue;
@@ -549,13 +572,16 @@
     for(let i = start; i <= arr.length - (k - cur.length); i++){ cur.push(arr[i]); combos(arr, k, i + 1, cur, out); cur.pop(); }
     return out;
   }
-  const uniqueBases = team => new Set(team.map(h => h.base || baseName(h.name))).size === team.length;
+  // A team may hold separate copies of the same hero (seen in a real saved team: two copies of one hero),
+  // but never the same copy twice, so two forms of one copy cannot be fielded together.
+  const keyOf = h => h.__unit || h.name;
+  const uniqueUnits = team => new Set(team.map(keyOf)).size === team.length;
   // Keep the best few forms per base so costume alternatives can compete.
   function shortlist(list, score, n){
     const seen = new Map(), out = [];
     for(const h of list.slice().sort((a, b) => score(b) - score(a))){
       const b = h.base || baseName(h.name), c = seen.get(b) || 0;
-      if(c >= 2) continue; seen.set(b, c + 1); out.push(h);
+      if(c >= 3) continue; seen.set(b, c + 1); out.push(h);
       if(out.length >= n) break;
     }
     return out;
@@ -567,25 +593,26 @@
     const used = opts.usedUnits || new Set();
     const avail = opts.pool.filter(h => !used.has(h.__unit || h.name));
     const stackN = opts.stack == null ? 3 : opts.stack;
-    const rs = opts.roleScore || (() => 0);
+    const rs0 = opts.roleScore || (() => 0), memo = new Map();
+    const rs = (h, role) => { const k = role === "support" ? 1 : 0; let m = memo.get(h); if(!m){ m = [null, null]; memo.set(h, m); } if(m[k] === null) m[k] = rs0(h, role); return m[k]; };
     const stackPool = opts.color ? avail.filter(h => h.el === opts.color) : avail;
     const sCand = shortlist(stackPool, h => rs(h, "attack"), stackN >= 5 ? 9 : 8);
-    // With too few distinct heroes of the colour, use a smaller stack rather than none.
-    const k = Math.min(stackN, new Set(sCand.map(h => h.base || baseName(h.name))).size);
+    // With too few copies of the colour, use a smaller stack rather than none.
+    const k = Math.min(stackN, new Set(sCand.map(keyOf)).size);
     if(k < 1) return null;
     let best = null;
     const stacks = combos(sCand, k, 0, [], []);
     for(const st of stacks){
-      if(!uniqueBases(st)) continue;
+      if(!uniqueUnits(st)) continue;
       const needSup = 5 - st.length;
-      const stBases = new Set(st.map(h => h.base || baseName(h.name)));
+      const stUnits = new Set(st.map(keyOf));
       const reserved = opts.reserved || new Set();
-      const supPool = avail.filter(h => !stBases.has(h.base || baseName(h.name)) && !st.includes(h) && !reserved.has(h.__unit || h.name));
+      const supPool = avail.filter(h => !stUnits.has(keyOf(h)) && !reserved.has(keyOf(h)));
       const sup = needSup ? shortlist(supPool, h => rs(h, "support"), 10) : [];
       const supCombos = needSup ? combos(sup, Math.min(needSup, sup.length), 0, [], []) : [[]];
       for(const sp of supCombos){
         const team = st.concat(sp);
-        if(!uniqueBases(team) || new Set(team.map(h => h.__unit || h.name)).size !== team.length) continue;
+        if(!uniqueUnits(team)) continue;
         const roles = st.map(() => "attack").concat(sp.map(() => "support"));
         const ev = evaluate(team, {ctx:opts.ctx, enemy:opts.enemy, troops:opts.troops, roleScore:rs, roles});
         if(!best || ev.score > best.ev.score) best = {team, stack:st, sup:sp, ev};
@@ -608,7 +635,7 @@
       for(const c of colors){
         const cand = shortlist(opts.pool.filter(h => h.el === c && !used.has(h.__unit || h.name)), h => rs(h, "attack"), 6);
         const seen = new Set();
-        for(const h of cand){ const b = h.base || baseName(h.name); if(seen.has(b)) continue; seen.add(b); res.add(h.__unit || h.name); if(seen.size >= 3) break; }
+        for(const h of cand){ const k = keyOf(h); if(seen.has(k)) continue; seen.add(k); res.add(k); if(seen.size >= 3) break; }
       }
       return res;
     };
@@ -663,25 +690,56 @@
         const g = at(prog.factor, null, "low") - s.calcPower;
         out.push({hero:h.name, kind:"costume", gain:g, verified:false, text:"Fully level one of " + h.name + "'s costumes for the costume bonus (+3–5% attack/defense, +6–10% health, +1–5% mana): about +" + g + " power (estimate)."});
       }
-      // Mana troop levelling: verified when the speed and troop table are supported.
-      const tp = opts && opts.troopPlan && opts.troopPlan.get(h);
-      const t = tp && tp.troop;
-      if(t && t.kind === "mana" && isInt(t.level) && t.level < 30 && BASE_TILES_X2[h.speed]){
-        const now = tilesNeeded(h.speed, t.mana);
-        for(const [lvl, v] of MANA4_STEPS.slice().reverse()){
-          if(lvl <= t.level) continue;
-          const tl = tilesNeeded(h.speed, v);
-          if(tl < now){ out.push({hero:h.name, kind:"troop", gain:(now - tl) * 40, verified:t.source === "pattern" || t.source === "manual", text:"Level your " + troopLabel(t) + " to " + lvl + " (+" + v + "% mana): " + h.name + " charges in " + tl + " tiles instead of " + now + " (" + h.speed + ", offense, tiles that hit; troop ID match " + (t.source === "manual" ? "set by you" : "from naming pattern") + ")."}); break; }
+      // Troop levelling that reaches a better breakpoint. Verified: mana table, Magic/Styx/Legendary at 30,
+      // the tile formula, and the troop ID naming (matches a real v389 save).
+      if(BASE_TILES_X2[h.speed]){
+        const tp = opts && opts.troopPlan && opts.troopPlan.get(h);
+        const cur = tp && tp.troop && tp.troop.mana !== null ? tilesNeeded(h.speed, tp.troop.mana) : tilesNeeded(h.speed, 0);
+        let best = null;
+        for(const t of (opts && opts.troops) || []){
+          if(t.color !== h.el || !isInt(t.level)) continue;
+          const steps = t.kind === "mana" ? MANA4_STEPS.slice().reverse().filter(([l]) => l > t.level)
+            : (["magic","styx","legendary"].includes(t.kind) && t.level < 30) ? [[30, troopMana(t.kind, 30)]] : [];
+          for(const [lvl, v] of steps){
+            const tl = tilesNeeded(h.speed, v);
+            if(tl < cur){ if(!best || tl < best.tl || (tl === best.tl && lvl - t.level < best.lvl - best.t.level)) best = {t, lvl, v, tl}; break; }
+          }
+        }
+        if(best){
+          const other = opts && opts.troopPlan ? [...opts.troopPlan.entries()].find(([x, p]) => x !== h && p.troop === best.t) : null;
+          out.push({hero:h.name, kind:"troop", troopId:best.t.ownedId, gain:(cur - best.tl) * 40, verified:true,
+            text:"Level your " + troopLabel(best.t) + " to " + best.lvl + " (+" + best.v + "% mana): " + h.name + " charges in " + best.tl + " tiles instead of " + cur + " (" + h.speed + ", offense, tiles that hit" + (other ? "; that troop is on " + other[0].name + " in this plan" : "") + ")."});
         }
       }
     }
-    return out.sort((a, b) => (b.verified - a.verified) || (b.gain - a.gain)).slice(0, (opts && opts.limit) || 4);
+    // One suggestion per troop: keep its best use in this team.
+    const seenTroop = new Set();
+    return out.sort((a, b) => (b.verified - a.verified) || (b.gain - a.gain))
+      .filter(u => !u.troopId || (!seenTroop.has(u.troopId) && seenTroop.add(u.troopId)))
+      .slice(0, (opts && opts.limit) || 4);
   }
 
   /* ------------------------------------------------------------------ */
   /* 9. Saved game teams                                                */
   /* ------------------------------------------------------------------ */
-  function gameTeams(snapshot, units, troops){
+  // Friendly names for the game's team keys. Unrecognised keys are shown as stored.
+  function teamLabel(key){
+    let m;
+    if((m = /^main_(\d+)$/.exec(key))) return {label:"Team " + m[1], group:"main"};
+    const fixed = {pvp_league_attack:"Raid attack", pvp_league_defense:"Raid defense", mercenary_war_defense:"Mercenary war defense", hexmap_attack:"Hex map attack", guest_ip:"Guest heroes"};
+    if(fixed[key]) return {label:fixed[key], group:"main"};
+    if((m = /^(legendary|epic|rare)(?:\|(no_\w+|all_elements))?(?:\|(attack|defense))?$/.exec(key))){
+      const star = {legendary:"5★", epic:"4★", rare:"3★"}[m[1]];
+      const col = m[2] ? (m[2] === "all_elements" ? "all colours" : "no " + (TROOP_COLORS[m[2].slice(3)] || m[2].slice(3))) : "";
+      return {label:"Tournament " + star + (col ? ", " + col : "") + (m[3] ? ", " + m[3] : ""), group:"tournament"};
+    }
+    if(key.split("_").every(w => CLASSES.includes(w))) return {label:"Class team: " + key.split("_").map(w => w[0].toUpperCase() + w.slice(1)).join(" + "), group:"other"};
+    return {label:key.replace(/[_|]+/g, " ").trim(), group:"other"};
+  }
+
+  /** Saved game teams resolved to owned copies. aliases maps definition IDs to catalog names,
+   *  used for the member's worn costume (activeHeroDefinitionId, seen in a v389 save). */
+  function gameTeams(snapshot, units, troops, aliases){
     const teams = snapshot && snapshot.teams, out = [];
     if(!teams || typeof teams !== "object") return out;
     const byInst = new Map(units.filter(u => u.instanceId).map(u => [u.instanceId, u]));
@@ -692,17 +750,28 @@
         const hid = m && m.hid != null ? String(m.hid) : null;
         if(!hid || hid === "empty") return {slot:i, empty:true};
         const u = byInst.get(hid), tid = m.tid != null ? String(m.tid) : null;
-        return {slot:i, instanceId:hid, unit:u || null, troop:tid && tid !== "default" ? byTroop.get(tid) || {ownedId:tid, kind:"unknown", color:null, level:null, mana:null, source:"unmatched"} : null};
+        let form = null, formNote = null;
+        const worn = m && typeof m.activeHeroDefinitionId === "string" ? m.activeHeroDefinitionId : null;
+        if(u && worn){
+          const a = aliases && aliases[worn];
+          const f = a ? u.forms.find(x => x.hero.name === a.name) : null;
+          if(worn === u.definitionId) form = "base";
+          else if(f) form = f.id;
+          else formNote = "worn costume " + worn + " is not among this copy's matched forms";
+        } else if(u) form = "base";
+        return {slot:i, instanceId:hid, unit:u || null, form, formNote, worn,
+          troop:tid && tid !== "default" ? byTroop.get(tid) || {ownedId:tid, kind:"unknown", color:null, level:null, mana:null, source:"unmatched"} : null};
       });
-      if(members.every(m => m.empty)) continue;
-      out.push({key, members, unresolved:members.filter(m => !m.empty && !m.unit).length});
+      if(members.every(m => m.empty) || members.every(m => m.empty || !m.unit)) continue;   // e.g. guest heroes
+      out.push(Object.assign({key, members, unresolved:members.filter(m => !m.empty && !m.unit).length}, teamLabel(key)));
     }
-    return out;
+    const order = {main:0, tournament:1, other:2};
+    return out.sort((a, b) => order[a.group] - order[b.group] || a.key.localeCompare(b.key, undefined, {numeric:true}));
   }
 
   const api = {TIERS, L1_RATIO, LB_RATIO, BASE_TILES_X2, MANA4_STEPS, MANA4_IDS, SPEED, COSTUME_BONUS, RULES,
     retag, progression, statsFor, heroStats, buildUnits, poolFrom, parseTroops, recognizeTroop, troopMana, tilesNeeded,
     troopsFrom, troopLabel, assignTroops, synergy, opponentNeeds, matchup, weaknesses, assumptions, explain, evaluate,
-    searchTeam, buildWar, duplicateUnits, suggestUpgrades, gameTeams, baseName, validPower, costumeMaxed};
+    searchTeam, buildWar, duplicateUnits, suggestUpgrades, gameTeams, teamLabel, baseName, validPower, costumeMaxed};
   if(typeof module === "object" && module.exports) module.exports = api; else root.EPEngine = api;
 })(typeof globalThis !== "undefined" ? globalThis : this);

@@ -820,9 +820,9 @@ function buildDefenses(){
     const members=[tank];
     while(members.length<5){
       let best=null,bestS=-1e9;
-      const usedBases=new Set(members.map(baseOf));
+      const usedUnits=new Set(members.map(m=>m.__unit||m.name));
       for(const h of cands){
-        if(members.some(m=>m.name===h.name)||usedBases.has(baseOf(h))) continue;
+        if(usedUnits.has(h.__unit||h.name)) continue; // separate copies may share a team; one copy cannot appear twice
         const t2=members.concat([h]);
         const s=t2.slice(1).reduce((a,x)=>a+Math.max(defScore(x,"flank"),defScore(x,"wing")),0)
               + defScore(tank,"tank") + synergyScore(t2) + elementPenalty(t2);
@@ -883,7 +883,7 @@ function titanScore(h){
 }
 function buildTitan(titanColor, pool){
   const color = BRING[titanColor];
-  return { color, team: pool.filter(h=>h.el===color).sort((a,b)=>titanScore(b)-titanScore(a)).filter((h,i,arr)=>arr.findIndex(x=>baseOf(x)===baseOf(h))===i).slice(0,5) };
+  return { color, team: pool.filter(h=>h.el===color).sort((a,b)=>titanScore(b)-titanScore(a)).filter((h,i,arr)=>arr.findIndex(x=>(x.__unit||x.name)===(h.__unit||h.name))===i).slice(0,5) };
 }
 
 /* ---------- war builder ---------- */
@@ -1086,7 +1086,7 @@ function troopHtml(plan){
   return rows.length?`<div class="note" style="font-size:12.5px"><b>Troops</b> (one per hero, matching colour; offense, tiles that hit; other mana bonuses such as emblems or costumes not included): ${rows.join(" · ")}</div>`:"";
 }
 function upgradesHtml(team,plan){
-  const ups=EPEngine.suggestUpgrades(team,{troopPlan:plan});
+  const ups=EPEngine.suggestUpgrades(team,{troopPlan:plan,troops:poolState().troops});
   if(!ups.length) return "";
   return `<details class="note" style="font-size:12.5px"><summary><b>Upgrades that would help this team</b></summary>${ups.map(u=>`• <b style="color:${u.verified?"var(--nature)":"var(--gold2)"}">${u.verified?"Verified":"Estimate"}:</b> ${esc(u.text)}`).join("<br>")}</details>`;
 }
@@ -1446,7 +1446,8 @@ document.addEventListener("click",e=>{
       if(idx>=0){ SB[idx]=ph; sbSel=null; renderSB(); } } return; }
   const ld=q(".sbload"); if(ld){ e.preventDefault(); const t2=sbTeams()[+ld.getAttribute("data-i")]; toBuilder(t2.heroes,t2.units,t2.forms); return; }
   const gl=q(".gtload"); if(gl){ e.preventDefault(); const t=gameTeamsList()[+gl.getAttribute("data-i")]; if(!t) return;
-    const ms=t.members.filter(m=>!m.empty).slice(0,5); toBuilder(ms.map(m=>{ const x=gameTeamEntry(m); return x?x.name:""; }),ms.map(m=>m.unit?m.unit.key:null)); return; }
+    // Keep the game's slot positions (an empty slot stays empty).
+    const ms=t.members.slice(0,5); toBuilder(ms.map(m=>{ const x=!m.empty&&gameTeamEntry(m); return x?x.name:""; }),ms.map(m=>m.unit?m.unit.key:null),ms.map(m=>{ const x=!m.empty&&gameTeamEntry(m); return x?x.__form:null; })); return; }
   const lg=q(".sblog"); if(lg){ e.preventDefault(); const t2=sbTeams()[+lg.getAttribute("data-i")];
     const es=logEntries(); es.push({date:new Date().toISOString().slice(0,10),mode:"Raid Attack",result:lg.getAttribute("data-r"),tank:"",note:"Team: "+t2.name,ctx:CTX,team:t2.heroes});
     store.set("epLog",es); shareBattle(es[es.length-1]); renderLog(); alert("Logged "+lg.getAttribute("data-r")+" for "+t2.name); return; }
@@ -1501,7 +1502,7 @@ function renderSBAnalysis(){
   applySyn(hs).whys.forEach(x=>bits.push(x));
   const tk=SB[2];
   if(hs.length===5&&tk&&!T(tk,"taunt")&&!T(tk,"wall")&&!T(tk,"healer")&&!T(tk,"counter")) bits.push(`⚠️ ${esc(tk.name)} has no tanking mechanic (taunt/wall/heal/counter) — consider Auto-arrange or a different middle`);
-  const bases=hs.map(baseOf); if(new Set(bases).size<bases.length) bits.push("⚠️ The same hero appears twice (copies or costume forms of one hero). The game allows one of each hero per team.");
+  const units=hs.map(h=>h.__unit||h.name); if(new Set(units).size<units.length) bits.push("⚠️ The same owned copy appears twice (as two forms). Use another copy or a different hero.");
   if(hs.some(h=>!h.__str)) bits.push("ℹ️ Heroes marked “not owned” use catalog max-level values.");
   let extra="";
   if(hs.length>=2){
@@ -1519,13 +1520,23 @@ function renderSBSaved(){
   d.innerHTML+=gameTeamsHtml();
 }
 // Teams saved inside the imported game save, offered as editable starting points.
-function gameTeamsList(){ const st=poolState(); return EPEngine.gameTeams(store.get("epEvaRoster"),st.units,st.troops); }
-function gameTeamEntry(m){ return m.unit?unitBaseEntry(m.unit):null; }
+function gameTeamsList(){ const st=poolState(); return EPEngine.gameTeams(store.get("epEvaRoster"),st.units,st.troops,typeof EVA1_HERO_IDS!=="undefined"?EVA1_HERO_IDS:{}); }
+// The member's worn costume from the save when that form is available, else the copy's chosen form.
+function gameTeamEntry(m){
+  if(!m.unit) return null;
+  const fs=poolState().byUnit.get(m.unit.key)||[];
+  return (m.form&&fs.find(h=>h.__form===m.form))||unitBaseEntry(m.unit);
+}
+function gameTeamRow(t,i){
+  const names=t.members.filter(m=>!m.empty).map(m=>{ const e=gameTeamEntry(m); return e?esc(e.name)+(m.formNote?` <span style="color:var(--dim)" title="${esc(m.formNote)}">*</span>`:""):`<i>unknown copy ${esc(m.instanceId)}</i>`; });
+  return `<div class="note"><b>${esc(t.label)}</b> <span style="color:var(--dim);font-size:11px">${esc(t.key)}</span> — ${names.join(", ")}${t.unresolved?` <span style="color:var(--dim)">(${t.unresolved} not in your matched roster)</span>`:""}<span style="float:right"><a href="#" class="gtload" data-i="${i}" style="color:var(--accent)">Load</a></span></div>`;
+}
 function gameTeamsHtml(){
   const gts=gameTeamsList(); if(!gts.length) return "";
-  return `<h2 style="margin-top:16px;font-size:17px">Teams from your game save</h2><div class="note" style="font-size:12.5px">Loaded as editable starting points. Being saved in the game does not make a team strong — check the analysis. Costume choice per team is not read from the save; each copy uses its chosen form.</div>`+
-    gts.map((t,i)=>{ const names=t.members.filter(m=>!m.empty).map(m=>{ const e=gameTeamEntry(m); return e?esc(e.name):`<i>unknown copy ${esc(m.instanceId)}</i>`; });
-      return `<div class="note"><b>${esc(t.key)}</b> — ${names.join(", ")}${t.unresolved?` <span style="color:var(--dim)">(${t.unresolved} not in your matched roster)</span>`:""}<span style="float:right"><a href="#" class="gtload" data-i="${i}" style="color:var(--accent)">Load</a></span></div>`; }).join("");
+  const main=gts.map((t,i)=>[t,i]).filter(([t])=>t.group==="main"), rest=gts.map((t,i)=>[t,i]).filter(([t])=>t.group!=="main");
+  return `<h2 style="margin-top:16px;font-size:17px">Teams from your game save</h2><div class="note" style="font-size:12.5px">Loaded as editable starting points with each hero's saved costume and slot. Being saved in the game does not make a team strong — check the analysis.</div>`+
+    main.map(([t,i])=>gameTeamRow(t,i)).join("")+
+    (rest.length?`<details><summary>Tournament, class, event and quest teams (${rest.length})</summary>${rest.map(([t,i])=>gameTeamRow(t,i)).join("")}</details>`:"");
 }
 function toBuilder(names,units,forms){
   SB=[null,null,null,null,null];
