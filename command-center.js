@@ -49,7 +49,7 @@
   document.getElementById('rvAll').parentElement.append(toolbar);
   renderLayout();
   function enhanceCards() {
-    document.querySelectorAll('.hero[data-h],.hero[data-n],.sbslot').forEach(card => {
+    document.querySelectorAll('.hero,.sbslot').forEach(card => {
       card.tabIndex = 0;
       card.setAttribute('role', 'button');
       const name = card.querySelector('.nm,.n')?.textContent || 'Choose hero';
@@ -68,7 +68,7 @@
     });
   }
   document.addEventListener('keydown', event => {
-    if ((event.key === 'Enter' || event.key === ' ') && event.target.matches('.hero[data-h],.hero[data-n],.sbslot')) {
+    if ((event.key === 'Enter' || event.key === ' ') && event.target.matches('.hero,.sbslot')) {
       event.preventDefault();
       event.target.click();
     }
