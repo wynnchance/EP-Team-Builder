@@ -11,3 +11,6 @@ jobs:
         with:
           node-version: '22'
       - run: node tests/eva1-import.test.cjs
+      - run: node tests/engine.test.cjs
+      - name: index.html matches app_template.html + heroes_full.json
+        run: python3 -c "import sys; d=open('heroes_full.json').read(); t=open('app_template.html').read(); sys.exit(0 if open('index.html').read()==t.replace('__HERO_DATA__', d) else 'index.html is stale: rebuild it from app_template.html')"
