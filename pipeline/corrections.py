@@ -22,6 +22,11 @@ FIELD_FIXES = {
     "Zondalath": {"el": "Holy"},
     "Lin Chong": {"el": "Nature"},
     "Maisie":    {"el": "Dark"},
+    # Nidavellir family missing from wiki infoboxes; all 8 share the Molten Core passive (Aug 2026)
+    "Aethslegaur": {"fam": "Nidavellir"}, "Dagr": {"fam": "Nidavellir"},
+    "Dularfulr": {"fam": "Nidavellir"}, "Fjalar": {"fam": "Nidavellir"},
+    "Gandr": {"fam": "Nidavellir"}, "Hreidmarr": {"fam": "Nidavellir"},
+    "Ott": {"fam": "Nidavellir"}, "Regin": {"fam": "Nidavellir"},
 }
 for name, fixes in FIELD_FIXES.items():
     h = byname.get(name)
